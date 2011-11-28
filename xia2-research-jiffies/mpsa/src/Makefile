@@ -5,3 +5,4 @@ SOURCE_OBJECTS = mpsa.o mpsa_Commands.o mpsa_DefnOps.o mpsa_FileCommands.o mpsa_
 	cc -c -malign-double -O3 -I/usr/include -DMPSA_ETC_DIR=\"/home/gw219/mpsa/i386/etc\" $<
 mpsa : $(SOURCE_OBJECTS)
 	cc -malign-double -O3 -o mpsa $(SOURCE_OBJECTS) -L/usr/lib -ltcl8.5 -lm -lc
+	cp mpsa ../bin
