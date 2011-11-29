@@ -1,0 +1,14 @@
+TCL_VER = 8.0
+TCL_LIB_DIR = /usr/lib
+TCL_INCLUDE_DIR = /usr/include
+TCL_LIB = -ltcl$(TCL_VER)
+MPSA_SRC_DIR = /home/gw219/MPSA/stable/mpsa/i386/src
+TPP_SRC_DIR = /home/gw219/MPSA/development/tpp/i386/src
+PL_SRC_DIR = /home/gw219/MPSA/development/pairlist/i386/src
+CL_SRC_DIR = /home/gw219/MPSA/development/celllist/i386/src
+TREE_SRC_DIR = /home/gw219/MPSA/stable/tree/i386/src
+MPSA_LIB = -lm -lc $(TCL_LIB)
+MPSA_INCLUDE = -I$(TCL_INCLUDE_DIR) -I$(MPSA_SRC_DIR) -I$(TPP_SRC_DIR) -I$(PL_SRC_DIR) -I$(TREE_SRC_DIR) -I$(CL_SRC_DIR)
+MPSA_COMPILER_FLAGS = -DMPSA_LIB_DIR=$(MPSA_SRC_DIR)/lib/tcl -O2 -fPIC
+MPSA_SHARED_FLAGS = -shared
+MPSA_LINKER_FLAGS = $(MPSA_SHARED_FLAGS) $(MPSA_COMPILER_FLAGS)

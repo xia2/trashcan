@@ -1,0 +1,40 @@
+internal structure of MPSA source tree
+
+MPSA contains:
+	development
+	doc
+	lib
+	makefiles
+	monolith
+	stable
+
+contents of each directory:
+
+development:
+	modules currently under (active) development:
+	cloud+		enhanced clouds
+	tpp		6 dimensional search tree
+	pairlist	pairlist implementation
+doc:
+	documents, for example this
+lib:
+	tcl scripts etc
+makefiles:
+	`monolith' makefiles, for various platforms. 
+	note: not all platforms are supported in modular form.
+monolith:
+	directories with a few files which are different to the 
+	modular forms of the program
+
+	to get a monolithic program, go into one of these, type
+	tclsh ../etc/MakeLinks[Devel/Stable].tcl
+	make -f Makefile.[Platform]
+	to get a binary
+stable:
+	modules which are not currently under active development
+	mpsa		mpsa core
+	tree		tree code implementation, search and gravity
+	cloud		cloud (basic)
+	quadtree	quadrupole gravity implementation
+	sf		star formation
+	sn		supernovae

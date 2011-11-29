@@ -1,0 +1,287 @@
+/*[ mpsa_CreateListCmd
+ *[ action:  create a new list structure, register with hash table and
+ *[          simulation structure
+ *[ objects: takes name of a simulation and name of new list structure
+/*[ mpsa_DeleteListCmd
+ *[ action:  fetch and delete list structure from hash table, delete hash
+ *[          table entry and pointer to list within simulation structure
+ *[ objects: takes name of list structure to be deleted
+/*[ mpsa_CreateSimulationCmd
+ *[ action:  creates simulation structure and creates a hash entry 
+ *[          to access it.
+ *[ objects: name of new simulation structure
+/*[ mpsa_DeleteSimulationCmd
+ *[ action:  fetch and delete simulation structure, as well as all lists and
+ *[          particles associated with it, deleteing hash entry
+ *[ objects: simulation name
+/*[ mpsa_RegisterNewParticleTypeCmd
+ *[ action:  create a new particle definition according to users specification
+ *[          using predefined pip types
+ *[ objects: type name, number of pips and list of pip names
+/*[ mpsa_CheckPipDefinedCmd
+ *[ action:  determine whether a certain pip has been defined
+ *[ objects: name of a pip, returns TCL_OK or TCL_ERROR
+/*[ mpsa_GetParticleDefinition
+ *[ action:  get a particle definition structure from the appropriate hash
+ *[          table, returning it as *Particle
+ *[ objects: takes a tcl interpreter, the name (hash table key), returns
+ *[          a pointer to a definition structure
+/*[ mpsa_GetParticleDefinitionFromID
+ *[ action:  get a particle definition structure from the appropriate hash
+ *[          table, searching through the hash table
+ *[ objects: takes a dynamic particle ID, returns a pointer to a definition 
+ *[          structure
+/*[ mpsa_GetPipDefinition
+ *[ action:  get a pip definition structure from the appropriate hash table,
+ *[          indexed by Label
+ *[ objects: takes a tcl interpreter and a name, returns a pointer to a 
+ *[          pip definition structure
+/*[ mpsa_GetMaxParticleID
+ *[ mpsa_IncrementMaxParticleID
+ *[ mpsa_GetMaxPipID
+ *[ mpsa_IncrementMaxPipID
+ *[ action:  set of wrapper functions to administer the allocation of 
+ *[          dynamic type identifiers
+ *[ objects: none
+/*[ mpsa_GetParticlesWithPip
+ *[ action:  get a list of particle definitions which include the 
+ *[          given pip definition
+ *[ objects: takes a pip definition, and returns an array of pointers to 
+ *[          particle definitions and the number of elements of the array
+/*[ mpsa_DoesParticleHavePip
+ *[ action:  test to see if a particle definition contains a given pip 
+ *[          definition
+ *[ objects: takes a pip definition and particle definition, returns yes/no
+/*[ mpsa_AddParticleTypeToList
+ *[ action:  add a particle definition to a list of particle definitions,
+ *[          used in mpsa_GetParticlesWithPip
+ *[ objects: takes new particle definition and old list, and number of elements
+ *[          returns new list
+/*[ mpsa_GetPipPosition
+ *[ action:  takes a particle definition and a pip definition, and returns
+ *[          the position of the pip within the particle if applicable
+ *[ objects: takes particle definition and pip definition, returns *position
+ *[          if returns MPSA_FAIL, particle does not have required pip
+/*[ mpsa_WriteSimulationCmd
+ *[ action:  write a simulation but not associated particles
+ *[          to a tcl channel - different to gsim
+ *[ objects: takes a tcl channel and a simulation
+/*[ mpsa_WriteParticleListCmd
+ *[ action:  write the data from a list of particles to a binary 
+ *[          tcl channel
+ *[ objects: takes a list and a tcl channel
+/*[ mpsa_SetPlatformCmd
+ *[ action:  set platform type and byte ordering
+ *[ objects: takes a platform name
+/*[ mpsa_CreateConversionTableCmd
+ *[ action:  create blank conversion table
+ *[ objects: just takes a number of elements to make in the table
+/*[ mpsa_DeleteConversionTableCmd
+ *[ action:  delete the type conversion table
+ *[ objects: none
+/*[ mpsa_WriteConversionTableElementCmd
+ *[ action:  takes an old id, and a name, looks up the new name and 
+ *[          obtains a new id, writing this all into a table
+ *[ objects: takes an old ID and a type name
+/*[ mpsa_ReadParticleListCmd
+ *[ action:  read in particle properties from a tcl channel and 
+ *[          create particles in a given simulation
+ *[ objects: takes a simulation structure and a tcl channel
+/*[ mpsa_WriteSimulation
+ *[ action:  write a simulation structure to a binary tcl channel
+ *[          swapping bytes as necessary
+ *[ objects: takes a simulation and a tcl channel
+/*[ mpsa_WriteParticle
+ *[ action:  write all of the data from a particle structure, including
+ *[          pip information, to a tcl channel
+ *[ objects: 
+/*[ mpsa_WriteFloat/Integer
+ *[ action:  write value to tcl channel, making appropriate byte swapping
+ *[          action
+ *[ objects: takes a value and a tcl channel
+/*[ mpsa_SetByteOrder
+ *[ action:  sets the correct byte ordering for machine type
+ *[ objects: name
+/*[ mpsa_CreateConversionTable
+ *[ action:  creates a type conversion table of predefined size
+ *[ objects: takes a number of elements to make space for
+/*[ mpsa_DeleteConversionTable
+ *[ action:  delete the conversion table including all names;
+ *[ objects: none
+/*[ mpsa_WriteConversionTableElement
+ *[ action:  writes an element of the conversion table from the old id,
+ *[          the name and the new id
+ *[ objects: takes the old id, the name and the new id of a particle type
+/*[ mpsa_GetNewTabulatedID
+ *[ action:  gets new dynamic ID from old dynamic ID
+ *[ objects: takes an integer ID and returns another
+/*[ mpsa_ReadFloat/Integer
+ *[ action:  read value from a tcl channel, performing appropriate byte
+ *[          swapping actions
+ *[ objects: a tcl channel from which to read and returns *Value
+/*[ mpsa_ReadParticle
+ *[ action:  create a new blank particle in a simulation and set 
+ *[          all of it's values to those stored in the data file, including pip
+ *[          data
+ *[ objects: takes a simulation and a tcl channel
+/*[ mpsa_RegisterNewPip
+ *[ action:  register a new pip definition structure with the hash table
+ *[          this is an external "interface" function
+ *[ objects: takes a pointer to a new pip definition structure
+/*[ mpsa_ClearListCmd
+ *[ action:  empty a list structure of pointers to particles
+ *[ objects: name of list structure
+/*[ mpsa_AppendToListCmd
+ *[ action:  append particles from simulation structure to a list structure
+ *[          according to basic (ie type) criteria
+ *[ objects: takes list structure name and particle definition name
+/*[ mpsa_DeleteParticlesCmd
+ *[ action:  delete all particles extracted into a list from simulation 
+ *[          structure and clear the list
+ *[ objects: name of list of extracted particles
+/*[ mpsa_FlexibleAppendToListCmd
+ *[ action:  append particles from simulation structure to list according to
+ *[          a flexible set of criteria defined by user, or criteria included
+ *[          within mpsa base
+ *[ objects: name of list, name of group (ie pip type or particle), criterion
+ *[          within group, operator (described elsewhere) and a value
+/*[ mpsa_AddListToSimulation
+ *[ action:  add a newly defined list structure to a simulation structure
+ *[ objects: takes a pointer to a simulation and a pointer to the list
+/*[ mpsa_RemoveListFromSimulation
+ *[ action:  remove list pointer from list within simulation structure
+ *[          in the process of deleteing the list
+ *[ objects: takes a pointer to a simulation and a pointer to the list
+/*[ mpsa_IsListInSim
+ *[ action:  tests to see if a given list pointer is associated with a
+ *[          simulation, returning either MPSA_OKAY = yes or MPSA_FAIL = no
+ *[ objects: takes a pointer to a simulation and a pointer to the list
+/*[ mpsa_ClearList
+ *[ action:  clear all pointer entries in list structure
+ *[ objects: takes pointer to list structure
+/*[ mpsa_ExtractSimToList
+ *[ action:  extract all particles of a given type from a simulation 
+ *[          to a list, counting them as it goes        
+ *[ objects: takes pointer to a simulation and pointer to a list, a type 
+ *[          described by an integer and returns the number of extractions
+/*[ mpsa_ExtractAllToList
+ *[ action:  extract all particles associated with a simulation structure
+ *[          to a list
+ *[ objects: takes a pointer to a simulation and a pointer to a list, returning
+ *[          number of extractions
+/*[ mpsa_AppendToList
+ *[ action:  add a particle pointer to a list structure
+ *[ objects: a pointer to a list, and a pointer to the particle to be added
+/*[ mpsa_MoveParticlePositionCmd
+ *[ action:  move all of the particles in a list by their velocity
+ *[          multiplied by dt
+ *[ objects: takes a name of a list and dt (a floating point value)
+/*[ mpsa_MoveParticleVelocityCmd
+ *[ action:  updates the velolity of all of the particles in the list
+ *[          by their acceleration multiplied by dt
+ *[ objects: takes a name of a list and dt (a floating point value)
+/*[ mpsa_SetMovementTimeStep
+ *[ action:  trivial little function to set the global variable, done this
+ *[          way for sake of efficiency, called by movement commands
+ *[ objects: a floating value as new dt
+/*[ mpsa_MoveParticlePosition
+ *[ action:  function to update the position of a particle by velocity
+ *[          multiplied by global dt value set in mpsa_SetMovementTimeStep
+ *[ objects: takes a pointer to a particle
+/*[ mpsa_MoveParticleVelolity
+ *[ action:  function to update the velocity of a particle by acceleration
+ *[          multiplied by global dt value set in mpsa_SetMovementTimeStep
+ *[ objects: takes a pointer to a particle
+/*[ mpsa_GetList
+ *[ action:  gets a list structure pointer from the appropriate hash table
+ *[          and returns it in *List
+ *[ objects: takes name and tcl interpreter, returns a list pointer
+/*[ mpsa_GetSimulation
+ *[ action:  get a simulation structure pointer from the hash table and 
+ *[          returns it in *Simulation
+ *[ objects: takes tcl interpreter and name of the simulation, returns pointer
+/*[ mpsa_RemoveListFromHash
+ *[ action:  remove list hash entry with the key ListName
+ *[          used when deleteing lists
+ *[ objects: name of list
+/*[ mpsa_RemoveSimFromHash
+ *[ action:  remove simulation hash entry with the key SimName
+ *[          used when deleting simulations
+ *[ objects: name of simulation
+/*[ mpsa_SetOperator
+ *[ action:  set appropriate operator for use with list append command
+ *[          uses global variables for sake of efficiency
+ *[ objects: takes name of operator, eg >=
+/*[ mpsa_BinaryOperators
+ *[ action:  act as wrapper functions to binary operators to enable faster
+ *[          action in list appending command, as pointers to functions can
+ *[          be set, as set above and used below
+ *[ objects: all take two variables and return MPSA_OKAY = true, MPSA_FAIL =
+ *[          false
+/*[ mpsa_Int/Float Operator
+ *[ action:  generic operator as set above, returns value of operator acting
+ *[          on two variables
+ *[ objects: takes two variables, returns MPSA_OKAY = true, MPSA_FAIL = false
+/*[ mpsa_CreateParticlesCmd
+ *[ action:  create a number of particles as described at command line, 
+ *[          associating them with a given simulation
+ *[ objects: takes a simulation name, a particle type name and an integer
+ *[          describing the number to be created
+/*[ mpsa_SetParticleEntry
+ *[ action:  set the entry which the list append command will compare
+ *[          with the given value
+ *[ objects: takes a name, returns MPSA_FAIL if this is not recognised
+/*[ mpsa_GetFloatEntry
+ *[ action:  get entry of particle structure which was set above to compare
+ *[          for list append command
+ *[ objects: takes a particle, returns a floating value
+/*[ mpsa_GetIntEntry
+ *[ action:  get entry of particle structure which was set above to compare
+ *[          for list append command
+ *[ objects: takes a particle, returns a integer value
+/*[ mpsa_CreateParticle
+ *[ action:  creates a particle and appropriate pips depending on type,
+ *[          making use of pip constructors detailed in pip definition.
+ *[          global variables prevent repeated definition searches
+ *[ objects: takes a simulation, and appends a particle of given type
+/*[ mpsa_DeleteParticle
+ *[ action:  deletes a particle and all pips associated, calling the 
+ *[          destructors of those pips. again uses global variables to
+ *[          prevent repeated searches.
+ *[ objects: takes a pointer to the particle to be deleted
+/*[ mpsa_DeleteParticles
+ *[ action:  routine to delete all particles after a given one in a list
+ *[          used when deleting simulation and calls mpsa_DeleteParticle
+ *[ objects: takes pointer to first particle to be deleted
+/*[ mpsa_InitialRandomParticle
+ *[ action:  initialises particle structure values with random or default
+ *[          values to prevent particles being created on top of each other
+ *[ objects: takes a pointer to a particle
+/*[ mpsa_AddParticleToSimulation
+ *[ action:  adds a newly created particle to a simulation structure, 
+ *[          performing the neseccary book keeping operations
+ *[ objects: takes a pointer to a simulation and a pointer to a new particle
+/*[ mpsa_GetType
+ *[ action:  obtains the dynamicly allocated numerical ID of a given particle
+ *[          type determined by it's name
+ *[ objects: takes a tcl interpreter and a particle type name, returns dynamic 
+ *[          identifier in *Type
+/*[ mpsa_GetPipData
+ *[ action:  obtains the pip type listing for a given particle type determined
+ *[          by it's name
+ *[ objects: takes a tcl interpreter and a name, returns a list of pip 
+ *[          definitions
+/*[ mpsa_SetPipToPipType
+ *[ action:  set the pip in a particle to point to the correct pip type
+ *[          in the pip list, using global variables to prevent repeated 
+ *[          searches
+ *[ objects: takes a particle and a pip definition
+/*[ mpsa_ParticleHavePip
+ *[ action:  a routine to test if a particle has a given pip, again using 
+ *[          global variables to prevent excessive lookups. used in list
+ *[          append commands
+ *[ objects: takes a particle and a pip, returns MPSA_OKAY/FAIL
+/*[ mpsa_SimZero
+ *[ action:  to set all of the elements of a newly created simulation 
+ *[          to default values after creation
+ *[ objects: takes a simulation structure
