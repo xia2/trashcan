@@ -37,8 +37,7 @@ int mpsa_Init(
    * 'loadable module' format.
    */
 
-  Tcl_SetVar2(interp, "Mpsa", "etc", MPSA_ETC_DIR, TCL_GLOBAL_ONLY);
-  InitScript = "catch {source $Mpsa(etc)/Init.tcl}";
+  InitScript = "catch {source $env(MPSA_ETC_DIR)/Init.tcl}";
   Tcl_Eval(interp, InitScript);
 
   mpsa_InitCmd(dummy, interp, argc, argv);
