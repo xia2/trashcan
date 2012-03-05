@@ -2,30 +2,109 @@
 \begin{document}
 \section{Introduction}
 
+Make reference to the earlier \emph{xia2} paper, explain how this will
+complement that to give a more comprehensive understanding of what the
+program is doing. Also express how the guidelines contained herein may
+also inform interactive processing.
+
+Then explain why this is useful, and some design decisions embodied in
+the program (e.g. portability, free licensing.)
+
 \subsection{Workflow}
 
-Introduce single-crystal data reduction workflow for MX, identify (i) the breakdown (ii) the points where decisions need to be made (iii) the structure of the data (iv) the relationship between this and the analysis steps.
+Introduce single-crystal data reduction workflow for MX, identify (i)
+the breakdown (ii) the points where decisions need to be made (iii)
+the structure of the data (iv) the relationship between this and the
+analysis steps.
+
+At this stage also express ``bias'' in terms of choices e.g. generally
+minded to do \emph{x} for some value of \emph{x}. At least, if this is
+what e.g. Andrew recommends. Certainly should include a summary of
+existing program recommendations at this stage.
+
+Introduce the idea of two main ``pipelines'' which differ
+predominantly in how they perform the integration and how this by and
+large covers the main approaches to the problem. Mention though that
+there are no fundamental reasons why more programs could not be
+included. Then also make mention of alternative choices along the
+pipelines, e.g. 3DII, along with some guidelines as to when these may
+be appropriate.
 
 \subsection{Approach}
 
-In this section want to introduce the principles of how to do this - i.e. deciding which choices generally work well. Basing decision making choices on data from JCSG, choice of metrics for the decision making.
+In this section want to introduce the principles of how to do this -
+i.e. deciding which choices generally work well. Basing decision
+making choices on data from JCSG, choice of metrics for the decision
+making. Also be flexible and sympathetic that the metrics for decision
+making could be dependent on the quality of the data. Also parallelism
+- bring together multiple threads of processing only when they are
+needed, and then ensure that the conclusions drawn were consistent.
+
+It is probably important in here to also make mention of limitations
+which may result from ths starting point - for example, do the rules
+apply to less than ideal, non-structural-genomics data? Also make
+mention of limitations of assuming macromolecular data i.e. only 65
+spacegroup choices supported.
 
 \section{Decision Making for Data Reduction}
 
+In this section (which will be the bulk of the paper) need to cover
+(i) the decisions which are made at each step for each different
+program (ii) the dependencies between choices and (iii) the generally
+optimum flow through for a given ``pipeline'' choice. Also at each
+stage describe the feedback within that step, outside of that
+step. This will make more sense once the expert system interfaces are
+introduced and the ways of passing around this derived information are shown.
+
 \subsection{Indexing}
+
+What is the objective at this stage? What is the ``unit'' of data?
+What is the form of the outcome? How are those decisions arrived at?
+And what do we do if subsequently we decide we did something wrong?
 
 \subsection{Integration}
 
+What decisions need to go in here, how do you arrive at those correct
+conclusions? What are the metrics at this stage? Also are there
+preparatory steps to the integration which need to be done? E.g. cell
+refinement etc.
+
 \subsection{Scaling}
+
+This is obviously where matters get a little more complex as we're
+trying to pull together data from a number of different samples - so
+the preparatory stage for this one is more complex. Need to describe
+this (i) in the abstract then (ii) the detail of how it is implemented
+for the 2D and 3D pipelines.
 
 \section{Implementing Automated Data Reduction}
 
 \subsection{Data Management}
 
+Introduce as static data model, how are the inputs
+understood. Automated understanding of your data set. Revisit tasks
+which can be performed on each, the links to the various steps.
+
 \subsection{Expert System Interfaces}
+
+Introduce this as (i) generally a good idea and (ii) a way of
+mediating the link between the data structures and the
+processing. Also mention that it means that to some extent the
+implementations of these things are interchangable and things which
+are in common are only written once.
 
 \subsection{Factories and Links}
 
+Introduce here this idea as a way of a data object accessing
+processing functionality about itself, and hold on to that expert as a
+source of derived information, and delegate all requests for this
+information to the worker.
+
 \section{Discussion}
+
+Lots of experts, each with a very small domain of expertise. They are
+always consulted, neat coding ensures that if the values are out of
+date when requested they are recalculated, otherwise
+cached. Ultimately this makes the entire xia2 process a ``print'' statement.
 
 \end{document}
