@@ -1,10 +1,15 @@
-Decision Making and Information Management for Automated Data Reduction
+\documentclass[a4paper, 11pt]{article}
+\title{Decision Making and Information Management for Automated Data Reduction}
 
-Abstract
+\begin{document}
 
+\maketitle
+
+\section{Abstract}
 
 One of the key reasons for the development of xia2 (FIXME REFERENCE) was to provide a framework to implement decision making for MX data reduction employing common data reduction software. Here we present details of this framework along with the derivation of the decision making protocols. Inside xia2 the data analysis process is divided into three phases, indexing, integration and scaling, with the first two of these applied to individual sweeps and the final one applied to the data set as a whole. A key part of the structure of xia2 is the relationship between these processes and the data themselves.
-Introduction
+
+\section{Introduction}
 
 Data reduction for macromolecular crystallography is usually structured as an interactive process (FIXME CITE) where an analysis step is performed, which then informs subsequent decisions for later analysis steps, using commonly available and comprehensive suites of software (FIXME LABELIT, MOSFLM / CCP4, XDS, HKL2000.) In some situations a discovery will be made later in the analysis which invalidates earlier decisions. Any framework to support MX data reduction must therefore allow for assertions which may later be modified or eliminated. 
 
@@ -12,30 +17,36 @@ At the same time, the actual choices to be made at every stage are not well docu
 Data Set Structures and Data Analysis Steps
 
 In general the raw data from an MX experiment will take the form of a set of diffraction images with some associated metadata. However these images will have an associated logical structure. At the lowest level the sequence of images recorded consecutively with a constant distance and wavelength and continuous in oscillation (i.e. image N + 1 follows directly from image N) forms a sweep. In most cases this will correspond to a single data collection and may represent the full data set. In some cases however multiple sweeps will be recorded which need to be merged together to form a logical wavelength of data, for example low and high resolution passes. In turn multiple wavelengths of data may be recorded where the data should be scaled together but merged separately, corresponding to the data from a crystal which is in turn contained within a project. In terms of the data analysis, the indexing and integration tasks are relevant for individual sweeps while all of the data from a crystal should be placed onto a single scale. 
-Decision Making
+
+\section{Decision Making}
 
 While many issues in MX data reduction result directly from the data quality, there are a number of pathologies to check for (FIXME CITE) as well as situations where general rules are required to guide decision making. To meet these requirements therefore it is helpful to develop the decision making rules against an archive of good quality data, hence a number of data sets from the Joint Centre for Structural Genomics archive were chosen. These offer a number of benefits:
-the experiments were performed in a systematic manner,
-the structures have been solved hence reliably characterised,
-a substantial range of symmetries are included and
-the data are freely available.
 
+\begin{itemize}
+\item{the experiments were performed in a systematic manner,}
+\item{the structures have been solved hence reliably characterised,}
+\item{a substantial range of symmetries are included and}
+\item{the data are freely available.}
+\end{itemize}
 
+\noindent
 The data sets used for this analysis are listed in (FIXME APPENDIX). As mentioned above, the analysis will be considered as three distinct phases, with the decision making separated accordingly.
-Indexing
+
+\subsection{Indexing}
 
 Where the indexing of a diffraction pattern historically referred explicitly to the calculation of indices for the observed reflections, the term now typically includes peak searching, calculation of a basis, determination of the cell constants and analysis of the possible Bravais lattice classes. In many instances the indexing will be successful with reflections from a small number of images within the data set, and indeed some of the implementations include explicit limits (FIXME ENUMERATE) while others by default make use of the full data set (FIXME ENUMERATE). In many cases the first choice in the analysis of an X-ray data set will be the images to use for indexing, which may be based on inspection of the available images or rules of thumb. 
 
 In xia2, the program LABELIT (CITE) is generally chosen as the first indexing program as it is robust against problems due to ice rings and also includes a sophisticated approach to the refinement of the direct beam position, which was found i n the early development of xia2 to be a substantial help, as frequently the direct beam centre was recorded inaccurately giving rise to complications in the analysis. The first decision to make is therefore the selection of images to use for indexing. A number of metrics were considered for this: R.M.S. deviation between observed and predicted spot position, absolute values of cell constants, metric penalty of the solution with the correct lattice, with the final one chosen as this was largely independent of the data quality, was not a target of refinement and did not depend on the accuracy of the wavelength and detector distance. From the data sets in the archive, 86 sweeps were chosen where: the lattice was neither pseudosymmetric nor triclinic, indexing with a single image gave the correct solution and 90 degrees or more of data were available. The last requirement was to allow wide spacings between images to be considered, and represents a reasonable constraint as the majority of sweeps will consist of 90 degrees or more of data. 
 
-For each sweep up to 15 images were considered for indexing, spread evenly across the range [phi_0, phi_0 + 90] and the resulting metric penalties for indexing with each set of images for a given sweep normalized to the range [0, 1]. The results for all sweeps were then averaged, resulting in the values shown in FIXME FIGURE, where it is clear that the average normalized metric penalty drop significantly from one image to two, further to three before levelling off at approximately uniform accuracy. From this the conclusion was drawn that three images from the first 90 degrees generally gives the most accurate characterization of the unit cell. Following a similar procedure the spacings between these three images in the range [5, 45] degrees were tested and it is clear from FIXME FIGURE that 45 degree spacings give the most accurate result. When spacings of up to 90 degrees were considered there remained a clear minimum around 45 degrees, indicating that this result is generally valid (not shown.) The conclusion was therefore drawn that three images with 45 degree spacings give the most accurate characterization. 
+For each sweep up to 15 images were considered for indexing, spread evenly across the range [phi\_0, phi\_0 + 90] and the resulting metric penalties for indexing with each set of images for a given sweep normalized to the range [0, 1]. The results for all sweeps were then averaged, resulting in the values shown in FIXME FIGURE, where it is clear that the average normalized metric penalty drop significantly from one image to two, further to three before levelling off at approximately uniform accuracy. From this the conclusion was drawn that three images from the first 90 degrees generally gives the most accurate characterization of the unit cell. Following a similar procedure the spacings between these three images in the range [5, 45] degrees were tested and it is clear from FIXME FIGURE that 45 degree spacings give the most accurate result. When spacings of up to 90 degrees were considered there remained a clear minimum around 45 degrees, indicating that this result is generally valid (not shown.) The conclusion was therefore drawn that three images with 45 degree spacings give the most accurate characterization. 
 
 This conclusion may be interpreted by considering the mechanism behind the one-dimensional FFT autoindexing implemented in LABELIT (and MOSFLM, based on the DPS code.) The peak positions are transformed to reciprocal space and analysed via one-dimensional Fourier transform in ~ 7000 directions, with those directions where the strongest periodicity was observed taken as candidate basis vectors. In the case where one or two images are used, the reciprocal space coverage will be such that there are substantial regions of reciprocal space where spacings are not directly recorded. Once the third image is added the coverage will be such that no region is more than ~ 20 degrees from parallel to a measured axis (keeping in mind the P-1 symmetry of the pattern) making it much more likely that the direct axis rather than some linear combination is found. The results of this indexing step will be a list of possible Bravais lattices with corresponding cell constants, as well as a refined model of the diffraction geometry.
 
 It is worth noting that there will be many cases where simply taking a small number of images will not give an accurate indexing solution, for example with weak or sparse diffraction. In these cases it may be necessary to employ different software (for example XDS) though LABELIT has recently been modified to allow indexing from full data sets (FIXME COMMUNICATION.)
 
 When performing the data processing interactively it is straightforward to assess the quality of the solution, by comparing the observed reflections with the corresponding predictions. However in some pathalogical cases where the arrangement of molecules gives a close to centred lattice (for example dataset 45453 in the JCSG archive, corresponding to PDB deposition 2PBL) the weak reflections which are not usually significant in terms of indexing the pattern may be crucial. The JCSG example has a strong diffraction pattern which will in most cases index with a centred monoclinic basis - however there are intermediate reflections (FIXME FIGURE) which indicate that a primitive basis with the same cell constants is required as the missing reflections are systematically absent with the centred lattice. It is however important to note that the failure to index a substantial number of reflections is not an unambiguous indication of a problem as there could be multiple independent crystal lattices visible on the image. An explicit test must therefore be made to determine whether there are a significant number of reflections found which should be systematically absent. This was implemented in xia2 by reindexing the spot lists with the basis from indexing and assessing the number of systematically absent reflections to be found. If this significantly exceeds the number expected for randomly distributed reflections the lattice may be assumed to be misindexed and a correct primitive basis calculated using functionality from the CCTBX toolkit (FIXME CITE.) It has been suggested (FIXME MCSWEENEY PRIVATE COMMUNICATION) that this test may be better performed by integrating the pattern with the transformed basis and testing whether the measured intensities are compatible with absences.
-Integration, with MOSFLM
+
+\subsection{Integration, with MOSFLM}
 
 MOSFLM is usually run as an interactive process, with the user able to inspect results as they are calculated via overlays to the diffraction image. As the xia2 system cannot make use of this information, the summaries printed in the MOSFLM log must be relied apon, with additional and explicit tests to overcome the lack of image analysis.
 
@@ -43,43 +54,58 @@ The integration of diffraction data with MOSFLM, starting from an indexed data s
 Preparing the Program State
 
 When running interactively the initial profile parameters for the cell refinement are assigned from the observed spot sizes from the characterization step. As this is run separately inside xia2 it is necessary to reproduce these profile parameters by running an incidental autoindexing step, where the results are ignored but the profile parameters are saved. This will also give an estimate of the resolution at which strong reflections are observed, which is useful to set in the cell refinement.
-Cell Refinement
 
-The main choice for cell refinement is the selection of image wedges to use, keeping in mind the limitation of a total of 30 frames. The MOSFLM authors suggest that a single wedge may be adequate when the lattice has tetragonal symmetry or higher (i.e. only one or two free cell parameters) however in other cases two or more wedges will be needed. As for autoindexing, a metric is required to score the possible choices against a set of good quality data and as before the metric penalty for the results of the triclinic refinement were found to be best suited, calculated using the IOTBX LATTICE_SYMMETRY tool included in the LABELIT distribution as well as CCTBX. 
+\subsubsection{Cell Refinement}
+
+The main choice for cell refinement is the selection of image wedges to use, keeping in mind the limitation of a total of 30 frames. The MOSFLM authors suggest that a single wedge may be adequate when the lattice has tetragonal symmetry or higher (i.e. only one or two free cell parameters) however in other cases two or more wedges will be needed. As for autoindexing, a metric is required to score the possible choices against a set of good quality data and as before the metric penalty for the results of the triclinic refinement were found to be best suited, calculated using the IOTBX LATTICE\_SYMMETRY tool included in the LABELIT distribution as well as CCTBX. 
 
 The first test was to determine the number of wedges, so up to 10 wedges of three images were used with the results in FIXME FIGURE indicating that two wedges was substantially better than one, while three wedges gave as accurate results as including further data. Similarly the width of these three wedges was tested, and it was found that using four or more images generally gave an accurate result, with spacings of ~ 15 degrees or more up to 45 degrees (results not shown.) 
 
-Cell refinement in interactive processing can provide a useful test of the Bravais lattice constraints. If these are incorrectly assigned the predictions may become inaccurate at higher resolution. In batch processing however it is hard to make this judgement, as the R.M.S. deviations include contributions which depend on the quality of the data. However, a test may be made because imposing the correct lattice constraints should improve, or at least make no worse, the alignment of the predictions with the observed reflections. The cell refinement is therefore performed twice, with and without the lattice constraints, and the R.M.S. deviations compared in a pairwise manner. If the deviations with the constraints are significantly higher (found to be > 50% higher by comparison with a large set of good data) the lattice constraints may be eliminated as inappropriate and a lower symmetry tested. It is important to note that this test, based on the alignment of the reflections, provides an orthogonal source of information about the crystal symmetry from the intensity measurements.
-Integration Protocols
+Cell refinement in interactive processing can provide a useful test of the Bravais lattice constraints. If these are incorrectly assigned the predictions may become inaccurate at higher resolution. In batch processing however it is hard to make this judgement, as the R.M.S. deviations include contributions which depend on the quality of the data. However, a test may be made because imposing the correct lattice constraints should improve, or at least make no worse, the alignment of the predictions with the observed reflections. The cell refinement is therefore performed twice, with and without the lattice constraints, and the R.M.S. deviations compared in a pairwise manner. If the deviations with the constraints are significantly higher (found to be > 50\% higher by comparison with a large set of good data) the lattice constraints may be eliminated as inappropriate and a lower symmetry tested. It is important to note that this test, based on the alignment of the reflections, provides an orthogonal source of information about the crystal symmetry from the intensity measurements.
+
+\subsubsection{Integration Protocols}
 
 There are a range of different ways that the integration of a data set may be performed with MOSFLM, though the authors advise that the cell is refined and fixed prior to integration and the appropriate lattice constraints are applied. In particular it is beneficial to ask whether refinement of the cell, fixing of the cell constants, imposition of the lattice constraints or imposition of a sensible resolution limit make a difference to the accuracy of the measured intensities. The accuracy was assessed by using a script to run POINTLESS (FIXME CITE) and SCALA (FIXME CITE) to a fixed resolution limit and comparing the final overall Rmerge values over a large range of data sets. It was found that refining and fixing the cell prior to integration was critical, though application of the lattice constraints or resolution limits made little difference. In particular, the quality of the data integrating for example in P1 or the correct lattice were essentially identical.
 
 After integration is complete (or has failed) there are a number of opportunities for feedback. In particular, rerunning with an updated gain parameter was found to be helpful when suggested by MOSFLM, and in some cases switching off refinement of the mosaic spread or spot profile parameters when the corresponding errors occurred made the integration more robust. However, it is important that the same gain values are used for all data recorded with a given detector.
-Integration, with XDS
+
+\subsection{Integration, with XDS}
 
 There are three main phases of analysis with XDS: indexing and refinement of the experimental model, integration of the data and global postrefinement after integration. As the indexing in XDS will refine the full experimental model (i.e. including the alignment of the detector, beam and rotation axis) it was found that the matrix calculated from LABELIT was insufficient for accurate integration, however the refinement of the direct beam position and distance is beneficial. Therefore the protocol is to first repeat the indexing step with XDS, taking the results from LABELIT as a starting point followed by integration, global postrefinement and initial scaling. 
-Indexing, Again
+
+\subsubsection{Indexing, Again}
 
 The default for indexing with XDS is to use the full set of images. While this may be sensible in many cases, it can also be unnecessary, expensive and in some cases (which will be shown shortly) result in a less accurate result. The first choice is therefore to determine the number, width and spacing of image wedges to use for indexing. The same metric applied earlier may be used here to score the choices. FIXME FIGURE shows the normalized metric penalties for 1 to 10 5 degree wedges of data, where 0 corresponds to the full data set. Clearly using all images gives a more accurate result than a single small wedge, however two and three small wedges give further improvements. In terms of the width and spacing, wedges wider than ~ 4 degrees and spaced more than ~ 15 degrees were found to give good results.
-Integration
+
+\subsubsection{Integration}
 
 In terms of the integration protocols, there are a number of options which may be followed namely:
-including the Bravais lattice constraints,
-recycling the reflection profile parameters,
-using the globally refined orientation matrix and
-recycling of all of the results of postrefinement including the detector distortions.
 
+\begin{itemize}
+\item{including the Bravais lattice constraints,}
+\item{recycling the reflection profile parameters,}
+\item{using the globally refined orientation matrix and}
+\item{recycling of all of the results of postrefinement including the detector distortions.}
+\end{itemize}
 
 These may be compared with the default of processing the measurements with a triclinic basis from XDS indexing with no refinement. While it was found that the only measurable improvement in data quality was from recycling the reflection profile parameters, it was felt that using the updated orientation matrix was helpful and hence in the second integration pass this was applied. Reintegration with an updated resolution limit, rather than applying the resolution limit in scaling, was found to make no difference.
-Bravais Lattice Testing
+
+\subsubsection{Bravais Lattice Testing}
 
 In the MOSFLM cell refinement, the Bravais lattice was tested by performing the refinement with and without the enforcement of the lattice constraints. With XDS a similar test may be performed by performing the global postrefinement with and without the lattice constraints. Once again, if the refinement without the constraints results in substantially better R.M.S. deviations then the corresponding Bravais lattice may be eliminated from consideration. Here, however, we have R.M.S. deviations in both pixel position and rotation which must be added in quadrature, against population means for good data of 1.114 +/- 0.189 and 1.015 +/- 0.066 respectively. A combined cutoff of Z = 4 is used in xia2.
-Scaling with SCALA and CCP4
+
+\section{Scaling with SCALA and CCP4}
 
 In usual user operation, most of the details of scaling diffraction data with CCP4 are hidden behind the graphical user interface CCP4i. For a typical single sweep data set where the pointgroup is unambiguous the scaling can usually be performed following a recipe included in the Scala documentation, where corrections are applied for primary beam intensity / illuminated volume, absorption and sample decay smoothly varying with rotation. For more complex experiments, for example multi-pass and multi-wavelength data sets, there are a number of steps which need to be performed in preparing the data for scaling including:
-ensuring the data are consistently indexed,
-ensuring that the data were processed in a common pointgroup and lattice,
-understanding of which measurements need to be merged, and those which need to be scaled together but merged separately.
 
+\begin{itemize}
+\item{ensuring the data are consistently indexed,}
+\item{ensuring that the data were processed in a common pointgroup and lattice,}
+\item{understanding of which measurements need to be merged, and those which need to be scaled together but merged separately.}
+\end{itemize}
 
+\noindent
 In addition there are a number of bookkeeping tasks which need to be performed. 
+
+\end{document}
+
