@@ -7,7 +7,7 @@
 
 \section{Abstract}
 
-One of the key reasons for the development of xia2 (FIXME REFERENCE) was to provide a framework to implement decision making for MX data reduction employing common data reduction software. Here we present details of this framework along with the derivation of the decision making protocols. Inside xia2 the data analysis process is divided into three phases, indexing, integration and scaling, with the first two of these applied to individual sweeps and the final one applied to the data set as a whole. A key part of the structure of xia2 is the relationship between these processes and the data themselves.
+One of the key reasons for the development of xia2 (FIXME REFERENCE) was to provide a framework to implement decision making for MX data reduction employing common data reduction software. Here we present details of this framework [FIXME OBSERVATION - INCLUDE DETAILS OF FRAMEWORK?!] along with the derivation of the decision making protocols. Inside xia2 the data analysis process is divided into three phases, indexing, integration and scaling, with the first two of these applied to individual sweeps and the final one applied to the ``data set'' as a whole. A key part of the structure of xia2 is embedded in this relationship between these processes and the data themselves.
 
 \section{Introduction}
 
@@ -51,7 +51,8 @@ When performing the data processing interactively it is straightforward to asses
 MOSFLM is usually run as an interactive process, with the user able to inspect results as they are calculated via overlays to the diffraction image. As the xia2 system cannot make use of this information, the summaries printed in the MOSFLM log must be relied apon, with additional and explicit tests to overcome the lack of image analysis.
 
 The integration of diffraction data with MOSFLM, starting from an indexed data set, typically consists of refinement of the model before the full integration. This refinement makes use of postrefinement to improve the accuracy of the cell constants as well as refining the misorientation angles, following the integration of a small number of small wedges of data, which must be chosen. However, before this may be initiated the program state as if it were part of an interactive processing session must be simulated.
-Preparing the Program State
+
+\subsubsection{Preparing the Program State}
 
 When running interactively the initial profile parameters for the cell refinement are assigned from the observed spot sizes from the characterization step. As this is run separately inside xia2 it is necessary to reproduce these profile parameters by running an incidental autoindexing step, where the results are ignored but the profile parameters are saved. This will also give an estimate of the resolution at which strong reflections are observed, which is useful to set in the cell refinement.
 
@@ -96,7 +97,7 @@ In the MOSFLM cell refinement, the Bravais lattice was tested by performing the 
 
 \section{Scaling with SCALA and CCP4}
 
-In usual user operation, most of the details of scaling diffraction data with CCP4 are hidden behind the graphical user interface CCP4i. For a typical single sweep data set where the pointgroup is unambiguous the scaling can usually be performed following a recipe included in the Scala documentation, where corrections are applied for primary beam intensity / illuminated volume, absorption and sample decay smoothly varying with rotation. For more complex experiments, for example multi-pass and multi-wavelength data sets, there are a number of steps which need to be performed in preparing the data for scaling including:
+In normal user operation, most of the details of scaling diffraction data with CCP4 are hidden behind the graphical user interface CCP4i. For a typical single sweep data set where the pointgroup is unambiguous the scaling can usually be performed following a recipe included in the Scala documentation, where corrections are applied for primary beam intensity / illuminated volume, absorption and sample decay smoothly varying with rotation. For more complex experiments, for example multi-pass and multi-wavelength data sets, there are a number of steps which need to be performed in preparing the data for scaling including:
 
 \begin{itemize}
 \item{ensuring the data are consistently indexed,}
