@@ -8,16 +8,21 @@ program is doing on your behalf. Also express how the guidelines
 contained herein may also inform interactive processing.
 
 Then explain why this is useful, and some design decisions embodied in
-the program (e.g. portability, free licensing.) Finally mention that
-the key details about how to use it are described in the program
-manual available from the web and included in the program download.
+the program (e.g. full delegation, portability, free licensing.)
+Finally mention that the key details about how to use it are described
+in the program manual available from the web and included in the
+program download.
 
 \subsection{Workflow}
 
 Introduce single-crystal data reduction workflow for MX, identify (i)
 the breakdown (ii) the points where decisions need to be made (iii)
 the structure of the data (iv) the relationship between this and the
-analysis steps. 
+analysis steps. Also be clear about when this becomes more complex,
+for example multi-wavelength data sets.
+
+Introduce the scope i.e. the software currently used within xia2 and
+the reasons why these are used.
 
 At this stage also express ``bias'' in terms of choices e.g. generally
 minded to do \emph{x} for some value of \emph{x}. At least, if this is
@@ -40,13 +45,15 @@ making choices on data from JCSG, choice of metrics for the decision
 making. Also be flexible and sympathetic that the metrics for decision
 making could be dependent on the quality of the data. Also parallelism
 - bring together multiple threads of processing only when they are
-needed, and then ensure that the conclusions drawn were consistent.
+needed, and then ensure that the conclusions drawn were
+consistent. State that the alternative, of sharing e.g. orientation
+matrices, would be too involved allowing for the potential for feedback.
 
 It is probably important in here to also make mention of limitations
 which may result from ths starting point - for example, do the rules
 apply to less than ideal, non-structural-genomics data? Also make
 mention of limitations of assuming macromolecular data i.e. only 65
-spacegroup choices supported.
+spacegroup choices supported. 
 
 \section{Decision Making for Data Reduction}
 
@@ -66,12 +73,21 @@ What is the objective at this stage? What is the ``unit'' of data?
 What is the form of the outcome? How are those decisions arrived at?
 And what do we do if subsequently we decide we did something wrong?
 
+Be clear at this stage that the outcome is a \emph{list} of possible
+Bravais lattices and associated unit cell constants, selection of
+this cell choice for given lattice too (minimum penalty.) Also include
+some comments about post-indexing analysis in 2PBL, as well as a
+comment that there may be better ways to do this.
+
 \subsection{Integration}
 
 What decisions need to go in here, how do you arrive at those correct
 conclusions? What are the metrics at this stage? Also are there
 preparatory steps to the integration which need to be done? E.g. cell
 refinement etc.
+
+Integrating to the corners is fine, other rules for integration depend
+on the software used. Generally processing in P1 also works fine.
 
 \subsection{Scaling}
 
@@ -80,6 +96,10 @@ trying to pull together data from a number of different samples - so
 the preparatory stage for this one is more complex. Need to describe
 this (i) in the abstract then (ii) the detail of how it is implemented
 for the 2D and 3D pipelines.
+
+Selection of scaling model based on analysis for SCALA / AIMLESS - for
+XDS always use a full scaling model as this always gives the lowest
+residual - was this the best metric to use?
 
 \section{Implementing Automated Data Reduction}
 
@@ -109,6 +129,7 @@ information to the worker.
 Lots of experts, each with a very small domain of expertise. They are
 always consulted, neat coding ensures that if the values are out of
 date when requested they are recalculated, otherwise
-cached. Ultimately this makes the entire xia2 process a ``print'' statement.
+cached. Ultimately this makes the entire xia2 process a ``print''
+statement.
 
 \end{document}
