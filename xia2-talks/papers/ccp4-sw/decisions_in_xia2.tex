@@ -27,6 +27,8 @@ outcomes of this investigation will be described here, along with the
 expert system \emph{framework} in which the decision making was
 embedded to develop the final data reduction tool.
 
+\subsection{Workflow}
+
 Taken from the top level, the workflow for data reduction for
 macrmolecular crystallography (MX) is considered as three phases:
 characterisation and integration of data from individual sweeps,
@@ -40,6 +42,8 @@ be subsequently tested. The system must also embody the workflow to be
 performed to give a structure into which to embed the expertise to
 make the choices. 
 
+\subsection{Strategy}
+
 For any given choice there may be a set of optimum parameters for a
 given case. There may however also be a set of parameters which can be
 shown to generally work well with limited knowledge of the problem in
@@ -52,82 +56,156 @@ collected in a consistent manner. This has the benefit that the
 decision making may focus on the crystallograhic choices, without
 needing to work around problems caused by poor sample quality. 
 
-Make reference to the earlier \emph{xia2} paper, explain how this will
-complement that to give a more comprehensive understanding of what the
-program is doing on your behalf. Also express how the guidelines
-contained herein may also inform interactive processing.
-
-Then explain why this is useful, and some design decisions embodied in
-the program (e.g. full delegation, portability, free licensing.)
-Finally mention that the key details about how to use it are described
-in the program manual available from the web and included in the
-program download.
-
-\subsection{Workflow}
-
-Introduce single-crystal data reduction workflow for MX, identify (i)
-the breakdown (ii) the points where decisions need to be made (iii)
-the structure of the data (iv) the relationship between this and the
-analysis steps. Also be clear about when this becomes more complex,
-for example multi-wavelength data sets.
-
-Introduce the scope i.e. the software currently used within xia2 and
-the reasons why these are used.
-
-At this stage also express ``bias'' in terms of choices e.g. generally
-minded to do \emph{x} for some value of \emph{x}. At least, if this is
-what e.g. Andrew recommends. Certainly should include a summary of
-existing program recommendations at this stage.
-
-Introduce the idea of two main ``pipelines'' which differ
-predominantly in how they perform the integration and how this by and
-large covers the main approaches to the problem. Mention though that
-there are no fundamental reasons why more programs could not be
-included. Then also make mention of alternative choices along the
-pipelines, e.g. 3DII, along with some guidelines as to when these may
-be appropriate.
-
-\subsection{Approach}
-
-In this section want to introduce the principles of how to do this -
-i.e. deciding which choices generally work well. Basing decision
-making choices on data from JCSG, choice of metrics for the decision
-making. Also be flexible and sympathetic that the metrics for decision
-making could be dependent on the quality of the data. Also parallelism
-- bring together multiple threads of processing only when they are
-needed, and then ensure that the conclusions drawn were
-consistent. State that the alternative, of sharing e.g. orientation
-matrices, would be too involved allowing for the potential for feedback.
-
-It is probably important in here to also make mention of limitations
-which may result from ths starting point - for example, do the rules
-apply to less than ideal, non-structural-genomics data? Also make
-mention of limitations of assuming macromolecular data i.e. only 65
-spacegroup choices supported. 
+Finally, it is important to recognise that software for MX is
+constantly evolving, and that new packages will become available which
+ideally should be incorporated into the system. As such, some emphasis
+on abstraction of steps in the workflow is also helpful, to allow
+existing components within the system to be replaced. Currently the
+system includes support for two main integration packages, Mosflm
+(FIXME CITE) and XDS (FIXME CITE) which are accessed as the 2D and 3D
+pipelines respectively, reflecting the approach taken to profile
+fitting. These are used in combination with Scala (FIXME CITE), XSCALE
+(FIXME CITE) and more recently Aimless (FIXME CITE) as well as other
+tools from the CCP4 suite (FIXME CITE) to deliver the final result. In
+addition, Labelit (FIXME CITE) and CCTBX (FIXME CITE) are also
+extensively used in the analysis.
 
 \section{Decision Making for Data Reduction}
 
-In this section (which will be the bulk of the paper) need to cover
-(i) the decisions which are made at each step for each different
-program (ii) the dependencies between choices and (iii) the generally
-optimum flow through for a given ``pipeline'' choice. Should also be
-clear about what the outcome is at each stage i.e. what have you
-learned? Also at each stage describe the feedback within that step,
-outside of that 
-step. This will make more sense once the expert system interfaces are
-introduced and the ways of passing around this derived information are shown.
+As mentioned above, the crystallographic workflow is considered within
+xia2 in three phases - characterisation, integration and
+scaling. Within each of these there will be decisions which need to be
+made as well as decisions as to how to handle passing information
+around the system, in particular from later stages to earlier. 
 
-\subsection{Indexing}
+Here, the decisions \emph{within} each phase will be considered for
+each of the software packages supported, including special cases and
+advice the user about appropriate program options to use where
+appropriate.
 
-What is the objective at this stage? What is the ``unit'' of data?
-What is the form of the outcome? How are those decisions arrived at?
-And what do we do if subsequently we decide we did something wrong?
+\subsection{Characterisation}
 
-Be clear at this stage that the outcome is a \emph{list} of possible
-Bravais lattices and associated unit cell constants, selection of
-this cell choice for given lattice too (minimum penalty.) Also include
-some comments about post-indexing analysis in 2PBL, as well as a
-comment that there may be better ways to do this.
+The objective of the characterisation stage is to determine:
+
+\begin{itemize}
+\item{A list of possible Bravais lattice options and appropriate cell
+    constants for each.}
+\item{Refined / updated values for the beam centre and distance.}
+\item{A lattice / cell selection, based on an analysis of the possible
+    options.}
+\end{itemize}
+
+\noindent
+for a given sweep of images. In addition any $UB$ matrices calculated
+should also be available. For a given program, the choices to make
+are: the selection of images to use for indexing, the thresholds to
+use for indexing, selection of the ``best'' solution and analysis to
+ensure that the selected solution appears to be satisfactory. 
+
+\subsubsection{Labelit and Mosflm}
+
+Labelit and Mosflm share the same DPS indexing algorithm, though the
+implementation in Labelit allows for an additional search to refine
+the direct beam centre over a larger range. As such, the behaviour of
+the programs in indexing is similar requiring only one analysis for
+the selection of images, though the analysis of solutions will depend
+on the program being used, as they are scored differently.
+The authors of both Labelit and Mosflm recommend the use of two images
+for indexing, spaced by $\sim 90^{\circ}$ in rotation\footnote{Subsequently
+referred to as $\phi$ for brevity} giving a wide coverage of
+reciprocal space over which to determine the basis vectors. 
+
+To optimise any process a scoring scheme is needed. Here the objective
+is to determine the selection of images which generally give the most
+accurate indexing solution. As the R.M.S. deviation between observed
+and predicted spot centres is a target of refinement and the ideal absolute
+values of the unit cell constants are poorly defined (at least at this
+stage) these represent poor metrics. The metric penalty however,
+defined as the deviation from the constraints for each Bravais lattice
+(FIXME CITE) is appropriate as this is a test for internal consistency
+and is also relevent for automatic strategy systems such as EDNA
+(FIXME CITE.) With this in mind, a secondary constraint is raised:
+there is a benefit in using few rather than many images.
+
+Data were taken from 86 sweeps from the JCSG archive, where four
+criteria were met: the lattice was not pseudosymmetric, nor triclinic,
+autoindexing with a single image gave the ``correct'' result and at
+least $90^{\circ}$ of data were available. First, the number of images
+to use for indexing was considered. FIXME FIGURE shows the mean
+normalized metric penalty\footnote{All of the metric penalties for a
+  given sweep were scaled over the range $0 - 1$, then this normalized
+  value averaged across all sweeps for a given number of images.} for
+one to ten images spread across the range $0 - 90^{\circ}$, where
+smaller values indicate a more accurate solution. Clearly the use of
+two images gives a substantially more accurate result than the use of
+a single frame, as may be expected from the advice from the Mosflm and
+Labelit authors, however a further improvement may be observed from
+using three images after which no further improvement is clear. 
+
+[FIXME FIGURE]
+
+Following a similar procedure it was found (FIXME FIGURE) that a
+spacing of $\sim 45^{\circ}$ generally gave the most accurate
+solution. Extending this analysis to sweeps up to $180^{\circ}$
+confirmed this result (not shown.) 
+
+[FIXME FIGURE]
+
+This result may be considered as follows: the one-dimensional FFT
+indexing procedure employed in Mosflm and Labelit computes the
+Fourier transform of the projection of the observed peaks in $\sim
+7000$ reciprocal space directions. Those directions which show the
+strongest signal are then considered as possible basis vectors. Using
+three images spaced by $\sim 45^{\circ}$ ensures that any reciprocal
+space direction is likely to be well sampled making it more likely
+that a fundamental basis vector, rather than some linear combination
+thereof, will be found giving a more accurate result.
+
+When using Labelit, the solution is chosen to be the highest symmetry
+Bravais lattice / cell combination highlighted in the output. The
+Bravais lattice / cell combinations for all other lattices are also
+recorded, where the cell is chosen to be the one with the lowest
+metric penalty where multiple options exist. In usual operation Mosflm
+makes a selection from the possible solutions which satisfies similar
+constraints, which is taken by \emph{xia2}. Once again, all possible
+options are saved. It is important to note that this selection of the
+highest symmetry plausible solution is reasonable as it will be
+substantially challenged in subsequent analysis steps.
+
+\subsubsection{XDS}
+
+Unlike Mosflm and Labelit, the indexing in XDS is able to use $\phi$
+centroids as well as image positions of reflections in indexing, and
+therefore operates most reliably on one or more \emph{wedges} of
+images. Indeed, it is perfectly possible to index with peaks taken
+from every image in the sweep, a process which may be desirable in some
+circumstances. The indexing algorithm is however less robust against
+errors in the direct beam position that the DPS procedure in
+Labelit. The usual procedure in \emph{xia2} is therefore to first
+index with Labelit and, if necessary repeat this indexing with XDS
+using the refined beam centre. 
+
+Where Mosflm makes explicit assumptions about the experimental
+geometry, XDS allows a general rotation axis and beam vector and will
+typically refine these during the indexing step. Therefore, if the
+intention is to use XDS for integration it will be necessary to
+reindex the data. Determination of the optimum selection of images for
+this step is therefore necessary.
+
+By anology with Labelit, data were indexed with a triclinic basis
+from all images and from one to ten $5^{\circ}$ wedges, with the
+resulting triclinic cell used with \verb|iotbx.lattice_symmetry| to
+compute the metric penalty for the correct lattice. As may be seen
+from FIXME FIGURE, use of a single $5^{\circ}$ wedge gave the poorest
+results followed by the use of all images. The use of two and three
+wedges gave further improvement, with no improvement observed
+subsequently. Following from this, various wedge sizes were tested and
+no substantial trends, beyond using at least two frames, were found
+(not shown.) Finally the ideal spacing was found to be $\sim
+45^{\circ}$ though little improvement was found beyond $\sim
+20^{\circ}$ (also not shown.)  
+
+[FIXME FIGURE]
 
 \subsection{Integration}
 
@@ -189,5 +267,50 @@ date when requested they are recalculated, otherwise
 cached. Ultimately this makes the entire xia2 process a ``print''
 statement, showing the merging statistics and the location of the
 output reflection files.
+
+\section{Cruft}
+
+\subsection{Old Notes}
+
+Introduce single-crystal data reduction workflow for MX, identify (i)
+the breakdown (ii) the points where decisions need to be made (iii)
+the structure of the data (iv) the relationship between this and the
+analysis steps. Also be clear about when this becomes more complex,
+for example multi-wavelength data sets.
+
+Introduce the scope i.e. the software currently used within xia2 and
+the reasons why these are used.
+
+At this stage also express ``bias'' in terms of choices e.g. generally
+minded to do \emph{x} for some value of \emph{x}. At least, if this is
+what e.g. Andrew recommends. Certainly should include a summary of
+existing program recommendations at this stage.
+
+Introduce the idea of two main ``pipelines'' which differ
+predominantly in how they perform the integration and how this by and
+large covers the main approaches to the problem. Mention though that
+there are no fundamental reasons why more programs could not be
+included. Then also make mention of alternative choices along the
+pipelines, e.g. 3DII, along with some guidelines as to when these may
+be appropriate.
+
+\subsection{Approach}
+
+In this section want to introduce the principles of how to do this -
+i.e. deciding which choices generally work well. Basing decision
+making choices on data from JCSG, choice of metrics for the decision
+making. Also be flexible and sympathetic that the metrics for decision
+making could be dependent on the quality of the data. Also parallelism
+- bring together multiple threads of processing only when they are
+needed, and then ensure that the conclusions drawn were
+consistent. State that the alternative, of sharing e.g. orientation
+matrices, would be too involved allowing for the potential for feedback.
+
+It is probably important in here to also make mention of limitations
+which may result from ths starting point - for example, do the rules
+apply to less than ideal, non-structural-genomics data? Also make
+mention of limitations of assuming macromolecular data i.e. only 65
+spacegroup choices supported. 
+
 
 \end{document}
