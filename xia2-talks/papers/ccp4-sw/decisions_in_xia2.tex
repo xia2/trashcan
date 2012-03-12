@@ -27,6 +27,30 @@ outcomes of this investigation will be described here, along with the
 expert system \emph{framework} in which the decision making was
 embedded to develop the final data reduction tool.
 
+Taken from the top level, the workflow for data reduction for
+macrmolecular crystallography (MX) is considered as three phases:
+characterisation and integration of data from individual sweeps,
+followed by scaling and merging of all sweeps taken from a given
+crystal. Decisions made at earlier stages will have implications for
+subsequent stages, and information from those later stages may
+contradict those earlier decisions. Any system to automate data
+reduction must therefore be sufficiently flexible to manage this
+situation gracefully, considering all decisions made as hypotheses to
+be subsequently tested. The system must also embody the workflow to be
+performed to give a structure into which to embed the expertise to
+make the choices. 
+
+For any given choice there may be a set of optimum parameters for a
+given case. There may however also be a set of parameters which can be
+shown to generally work well with limited knowledge of the problem in
+hand. These \emph{guidelines} may be determined from a systematic
+analysis of a number of data sets, which should ideally not include
+any artefacts. This criterion highlighted the value of data from
+structural genomics programs, where the published data are well
+characterised (i.e. the structure has been solved) and have been
+collected in a consistent manner. This has the benefit that the
+decision making may focus on the crystallograhic choices, without
+needing to work around problems caused by poor sample quality. 
 
 Make reference to the earlier \emph{xia2} paper, explain how this will
 complement that to give a more comprehensive understanding of what the
