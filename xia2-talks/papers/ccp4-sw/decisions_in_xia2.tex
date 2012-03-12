@@ -1,6 +1,32 @@
 \documentclass[a4paper,11pt]{article}
 \begin{document}
+
+\section{Abstract}
+
+The usage of the data reduction expert system \emph{xia2} was
+presented in an earlier article (FIXME CITE.) Here the decision making
+protocols employed in the system will be presented, with a discussion
+of how these were determined, and how they may be applied in interactive
+processing. 
+
 \section{Introduction}
+
+Decisions made during interactive data reduction are typically based
+on experience and advice from program authors and other users. In many
+cases this will work, reinforcing the choices made, and it is typically
+only when these fail that more detail about those choices is
+sought. Equally, suggestions from the program authors rarely include a
+systematic appraisal of the possible choices and explanations as to
+which options will work best and why. 
+In the development of \emph{xia2} this absence was found
+as a limitation giving rise to a systematic investigation of the best
+options for a number of programs, 
+based on an analysis of data from the Joint Centre
+for Structural Genomics\footnote{http://www.jcsg.org} (JCSG.) The
+outcomes of this investigation will be described here, along with the
+expert system \emph{framework} in which the decision making was
+embedded to develop the final data reduction tool.
+
 
 Make reference to the earlier \emph{xia2} paper, explain how this will
 complement that to give a more comprehensive understanding of what the
@@ -103,6 +129,10 @@ residual - was this the best metric to use?
 
 \section{Implementing Automated Data Reduction}
 
+Introduce this section as: we have a set of rules however to make a
+working system we also need a framework in which to embed these rules
+to express the crystallographic workflow described earlier.
+
 \subsection{Data Management}
 
 Introduce as static data model, how are the inputs
@@ -117,6 +147,9 @@ processing. Also mention that it means that to some extent the
 implementations of these things are interchangable and things which
 are in common are only written once.
 
+Also separate out the three steps - prepare, do and finish, then
+illustrate how these apply to the three phases of processing.
+
 \subsection{Factories and Links}
 
 Introduce here this idea as a way of a data object accessing
@@ -130,6 +163,7 @@ Lots of experts, each with a very small domain of expertise. They are
 always consulted, neat coding ensures that if the values are out of
 date when requested they are recalculated, otherwise
 cached. Ultimately this makes the entire xia2 process a ``print''
-statement.
+statement, showing the merging statistics and the location of the
+output reflection files.
 
 \end{document}
