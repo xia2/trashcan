@@ -230,9 +230,80 @@ interactively using for example iMosflm (FIXME CITE) it is
 straightforward to see if the indexing solution is appropriate from a
 comparison of the observed and predicted reflection positions. When
 the analysis is performed with nothing in the way of visual feedback,
-as is the case inside \emph{xia2}, an equivalent assessment is needed.
+as is the case inside \emph{xia2}, an equivalent assessment is
+needed. This assessment depends on the program used, and will be
+discussed shortly.
+
+\subsubsection{Mosflm}
+
+A typical interactive integration session with Mosflm will start with
+indexing followed by the refinement of the cell once the lattice has
+been chosen. At this stage the interation may be performed either
+through the GUI or from a script. However, by working through this
+process a great deal of information about the data has been learned by
+the program, for example spot profle parameters from the spot search
+prior to indexing. In automating this analysis, particularly when
+alternative programs may be used for some of the steps, some effort
+must be made to reproduce the program state. This, coupled with the
+cell refinement step, may be characterised as preparation for
+integration. The decision making will therefore be separated into
+preparation and integration proper.
+
+The preparation for integration is primarily to set up Moslfm into
+a suitable state for performing integration. This will require the
+selection of images for the cell refinement prior to integration and
+the configuration of the program state. To determine rules for the
+selection of images a similar process was followed to the selection of
+images for indexing with XDS, allowing for an additional constraint of
+the use of 30 frames or fewer in cell refinement, with a similar
+result. In essence, the cell refinement was performed in P1 for the
+sweeps used earlier, and the resulting cell constants scored
+\emph{via} metric penalty, resulting in the use of three small wedges
+of data spaced by ideally $45^{\circ}$. To prepare the program state
+for cell refinement however it is necessary to first gather the
+reflection profile parameters that would usually be obtained during
+indexing. To achieve this aim an incidental indexing step is
+performed, where the spot parameters and an estimate of the resolution
+limit are retained but the other results ignored. It was found that
+applying this resolution limit during the cell refinement gave rise to
+much more reliable results.
+
+To approximate the visual assessment described above, the cell
+refinement is performed with the selected lattice from
+characterisation and in P1, with the orientation matrix from
+characterisation transformed appropriately. When the R.M.S. deviations
+between the observed and predicted spot positions are compared in a
+pairwise manner (i.e. as a function of frame and cycle) between the
+correct lattice and P1 a ratio may be calculated. It was found that in
+all cases when the lattice had been correctly assigned this ratio was
+less than 1.5. However, in cases where the lattice had pseudosymmetry
+the ratio exceeded this value, and is therefore used as a
+cutoff. Intuitively this makes sense: if the application of the
+lattice constraints makes the aignment of the predictions with the
+observed spot positions 50\% worse the lattice constraints are
+unlikely to be correct. If this is the case then that solution may be
+eliminated from consideration and the next lower symmetry lattice
+considered, a process which takes place within the characterisation.
+Other tests, comparing the deviations of the refined P1 cell
+parameters with the constraints from the lattice, in terms of the
+error estimates on those parameters, were found to be unreliable.
+
+Once the integration proper may begin there are a number of choices to
+be made:
+
+\begin{itemize}
+\item{Whether to fix the cell constants during integration.}
+\item{Whether to perform the integration with the lattice constraints
+    applied, as recommended by the Mosflm authors.}
+\item{Whether to apply a sensible resolution limit during integration,
+    as opposed to integrating across the entire active area.}
+\end{itemize}
+
+
 
 [NOTES]
+
+Don't forget the cell refinement resolution limit.
 
 What decisions need to go in here, how do you arrive at those correct
 conclusions? What are the metrics at this stage? Also are there
