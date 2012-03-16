@@ -299,11 +299,34 @@ be made:
     as opposed to integrating across the entire active area.}
 \end{itemize}
 
+Wheras the choices to date have been assessed in terms of the accuracy
+of the resulting cell constants, here the metric will need to relate
+to the accuracy of the observations, best observed by scaling the data
+and considering the merging statistics. Provided that the extent of
+the data are unchanged (i.e. same image range, same resolution limits)
+$R_{\rm{merge}}$ will be a reliable indicator of accuracy. To make
+this assessment, Pointless (FIXME CITE) and Scala (FIXME CITE) were
+used, the latter with a ``standard'' scaling model\footnote{SCALES
+  ROTATION SPACING 5 SECONDARY 6 BFACTOR ON BROTATION SPACING 20}
+which is the default in CCP4i and was therefore considered
+reasonable. Protocols were determined for integration to assess each
+of the earlier choices, by comparison with the procedures recommended
+by the program authors. In summary, it was found that fixing the cell
+constants during integration was helpful however applying a resolution
+cutoff made little difference, as did applying the Bravais lattice
+constraints. The conclusion was therefore to integrate across the
+active area of the detector, fixing the cell constants and applying
+the lattice constraints, though in hindsight there are arguments
+against the latter and developments are underway to perform all
+processing in P1.
+
+\subsubsection{XDS}
+
+
+
 
 
 [NOTES]
-
-Don't forget the cell refinement resolution limit.
 
 What decisions need to go in here, how do you arrive at those correct
 conclusions? What are the metrics at this stage? Also are there
