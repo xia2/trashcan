@@ -237,8 +237,8 @@ discussed shortly.
 \subsubsection{Mosflm}
 
 A typical interactive integration session with Mosflm will start with
-indexing followed by the refinement of the cell once the lattice has
-been chosen. At this stage the interation may be performed either
+indexing followed by the refinement of the cell, once the lattice has
+been chosen. At this stage the integration may be performed either
 through the GUI or from a script. However, by working through this
 process a great deal of information about the data has been learned by
 the program, for example spot profle parameters from the spot search
@@ -306,8 +306,10 @@ and considering the merging statistics. Provided that the extent of
 the data are unchanged (i.e. same image range, same resolution limits)
 $R_{\rm{merge}}$ will be a reliable indicator of accuracy. To make
 this assessment, Pointless (FIXME CITE) and Scala (FIXME CITE) were
-used, the latter with a ``standard'' scaling model\footnote{SCALES
-  ROTATION SPACING 5 SECONDARY 6 BFACTOR ON BROTATION SPACING 20}
+used, the latter with a ``standard'' scaling model\footnote{Smoothed
+  scaing on rotation with $5^{\circ}$ intervals, secondary absorption
+  correction and smoothed $B$ factor correction with $20^{\circ}$
+  intervals.}
 which is the default in CCP4i and was therefore considered
 reasonable. Protocols were determined for integration to assess each
 of the earlier choices, by comparison with the procedures recommended
