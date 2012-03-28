@@ -2,6 +2,6 @@ SOURCE_OBJECTS = mpsa.o mpsa_Commands.o mpsa_DefnOps.o mpsa_FileCommands.o mpsa_
 
 .suffixes : .o .c
 .c.o : 
-	cc -c -mcpu=pentiumpro -malign-double -O3 -I/usr/include -DMPSA_ETC_DIR=\"/home/gw219/MPSA/stable/mpsa/i386/etc\" $<
+	cc -c -O3 -I/usr/include -DMPSA_ETC_DIR=\"/home/gw219/MPSA/stable/mpsa/i386/etc\" $<
 mpsa : $(SOURCE_OBJECTS)
-	cc -mcpu=pentiumpro -malign-double -O3 -o mpsa $(SOURCE_OBJECTS) -L/usr/lib -ltcl8.0 -lm -lc
+	cc -O3 -o mpsa $(SOURCE_OBJECTS) -L/usr/lib -ltcl -lm -lc

@@ -46,6 +46,18 @@ foreach file [glob ../../development/pairlist/src/*.h] {
   if ![file exists $name] {exec ln -s $file .}
 }
 
+foreach file [glob ../../development/celllist/src/*.c] {
+  puts "linking $file"
+  set name [file tail $file]
+  if ![file exists $name] {exec ln -s $file .}
+}
+
+foreach file [glob ../../development/celllist/src/*.h] {
+  puts "linking $file"
+  set name [file tail $file]
+  if ![file exists $name] {exec ln -s $file .}
+}
+
 foreach file [glob ../../stable/sf/src/*.c] {
   puts "linking $file"
   set name [file tail $file]
@@ -77,6 +89,18 @@ foreach file [glob ../../development/tpp/src/*.c] {
 }
 
 foreach file [glob ../../development/tpp/src/*.h] {
+  puts "linking $file"
+  set name [file tail $file]
+  if ![file exists $name] {exec ln -s $file .}
+}
+
+foreach file [glob ../../development/diagnostic/src/*.c] {
+  puts "linking $file"
+  set name [file tail $file]
+  if ![file exists $name] {exec ln -s $file .}
+}
+
+foreach file [glob ../../development/diagnostic/src/*.h] {
   puts "linking $file"
   set name [file tail $file]
   if ![file exists $name] {exec ln -s $file .}
