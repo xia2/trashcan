@@ -180,17 +180,17 @@ therefore operates most reliably on one or more \emph{wedges} of
 images. Indeed, it is perfectly possible to index with peaks taken
 from every image in the sweep, a process which may be desirable in some
 circumstances. The indexing algorithm is however less robust against
-errors in the direct beam position that the DPS procedure in
+errors in the direct beam position that the modified DPS procedure in
 Labelit. The usual procedure in \emph{xia2} is therefore to first
 index with Labelit and, if necessary repeat this indexing with XDS
-using the refined beam centre. 
+using the refined beam centre and selected cell and symmetry. 
 
 Where Mosflm makes explicit assumptions about the experimental
 geometry, XDS allows a general rotation axis and beam vector and will
 typically refine these during the indexing step. Therefore, if the
 intention is to use XDS for integration it will be necessary to
-reindex the data. Determination of the optimum selection of images for
-this step is therefore necessary.
+repeat the indexing of the data. Determination of the optimum
+selection of images for this step is therefore necessary.
 
 By anology with Labelit, data were indexed with a triclinic basis
 from all images and from one to ten $5^{\circ}$ wedges, with the
@@ -324,19 +324,45 @@ processing in P1.
 
 \subsubsection{XDS}
 
+Where Mosflm is typically run through the graphical user interface
+iMosflm, XDS can only be run from scripts, making it ideal for usage
+within an automated system. The advised use of XDS is to perform all
+processing with a triclinic basis, then apply the Bravais lattice
+constraints at the final step (i.e. in the postrefinement.) However it
+is possible but by no means mandatory to ``recycle'' parameters from
+the later stages of processing and rerun the integration. The aim here
+is to determine the choices which will generally give rise to the best
+quality results ideally at minimal computational cost. As with the
+analysis of integration strategies with Mosflm, $R_{\rm{merge}}$ will
+be used as a metric for the quality of the data reduction. The four
+choices are:
 
+\begin{itemize}
+\item{Whether to enforce the Bravais lattice constraints.}
+\item{Whether to recycle the reflection profile parameters.}
+\item{Whether to recycle the orientation matrix and experimental
+    geometry model.}
+\item{Whether to recycle all results of postrefinement including local
+    detector distortions.}
+\end{itemize}
 
+\noindent
+These may be compared with the advised protocol stated above. Using
+the same data as were used for determination of Mosflm choices, it was
+clear that any of these changes to the strategy were polishing of the
+data, with an average change in $R_{\rm{merge}}$ of around 2\% of the
+value. The only measurable improvement was found from recycling the
+reflection profile parameters, though using the postrefined
+orientation matrix etc. seems reasonable, since it will be necessary
+to reintegrate the full data set.
 
-
-[NOTES]
-
-What decisions need to go in here, how do you arrive at those correct
-conclusions? What are the metrics at this stage? Also are there
-preparatory steps to the integration which need to be done? E.g. cell
-refinement etc. and also incidental indexing.
-
-Integrating to the corners is fine, other rules for integration depend
-on the software used. Generally processing in P1 also works fine.
+In processing the data with Mosflm the selection of Bravais lattice
+was tested \emph{via} postrefinement. In XDS, global refinement is
+performed after integration allowing the lattice to be tested in a
+similar manner, once again with a 50\% threshold. Currently in
+\emph{xia2} the integration is performed with the Bravais constraints
+applied, for historical reasons, though performing the integration
+with a triclinic basis is planned. 
 
 \subsection{Scaling}
 
