@@ -517,24 +517,35 @@ which will be investigated shortly.
 
 \subsubsection{Post Processing}
 
+From a certain perspective scaled and merged intensities are the end
+product of the data integration and scaling. It is however helpful to
+perform a small number of subsequent analysis tasks to prepare the
+data for downstream analysis:
 
+\begin{itemize}
+\item{Calculation of structure factor amplitudes from intensities.}
+\item{Determination of an average unit cell.}
+\end{itemize}
 
+\noindent
+The former of these requires the ``truncate'' procedure (FIXME CITE)
+where negative intensities are corrected to give small positive
+values. However, to best perform this correction it is necessary to
+remove systematically absent reflections from the data set, hence the
+spacegroup identification performed earlier, during the preparation
+step. At this stage it is also helpful to get the overall scale for
+the amplitudes correct - if the amino acid sequence is provided, the
+number of molecules in the asymmetric unit is estimated (FIXME CITE
+Kanterjeiff and Rupp) to give an estimate of the total number of atoms
+and hence the appropriate scale factor to apply. In the absence of
+this information it is assumed that the unit cell contains 50\%
+solvent, with the remaining space filled with ``average'' protein. 
 
-This is obviously where matters get a little more complex as we're
-trying to pull together data from a number of different samples - so
-the preparatory stage for this one is more complex. Need to describe
-this (i) in the abstract then (ii) the detail of how it is implemented
-for the 2D and 3D pipelines.
-
-Selection of scaling model based on analysis for SCALA / AIMLESS - for
-XDS always use a full scaling model as this always gives the lowest
-residual - was this the best metric to use?
-
-Make sure you talk about resolution limits, particularly about the
-difference between merged and unmerged resolution limits in
-this. Include (provided it is ok with Ed Mitchell) the $E^4$ plot, as
-that is rather instructive. Then comment that perhaps $CC\frac{1}{2}$
-may overall be a better measure of this.
+While the determination of the average unit cell is not a fundamental
+part of the analysis, it is nevertheless helpful for downstream
+analysis. This is computed in \emph{xia2} as an average from the
+sweeps, weighted by the number of reflections in each sweep, hence
+giving a bias towards higher resolution data sets.
 
 \section{Implementing Automated Data Reduction}
 
