@@ -549,33 +549,121 @@ giving a bias towards higher resolution data sets.
 
 \section{Implementing Automated Data Reduction}
 
-Introduce this section as: we have a set of rules however to make a
-working system we also need a framework in which to embed these rules
-to express the crystallographic workflow described earlier.
+In the previous section the decision making protocols for the data
+analysis were considered. These are not however sufficient to allow
+automated data analysis, as they need to be embedded in a framework
+which encodes the overall strategy for data analysis. In this section
+the structure of \emph{xia2} will be described with an emphasis on the
+interaction between the analysis and the data.
 
 \subsection{Data Management}
 
-Introduce as static data model, how are the inputs
-understood. Automated understanding of your data set. Revisit tasks
-which can be performed on each, the links to the various steps.
+As an expert system can only make decisions based on the information
+available, careful management of data is critical. Most data structures
+familiar to users of macromolecular crystallography deal with static
+information, for example coordinate files and reflection data. Here
+however the knowledge at any stage is a \emph{hypothesis} and hence
+subject to change following subsequent analysis. As such it is
+important to track the provenance of any derived information, such
+that subsequent invalidation of a result (for example, elimination of
+an indexing solution) will automatically invalidate any subsequent
+conclusions. This \emph{dynamic} information must be treated carefully
+to ensure that results are updated when necessary. This section will
+descibe this treatment.
+
+The main information provided to the system is the raw diffraction
+data, with suitable metadata (i.e. image headers) to describe the
+experiment. In many cases this information will be sufficient to build
+a useful model of the experiment. Within \emph{xia2} the raw data are
+structured in terms of sweeps of diffraction data, which belong to
+wavelengths (which are merged to a single MTZ data set in the output)
+which in turn belong to crystals. The crystals are contained within
+projects, but this does not currently take part in the analysis. They
+are also the fundamental unit of data for scaling. All of these
+objects (project, crystal, wavelength, sweep) map directly onto
+objects within \emph{xia2} and initially contain only static data -
+that is, the information derived from image headers or from user
+input. However, starting from this input information it is possible to
+perform some analysis as described above, and draw some
+conclusions. Although it would be possible to store the results of
+this analysis in these data objects, it would be necessary to ensure
+that they are kept up-to-date which would generate a substantial
+amount of book-keeping. An alternative, which is used inside
+\emph{xia2}, is to maintain a link to the
+\emph{source} of this information, which is essentially the analysis
+task which gave that result. However, to make this link in a general
+way it is necessary to have a standard interface to the analysis
+tasks.
 
 \subsection{Expert System Interfaces}
 
-Introduce this as (i) generally a good idea and (ii) a way of
-mediating the link between the data structures and the
-processing. Also mention that it means that to some extent the
-implementations of these things are interchangable and things which
-are in common are only written once.
+As there are a small number of high level steps in the data analysis
+process but a number of possible program options for each, it is
+possible to define an abstract interface to describe each step, which
+can then be implemented using the existing software which is available
+and the decision making protocols described above. The addition of an
+abstract interface also gives the option of centralising standard
+decision making steps, for example the management of solutions from
+indexing. As an example, both Mosflm and Labelit may be used to index
+a diffraction pattern based in a small number of images from a sweep,
+so both may present an \emph{Indexer} interface. The detail of how the
+indexing is performed and how the results are interpreted will be
+program specific and implemented in \emph{MosflmIndexer} and
+\emph{LabelitIndexer} respectively. The application of a standard
+interface however allows a standard two-way link to a sweep to be
+made, passing in generic information needed for indexing, receiving
+generic results from indexing.
 
-Also separate out the three steps - prepare, do and finish, then
-illustrate how these apply to the three phases of processing.
+While this approach adds an extra degree of separation between the
+data and the analysis programs, it allows for generic aspects of the
+analysis to be centralised and also allows the extension to include
+new software as it is developed in a straightforward way. 
 
-\subsection{Factories and Links}
+Within each interface (\emph{Indexer} and \emph{Integrater}, linked to
+sweeps and 
+\emph{Scaler} linked to the crystal) there are three standard phases -
+prepare, do and 
+finish, arranged in a loop (FIXME FIGURE.) The status of each phase is
+managed internally and each phase will be performed until it is
+completed or an error occurs. Once the finish phase is completed any
+results which have been derived are assumed valid, however in requests
+for information the interface will check that this is the case, and if
+not will perform the necessary steps. If some input information is
+changed this may invalidate the internal state, ensuring that next
+time results are requested they are recalculated taking into account
+this new information. While this structure is may appear complex, the
+real benefit is felt when tied in with the data management hierarchy.
 
-Introduce here this idea as a way of a data object accessing
-processing functionality about itself, and hold on to that expert as a
-source of derived information, and delegate all requests for this
-information to the worker.
+\subsection{Linking Data Structures and Interfaces}
+
+The benefit to having standard interfaces to all of the analysis
+steps, and linking those analysis steps to the data hierarchy, is that
+it is clear what the source of a particular piece of information
+is. For example, if a sweep is asked for the unit cell and Bravais
+lattice it may delegate this request to it's indexer. If the data have
+been indexed already and the result not invalidated it may be returned
+immediately. If no indexing has been performed this may be done
+implicitly, in order to deliver the result. If that result is
+subsequently eliminated, the next request for the unit cell will give
+the next solution, perhaps repeating the indexing if necessary to
+refine this result. 
+
+There are two main outcomes of this. In the scaling perparation, 
+the intensities are requested from integraters and cell and lattice
+information from the indexer. If from the pointgroup analysis these
+lattice is shown to be incorrect it may be eliminated and new
+values requested for the cell, lattice and intensities. If necessary
+the full integration of the data set will be performed implicitly,
+giving the opportunity for sophisticated feedback without excessive
+code complexity. The looping structure in each interface will also
+ensure that this reprocessing will be performed optimally.
+A second outcome of this is that the full processing
+of the data, from indexing through to scaling of all data from a
+crystal, may be performed implicitly by requesting the location of the
+final scaled and merged intensity data from the crystal. To this end,
+the ``main program'' inside \emph{xia2} is in fact a print statement,
+with all of the processing performed as a side-effect of providing the
+information to show in the output.
 
 \section{Discussion}
 
@@ -585,50 +673,6 @@ date when requested they are recalculated, otherwise
 cached. Ultimately this makes the entire xia2 process a ``print''
 statement, showing the merging statistics and the location of the
 output reflection files.
-
-\section{Cruft}
-
-\subsection{Old Notes}
-
-Introduce single-crystal data reduction workflow for MX, identify (i)
-the breakdown (ii) the points where decisions need to be made (iii)
-the structure of the data (iv) the relationship between this and the
-analysis steps. Also be clear about when this becomes more complex,
-for example multi-wavelength data sets.
-
-Introduce the scope i.e. the software currently used within \emph{xia2} and
-the reasons why these are used.
-
-At this stage also express ``bias'' in terms of choices e.g. generally
-minded to do \emph{x} for some value of \emph{x}. At least, if this is
-what e.g. Andrew recommends. Certainly should include a summary of
-existing program recommendations at this stage.
-
-Introduce the idea of two main ``pipelines'' which differ
-predominantly in how they perform the integration and how this by and
-large covers the main approaches to the problem. Mention though that
-there are no fundamental reasons why more programs could not be
-included. Then also make mention of alternative choices along the
-pipelines, e.g. 3DII, along with some guidelines as to when these may
-be appropriate.
-
-\subsection{Approach}
-
-In this section want to introduce the principles of how to do this -
-i.e. deciding which choices generally work well. Basing decision
-making choices on data from JCSG, choice of metrics for the decision
-making. Also be flexible and sympathetic that the metrics for decision
-making could be dependent on the quality of the data. Also parallelism
-- bring together multiple threads of processing only when they are
-needed, and then ensure that the conclusions drawn were
-consistent. State that the alternative, of sharing e.g. orientation
-matrices, would be too involved allowing for the potential for feedback.
-
-It is probably important in here to also make mention of limitations
-which may result from ths starting point - for example, do the rules
-apply to less than ideal, non-structural-genomics data? Also make
-mention of limitations of assuming macromolecular data i.e. only 65
-spacegroup choices supported. 
 
 
 \end{document}
