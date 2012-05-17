@@ -366,6 +366,160 @@ with a triclinic basis is planned.
 
 \subsection{Scaling}
 
+Where the indexing and integration operate on sweeps in isolation, the
+scaling must consider the data set as a whole. As such, it is at this
+point that all of the processed data are brought together and tested
+for consistency, both within individual sweeps (i.e. that the symmetry
+in intensity data is consistent with the Bravais lattice) and between
+sweeps (i.e. that the Bravais lattices are consistent and that the
+data are indexed in a consistent manner.) This requires careful
+management of derived information as well as the possibiity for feedback to
+earlier processing steps. To assist with this the scaling step is
+split into three phases - the preparation, the scaling itself and then
+post-processing, where for example data sets are combined, structure
+factor amplitudes are computed and so forth.
+
+Following the use of Mosflm and XDS, Scala (and now Aimless) and
+XSCALE are natural for the main scaling step. However a host of other
+programs from CCP4 and elsewhere (for example Cad, Truncate and
+Pointless) are used to help in this process.
+
+\subsubsection{Preparation}
+
+In the preparation phase the data from integration are tested for
+internal consistency both within and between sweeps. The first test is
+to determine whether the Bravais lattice used for processing is
+consistent with the apparent pointgroup of the data (FIXME FIGURE.)
+This test is performed by comparing the highest allowed Bravais
+lattice from processing with the most likely result from pointless. If
+the two are consistent (for example, pointgroup P422 with lattice tP)
+the test is passed immediately. If the apparent pointgroup has higher
+symmetry than the allowed lattice, as may occur when
+non-crystallographic symmetry is closely aligned with the unit cell
+axes, that pointgroup is ignored and the next most likely tested. If
+however the most likely pointgroup has \emph{lower} symmetry than the
+Bravais lattice used for processing the latter is eliminated from
+consideration as discussed before and the data are reprocessed with
+the lattice corresponding to this pointgroup.
+
+Once this test has been passed for all sweeps the data will have been
+processed with a lattice consistent with the pointgroup symmetry of
+the data. However, it may be the case (for example from a low and high
+resolution pass) that the conclusions for one sweep differ from those
+from another. In that case (FIXME FIGURE) the lowest symmetry Bravais
+lattice is assumed for all sweeps. If at this stage the pointgroup
+conclusions remain inconsistent an error is raised as it is likely
+that something has gone wrong - for example an inconsistent data set
+has been included in the processing. 
+
+Finally, it is necessary to ensure that the data are consistently
+indexed to cope with cases where there may be indexing ambiguity,
+using Pointless (FIXME FIGURE.) At this stage the most likely
+spacegroup is also determined from the systematic absences, primarily
+for the benefit of the downstream sructure factor amplitudes, though
+often convenient for the program user. When sorting and scaling the
+data are put into the order in which they were collected.
+
+\subsubsection{Scaling, with Scala}
+
+Though the scaling protocol recommended in the Scala documentation
+(smoothed scales over $5^{circ}$ spacing in rotation, absorption
+correction with 6 orders of spherical harmonics, $B-$factor correction
+smoothed over $20^{circ}$ spacing in rotation) works well in many
+cases there are examples when better results may be achieved by
+applying for example the tails correction or not including the
+decay. A such it is worthwhile to perform a search to decide the most
+appropriate model for scaling, which is complicted by the need for a
+protocol for the decision making. It was found that with Scala and
+with typical data sets there is essentially no risk of over fitting
+the scaling corrections, so the resulting $R_{\rm{merge}}$ was found to
+be a reasonable metric as the resolution limits and range of data
+considered are unchanged. However, this was found to give an excessive
+bias towards corrections for the high resolution data so the low
+resolution $R_{\rm{merge}}$ is also taken into account. Finally, in
+some cases the combination of scaling corrections may also converge
+badly, which is taken to be an indication of a poor model. Therefore,
+the resulting protocol is as follows: scaling with only smoothed scale
+factors over $5^{circ}$ spacing in rotation gives a reference
+convergence rate. Then seven other protocols are tested: with and
+without decay, absorption and partiality correction, with the model
+which gives the best merging residuals while converging in less than
+twice the time of the simple run selected. 
+
+In terms of the parameterisation of the scaling, it was found that for
+typical data adjusting the rotation range for the scale and
+$B$-factors and the number of spherical harmonics used from the
+defaults suggested in the documentation was of little benefit.
+Historically the scaling also included an iterative process to
+determine approriate correction factors for the error estimates. This
+procedure is however now performed by Scala and Aimless automatically.
+
+\subsubsection{Scaling, with XSCALE}
+
+Where the scaling with Scala applies a parameterised model to the data
+in order to minimise the differences between symmetry related
+observations, the scaling in XSCALE (and the XDS CORRECT step) apply
+corrections in terms of arrays of correction values which are indexed
+appropriately for decay, absorption and detector modulation. In this
+scaling the principle is to remove correlation of the intensity values
+with image number and resolution, image number and detector position
+and detector position respectively. The choice of corrections to apply
+is determined by the user.
+
+In the XDS CORRECT step these corrections are applied to the sweeps in
+isolation. The same corrections are applied in XSCALE to all of the
+data simultaneously. It was found that performing the scaling twice
+gave no improvement but did effectively double the number of
+parameters used, so the choice madein \emph{xia2} is to apply all of
+the scaling corrections in XSCALE with the minimum used in the XDS
+CORRECT step. It was found that the application of all scaling factors
+systematically gives the lowest merging residual, so this is the
+default choice in \emph{xia2} though a user option is available to
+control this choice. In scaling, all of the sweeps corresponding to
+each wavelenth are scaled into a single data set but not merged, and
+all sweeps are scaled in one run. 
+
+After the initial scaling resolution limits will be calculated
+following the procedures set out below, which are used for subsequent
+XSCALE runs. During scaling XSCALE suggests a
+list of reflections which do not appear to belong to the data set as a
+whole - these are subsequently excluded in an iterative manner.
+
+After scaling the unmerged data are reformatted into their original
+sweep structure and merged with Scala or Aimless, as this gives an
+easily interpreted report on data quality and also a route into
+producing MTZ files for the subsequent post processing, discussed below.
+
+\subsubsection{Resolution Limit Calculation}
+
+Early in the development of \emph{xia2} the resolution limits were
+determined from an analysis of the output of Scala, which proved to be
+unreliable. Resolution limits are now calculated directly from the
+scaled intensity data themselves, using routines developed using
+CCTBX, which allows the same procedures to be used for data from Scala
+and XSCALE hence giving more consistent results.
+
+The resolution limit calculations themselves use the merged and
+unmerged $\frac{I}{\sigma_I}$ values, the completeness and the
+$R_{\rm{merge}}$ as possible criteria for determining a cutoff, with
+the first two considered by default with values of 2 and 1
+respectively. The cutoff applied to the unmerged data was found to be
+helpful when considering data with very high multiplicity - though the
+multiplicity provides a boost to the apparent $\frac{I}{\sigma_I}$,
+the resulting measurements were found to be distributed more like a
+normal distrbution than an exponential distribution (i.e. Wilson) as would be
+expected, as judged by the $E^4$ plot from Truncate. This is assumed
+to be a result of a limited modelling of the correct errors for weak
+reflections, giving rise to systematic effects in
+merging. $CC\frac{1}{2}$ has since been proposed as a more robust
+choice for resolution limit calculation (Evans, private communication)
+which will be investigated shortly.
+
+\subsubsection{Post Processing}
+
+
+
+
 This is obviously where matters get a little more complex as we're
 trying to pull together data from a number of different samples - so
 the preparatory stage for this one is more complex. Need to describe
