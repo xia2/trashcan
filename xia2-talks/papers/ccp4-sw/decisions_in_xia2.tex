@@ -5,53 +5,53 @@
 
 The usage of the data reduction expert system \emph{xia2} was
 presented in an earlier article (FIXME CITE.) Here the decision making
-protocols employed in the system will be presented, with a discussion
+protocols employed in the system are presented, with a discussion
 of how these were determined, and how they may be applied in interactive
 processing. 
 
 \section{Introduction}
 
 Decisions made during interactive data reduction are typically based
-on experience and advice from program authors and other users. In many
+on experience, advice from program authors and other users. In many
 cases this will work, reinforcing the choices made, and it is typically
 only when these fail that more detail about those choices is
 sought. Equally, suggestions from the program authors rarely include a
 systematic appraisal of the possible choices and explanations as to
 which options will work best and why. 
 In the development of \emph{xia2} this absence was found
-as a limitation giving rise to a systematic study of the best
+to be a limitation giving rise to a systematic investigation of the best
 options for a number of programs, 
 based on an analysis of data from the Joint Centre
 for Structural Genomics\footnote{http://www.jcsg.org} (JCSG.) The
 outcomes of this investigation will be described here, along with the
 expert system \emph{framework} in which the decision making was
-embedded to develop the final data reduction tool.
+embedded to develop the final data reduction tool, \emph{xia2}.
 
 \subsection{Workflow}
 
 Taken from the top level, the workflow for data reduction for
-macrmolecular crystallography (MX) can be considered as three phases:
-characterisation, then integration of data from individual sweeps,
+macromolecular crystallography (MX) is considered as three phases:
+characterisation and integration of data from individual sweeps,
 followed by scaling and merging of all sweeps taken from a given
-crystal. Decisions made at earlier stages will have implications for
-subsequent stages, and information from those later stages may
+crystal. Decisions made at earlier stages has implications for
+subsequent stages, and information from the later stages may
 contradict those earlier decisions. Any system to automate data
 reduction must therefore be sufficiently flexible to manage this
 situation gracefully, considering all decisions made as hypotheses to
-be subsequently tested. The system must also embody the workflow to be
-performed to give a structure into which to embed the expertise to
-make the choices. 
+be subsequently tested. The system must also embody the workflow being
+performed to give a structure into which the expertise to
+make the choices is embedded. 
 
 \subsection{Strategy}
 
 For any given choice there may be a set of optimum parameters for a
-given case. There may however also be a set of parameters which can be
-shown to generally work well with limited knowledge of the problem in
-hand. These \emph{guidelines} may be determined from a systematic
+specific case. There may however also be a set of parameters which can be
+shown to generally work well with limited knowledge of that specific case. 
+These \emph{guidelines} may be determined from a systematic
 analysis of a number of data sets, which should ideally not include
 any artefacts. This criterion highlighted the value of data from
 structural genomics programs, where the published data are well
-characterised (i.e. the structure has been solved and refined) and have been
+characterised (i.e. the structure has been solved) and have been
 collected in a consistent manner. This has the benefit that the
 decision making may focus on the crystallograhic choices, without
 needing to work around problems caused by poor sample quality. 
@@ -60,8 +60,8 @@ Finally, it is important to recognise that software for MX is
 constantly evolving, and that new packages will become available which
 ideally should be incorporated into the system. As such, some emphasis
 on abstraction of steps in the workflow is also helpful, to allow
-existing components within the system to be replaced. Currently the
-system includes support for two main integration packages, Mosflm
+existing components within the system to be replaced. Currently \emph{xia2} 
+includes support for two main integration packages, Mosflm
 (FIXME CITE) and XDS (FIXME CITE) which are accessed as the 2D and 3D
 pipelines respectively, reflecting the approach taken to profile
 fitting. These are used in combination with Scala (FIXME CITE), XSCALE
@@ -96,7 +96,7 @@ The objective of the characterisation stage is to determine:
 \end{itemize}
 
 \noindent
-for a given sweep of images. In addition any $UB$ matrices calculated
+for a given sweep of images. In addition, any $UB$ matrices calculated
 should also be available. For a given program, the choices to make
 are: the selection of images to use for indexing, the thresholds to
 use for indexing, selection of the ``best'' solution and analysis to
@@ -107,8 +107,8 @@ ensure that the selected solution appears to be satisfactory.
 Labelit and Mosflm share the same DPS indexing algorithm, though the
 implementation in Labelit allows for an additional search to refine
 the direct beam centre over a larger range. As such, the behaviour of
-the programs in indexing is similar requiring only one analysis for
-the selection of images, though the analysis of solutions will depend
+the programs in indexing is similar, requiring only one analysis for
+the selection of images - though the analysis of solutions will depend
 on the program being used, as they are scored differently.
 The authors of both Labelit and Mosflm recommend the use of two images
 for indexing, spaced by $\sim 90^{\circ}$ in rotation\footnote{Subsequently
@@ -179,8 +179,8 @@ centroids as well as image positions of reflections in indexing, and
 therefore operates most reliably on one or more \emph{wedges} of
 images. Indeed, it is perfectly possible to index with peaks taken
 from every image in the sweep, a process which may be desirable in some
-circumstances. The indexing algorithm is however less robust against
-errors in the direct beam position that the modified DPS procedure in
+circumstances. The indexing algorithm is however less robust to
+errors in the direct beam position than the modified DPS procedure in
 Labelit. The usual procedure in \emph{xia2} is therefore to first
 index with Labelit and, if necessary repeat this indexing with XDS
 using the refined beam centre and selected cell and symmetry. 
@@ -329,10 +329,10 @@ iMosflm, XDS can only be run from scripts, making it ideal for usage
 within an automated system. The advised use of XDS is to perform all
 processing with a triclinic basis, then apply the Bravais lattice
 constraints at the final step (i.e. in the postrefinement.) However it
-is possible but by no means mandatory to ``recycle'' parameters from
+is possible, but by no means mandatory, to ``recycle'' parameters from
 the later stages of processing and rerun the integration. The aim here
 is to determine the choices which will generally give rise to the best
-quality results ideally at minimal computational cost. As with the
+quality results, ideally at minimal computational cost. As with the
 analysis of integration strategies with Mosflm, $R_{\rm{merge}}$ will
 be used as a metric for the quality of the data reduction. The four
 choices are:
@@ -349,9 +349,9 @@ choices are:
 \noindent
 These may be compared with the advised protocol stated above. Using
 the same data as were used for determination of Mosflm choices, it was
-clear that any of these changes to the strategy were polishing of the
+clear that any of these changes to the strategy were polishing the
 data, with an average change in $R_{\rm{merge}}$ of around 2\% of the
-value. The only measurable improvement was found from recycling the
+value. The only marked improvement was found from recycling the
 reflection profile parameters, though using the postrefined
 orientation matrix etc. seems reasonable, since it will be necessary
 to reintegrate the full data set.
@@ -366,7 +366,7 @@ with a triclinic basis is planned.
 
 \subsection{Scaling}
 
-Where the indexing and integration operate on sweeps in isolation, the
+While indexing and integration operate on sweeps in isolation,
 scaling must consider the data set as a whole. As such, it is at this
 point that all of the processed data are brought together and tested
 for consistency, both within individual sweeps (i.e. that the symmetry
@@ -381,7 +381,7 @@ factor amplitudes are computed and so forth.
 
 Following the use of Mosflm and XDS, Scala (and now Aimless) and
 XSCALE are natural for the main scaling step. However a host of other
-programs from CCP4 and elsewhere (for example Cad, Truncate and
+programs from CCP4 and elsewhere (including Cad, Truncate and
 Pointless) are used to help in this process.
 
 \subsubsection{Preparation}
@@ -391,7 +391,7 @@ internal consistency both within and between sweeps. The first test is
 to determine whether the Bravais lattice used for processing is
 consistent with the apparent pointgroup of the data (FIXME FIGURE.)
 This test is performed by comparing the highest allowed Bravais
-lattice from processing with the most likely result from pointless. If
+lattice from processing with the most likely result from Pointless. If
 the two are consistent (for example, pointgroup P422 with lattice tP)
 the test is passed immediately. If the apparent pointgroup has higher
 symmetry than the allowed lattice, as may occur when
@@ -420,17 +420,17 @@ for the benefit of the downstream sructure factor amplitudes, though
 often convenient for the program user. When sorting and scaling the
 data are put into the order in which they were collected.
 
-\subsubsection{Scaling, with Scala}
+\subsubsection{Scaling - Scala}
 
 Though the scaling protocol recommended in the Scala documentation
 (smoothed scales over $5^{circ}$ spacing in rotation, absorption
 correction with 6 orders of spherical harmonics, $B-$factor correction
 smoothed over $20^{circ}$ spacing in rotation) works well in many
 cases there are examples when better results may be achieved by
-applying for example the tails correction or not including the
-decay. A such it is worthwhile to perform a search to decide the most
+applying for example by including the tails correction or excluding the
+decay. As such it is worthwhile to perform a search to decide the most
 appropriate model for scaling, which is complicted by the need for a
-protocol for the decision making. It was found that with Scala and
+protocol for decision making. It was found that using Scala
 with typical data sets there is essentially no risk of over fitting
 the scaling corrections, so the resulting $R_{\rm{merge}}$ was found to
 be a reasonable metric as the resolution limits and range of data
@@ -450,27 +450,27 @@ In terms of the parameterisation of the scaling, it was found that for
 typical data adjusting the rotation range for the scale and
 $B$-factors and the number of spherical harmonics used from the
 defaults suggested in the documentation was of little benefit.
-Historically the scaling also included an iterative process to
-determine approriate correction factors for the error estimates. This
-procedure is however now performed by Scala and Aimless automatically.
+Historically, scaling included an iterative process to
+determine appropriate correction factors for the error estimates. This
+procedure is now performed by Scala and Aimless automatically.
 
-\subsubsection{Scaling, with XSCALE}
+\subsubsection{Scaling - XSCALE}
 
-Where the scaling with Scala applies a parameterised model to the data
+Where scaling with Scala applies a parameterised model to the data
 in order to minimise the differences between symmetry related
-observations, the scaling in XSCALE (and the XDS CORRECT step) apply
+observations, scaling in XSCALE (and the XDS CORRECT step) apply
 corrections in terms of arrays of correction values which are indexed
 appropriately for decay, absorption and detector modulation. In this
-scaling the principle is to remove correlation of the intensity values
-with image number and resolution, image number and detector position
-and detector position respectively. The choice of corrections to apply
+scaling, the principle is to remove correlation of the intensity values
+with image number, resolution and detector position, 
+respectively. The choice of corrections to apply
 is determined by the user.
 
-In the XDS CORRECT step these corrections are applied to the sweeps in
+In the XDS CORRECT step these corrections are applied to each sweep in
 isolation. The same corrections are applied in XSCALE to all of the
 data simultaneously. It was found that performing the scaling twice
 gave no improvement but did effectively double the number of
-parameters used, so the choice madein \emph{xia2} is to apply all of
+parameters used, so the choice made in \emph{xia2} is to apply all of
 the scaling corrections in XSCALE with the minimum used in the XDS
 CORRECT step. It was found that the application of all scaling factors
 systematically gives the lowest merging residual, so this is the
@@ -479,7 +479,7 @@ control this choice. In scaling, all of the sweeps corresponding to
 each wavelenth are scaled into a single data set but not merged, and
 all sweeps are scaled in one run. 
 
-After the initial scaling resolution limits will be calculated
+After the initial scaling, resolution limits will be calculated
 following the procedures set out below, which are used for subsequent
 XSCALE runs. During scaling XSCALE suggests a
 list of reflections which do not appear to belong to the data set as a
@@ -560,9 +560,9 @@ interaction between the analysis and the data.
 
 As an expert system can only make decisions based on the information
 available, careful management of data is critical. Most data structures
-familiar to users of macromolecular crystallography deal with static
-information, for example coordinate files and reflection data. Here
-however the knowledge at any stage is a \emph{hypothesis} and hence
+familiar to MX users deal with static
+information, for example coordinate files and reflection data. Here 
+the knowledge at any stage is a \emph{hypothesis} and hence
 subject to change following subsequent analysis. As such it is
 important to track the provenance of any derived information, such
 that subsequent invalidation of a result (for example, elimination of
@@ -588,10 +588,10 @@ perform some analysis as described above, and draw some
 conclusions. Although it would be possible to store the results of
 this analysis in these data objects, it would be necessary to ensure
 that they are kept up-to-date which would generate a substantial
-amount of book-keeping. An alternative, which is used inside
+amount of book-keeping. The alternative used inside
 \emph{xia2}, is to maintain a link to the
 \emph{source} of this information, which is essentially the analysis
-task which gave that result. However, to make this link in a general
+task which gave that result. To make this link in a general
 way it is necessary to have a standard interface to the analysis
 tasks.
 
@@ -600,7 +600,7 @@ tasks.
 As there are a small number of high level steps in the data analysis
 process but a number of possible program options for each, it is
 possible to define an abstract interface to describe each step, which
-can then be implemented using the existing software which is available
+can then be implemented using the existing software 
 and the decision making protocols described above. The addition of an
 abstract interface also gives the option of centralising standard
 decision making steps, for example the management of solutions from
@@ -609,15 +609,15 @@ a diffraction pattern based in a small number of images from a sweep,
 so both may present an \emph{Indexer} interface. The detail of how the
 indexing is performed and how the results are interpreted will be
 program specific and implemented in \emph{MosflmIndexer} and
-\emph{LabelitIndexer} respectively. The application of a standard
+\emph{LabelitIndexer}, respectively. The application of a standard
 interface however allows a standard two-way link to a sweep to be
 made, passing in generic information needed for indexing, receiving
 generic results from indexing.
 
 While this approach adds an extra degree of separation between the
 data and the analysis programs, it allows for generic aspects of the
-analysis to be centralised and also allows the extension to include
-new software as it is developed in a straightforward way. 
+analysis to be centralised and the freedom to extend, including
+new software as it is developed. 
 
 Within each interface (\emph{Indexer} and \emph{Integrater}, linked to
 sweeps and 
@@ -631,8 +631,8 @@ for information the interface will check that this is the case, and if
 not will perform the necessary steps. If some input information is
 changed this may invalidate the internal state, ensuring that next
 time results are requested they are recalculated taking into account
-this new information. While this structure is may appear complex, the
-real benefit is felt when tied in with the data management hierarchy.
+this new information. While this structure is complex, the
+real benefit is felt when through the the data management hierarchy.
 
 \subsection{Linking Data Structures and Interfaces}
 
@@ -648,16 +648,16 @@ subsequently eliminated, the next request for the unit cell will give
 the next solution, perhaps repeating the indexing if necessary to
 refine this result. 
 
-There are two main outcomes of this. In the scaling perparation, 
+There are two main outcomes of this. First, in scaling preparation, 
 the intensities are requested from integraters and cell and lattice
-information from the indexer. If from the pointgroup analysis these
+information from the indexer. If from pointgroup analysis this
 lattice is shown to be incorrect it may be eliminated and new
 values requested for the cell, lattice and intensities. If necessary
 the full integration of the data set will be performed implicitly,
 giving the opportunity for sophisticated feedback without excessive
 code complexity. The looping structure in each interface will also
 ensure that this reprocessing will be performed optimally.
-A second outcome of this is that the full processing
+Secondly, the full processing
 of the data, from indexing through to scaling of all data from a
 crystal, may be performed implicitly by requesting the location of the
 final scaled and merged intensity data from the crystal. To this end,
