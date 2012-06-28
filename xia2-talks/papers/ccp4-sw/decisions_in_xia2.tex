@@ -1,13 +1,40 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[preprint,pdf]{iucr}
+\journalcode{D}
+\usepackage{graphicx}
+\usepackage{cite}
+
 \begin{document}
 
-\section{Abstract}
+\title{Decision Making in xia2}
+
+\author[a]{G.}{Winter}
+\author[a]{C.}{Lobley}
+\author[b]{S.M.}{Prince}
+\aff[a]{Diamond Light Source, Harwell Science and Innovation Campus,
+Oxfordshire, \country{UK}}
+\aff[b]{Faculty of Life Sciences, Manchester Interdisciplinary  Biocentre, 
+Manchester, \country{UK}}
+
+\keyword{automation}
+\keyword{data reduction}
+\keyword{expert system}
+
+\maketitle
+\clearpage
+
+\begin{synopsis}
+FIXME a synopsis will appear here!
+\end{synopsis}
+
+\begin{abstract}
 
 The usage of the data reduction expert system \emph{xia2} was
 presented in an earlier article (FIXME CITE.) Here the decision making
 protocols employed in the system are presented, with a discussion
 of how these were determined, and how they may be applied in interactive
 processing. 
+
+\end{abstract}
 
 \section{Introduction}
 
@@ -30,31 +57,34 @@ embedded to develop the final data reduction tool, \emph{xia2}.
 \subsection{Workflow}
 
 Taken from the top level, the workflow for data reduction for
-macromolecular crystallography (MX) is considered as three phases:
-characterisation and integration of data from individual sweeps,
-followed by scaling and merging of all sweeps taken from a given
+macromolecular crystallography (MX) can be considered as three phases:
+(i) characterisation and (ii) integration of data from individual sweeps,
+followed by (iii) scaling and merging of all sweeps taken from a given
 crystal. Decisions made at earlier stages has implications for
 subsequent stages, and information from the later stages may
 contradict those earlier decisions. Any system to automate data
 reduction must therefore be sufficiently flexible to manage this
-situation gracefully, considering all decisions made as hypotheses to
-be subsequently tested. The system must also embody the workflow being
-performed to give a structure into which the expertise to
-make the choices is embedded. 
+situation gracefully, considering all decisions made as hypotheses
+that are subsequently tested. The system must also embody the workflow being
+performed to give the structure into which to embed the decision
+making expertise.
 
-\subsection{Strategy}
+\subsection{Blueprint}
 
 For any given choice there may be a set of optimum parameters for a
-specific case. There may however also be a set of parameters which can be
-shown to generally work well with limited knowledge of that specific case. 
+specific example data set. There may however also be a set of
+parameters which can be 
+shown to generally work well with limited knowledge of the problem in
+hand, for example a general ``class'' of data sets.
 These \emph{guidelines} may be determined from a systematic
-analysis of a number of data sets, which should ideally not include
-any artefacts. This criterion highlighted the value of data from
+analysis of a number of data sets, which should ideally be free of
+artefacts. This criterion highlighted the value of data from 
 structural genomics programs, where the published data are well
 characterised (i.e. the structure has been solved) and have been
 collected in a consistent manner. This has the benefit that the
 decision making may focus on the crystallograhic choices, without
-needing to work around problems caused by poor sample quality. 
+needing to work around problems caused by poor sample quality or
+inappropriate choices in data collection. 
 
 Finally, it is important to recognise that software for MX is
 constantly evolving, and that new packages will become available which
@@ -62,12 +92,15 @@ ideally should be incorporated into the system. As such, some emphasis
 on abstraction of steps in the workflow is also helpful, to allow
 existing components within the system to be replaced. Currently \emph{xia2} 
 includes support for two main integration packages, Mosflm
-(FIXME CITE) and XDS (FIXME CITE) which are accessed as the 2D and 3D
+\cite{leslie1992rcm} and XDS \cite{Kabsch:dz5179}
+which are accessed as the 2D and 3D
 pipelines respectively, reflecting the approach taken to profile
-fitting. These are used in combination with Scala (FIXME CITE), XSCALE
-(FIXME CITE) and more recently Aimless (FIXME CITE) as well as other
-tools from the CCP4 suite (FIXME CITE) to deliver the final result. In
-addition, Labelit (FIXME CITE) and CCTBX (FIXME CITE) are also
+fitting. These are used in combination with Scala \cite{Evans:ba5084}, XSCALE
+and more recently Aimless (Evans and Murshudov, this volume) as well
+as other
+tools from the CCP4 suite to deliver the final result. In
+addition, Labelit \cite{Sauter:dd5008} and CCTBX
+\cite{Grosse-Kunstleve:ks0118} are also 
 extensively used in the analysis.
 
 \section{Decision Making for Data Reduction}
@@ -80,7 +113,7 @@ around the system, in particular from later stages to earlier.
 
 Here, the decisions \emph{within} each phase will be considered for
 each of the software packages supported, including special cases and
-advice the user about appropriate program options to use where
+advice the user about appropriate \emph{xia2} options to use where
 appropriate.
 
 \subsection{Characterisation}
@@ -91,12 +124,13 @@ The objective of the characterisation stage is to determine:
 \item{A list of possible Bravais lattice options and appropriate cell
     constants for each.}
 \item{Refined / updated values for the beam centre and distance.}
-\item{A lattice / cell selection, based on an analysis of the possible
+\item{A lattice / cell proposal, based on an analysis of the possible
     options.}
 \end{itemize}
 
 \noindent
-for a given sweep of images. In addition, any $UB$ matrices calculated
+for a given sweep of images. In addition, any crystal orientation
+matrices calculated
 should also be available. For a given program, the choices to make
 are: the selection of images to use for indexing, the thresholds to
 use for indexing, selection of the ``best'' solution and analysis to
@@ -104,12 +138,13 @@ ensure that the selected solution appears to be satisfactory.
 
 \subsubsection{Labelit and Mosflm}
 
-Labelit and Mosflm share the same DPS indexing algorithm, though the
+Labelit and Mosflm share the same underlying one-dimensional FFT
+indexing algorithm \cite{Steller:mf0013} though the
 implementation in Labelit allows for an additional search to refine
-the direct beam centre over a larger range. As such, the behaviour of
+the direct beam centre over a wider range. As such, the behaviour of
 the programs in indexing is similar, requiring only one analysis for
 the selection of images - though the analysis of solutions will depend
-on the program being used, as they are scored differently.
+on the program being used as they are scored differently.
 The authors of both Labelit and Mosflm recommend the use of two images
 for indexing, spaced by $\sim 90^{\circ}$ in rotation\footnote{Subsequently
 referred to as $\phi$ for brevity} giving a wide coverage of
@@ -122,46 +157,64 @@ and predicted spot centres is a target of refinement and the ideal absolute
 values of the unit cell constants are poorly defined (at least at this
 stage) these represent poor metrics. The metric penalty however,
 defined as the deviation from the constraints for each Bravais lattice
-(FIXME CITE) is appropriate as this is a test for internal consistency
+\cite{Grosse-Kunstleve:sh5006} is appropriate as this is a test for
+internal consistency 
 and is also relevent for automatic strategy systems such as EDNA
 (FIXME CITE.) With this in mind, a secondary constraint is raised:
 there is a benefit in using few rather than many images.
 
-Data were taken from 86 sweeps from the JCSG archive, where four
+\begin{figure}
+\caption{Mean normalised metric penalty as a function of number of
+  images used for characterisation with Labelit, where smaller values
+  indicate more accurate solutions.
+\label{figure:no_images}}
+\centering
+\includegraphics[scale=0.5]{figures/no_images.pdf}
+\end{figure}
+
+Data were taken from 86 sweeps from the JCSG archive, where  the
+following four
 criteria were met: the lattice was not pseudosymmetric, nor triclinic,
 autoindexing with a single image gave the ``correct'' result and at
 least $90^{\circ}$ of data were available. First, the number of images
-to use for indexing was considered. FIXME FIGURE shows the mean
+to use for indexing was considered. Figure~\ref{figure:no_images}
+shows the mean 
 normalized metric penalty\footnote{All of the metric penalties for a
   given sweep were scaled over the range $0 - 1$, then this normalized
   value averaged across all sweeps for a given number of images.} for
 one to ten images spread across the range $0 - 90^{\circ}$, where
 smaller values indicate a more accurate solution. Clearly the use of
 two images gives a substantially more accurate result than the use of
-a single frame, as may be expected from the advice from the Mosflm and
-Labelit authors, however a further improvement may be observed from
-using three images after which no further improvement is clear. 
+a single frame, confirming the advice from the Mosflm and
+Labelit authors. However a further improvement may be observed from
+using three images, after which no further improvement is clear. 
 
-[FIXME FIGURE]
+\begin{figure}
+\caption{Normalised metric penalty for indexing from three images, up
+  to a maximum spacing of $45^{\circ}$.
+\label{figure:phi_spacing_45a}}
+\centering
+\includegraphics[scale=0.5]{figures/phi_spacing_45a.pdf}
+\end{figure}
 
-Following a similar procedure it was found (FIXME FIGURE) that a
+Following a similar procedure it was found
+(Figure~\ref{figure:phi_spacing_45a}) that a 
 spacing of $\sim 45^{\circ}$ generally gave the most accurate
-solution. Extending this analysis to sweeps up to $180^{\circ}$
+solution. Extending this analysis to sweeps of up to $180^{\circ}$
 confirmed this result (not shown.) 
-
-[FIXME FIGURE]
 
 This result may be considered as follows: the one-dimensional FFT
 indexing procedure employed in Mosflm and Labelit computes the
-Fourier transform of the projection of the observed peaks in $\sim
+Fourier transform of the projection of the observed peaks gathered
+from all images in $\sim
 7000$ reciprocal space directions. Those directions which show the
 strongest signal are then considered as possible basis vectors. Using
 three images spaced by $\sim 45^{\circ}$ ensures that any reciprocal
-space direction is likely to be well sampled making it more likely
+space direction is likely to be well sampled. This will make it more likely
 that a fundamental basis vector, rather than some linear combination
-thereof, will be found giving a more accurate result.
+of basis vectors, will be found giving a more accurate result.
 
-When using Labelit, the solution is chosen to be the highest symmetry
+When using Labelit, the proposed solution is chosen to be the highest symmetry
 Bravais lattice / cell combination highlighted in the output. The
 Bravais lattice / cell combinations for all other lattices are also
 recorded, where the cell is chosen to be the one with the lowest
@@ -174,29 +227,43 @@ substantially challenged in subsequent analysis steps.
 
 \subsubsection{XDS}
 
-Unlike Mosflm and Labelit, the indexing in XDS is able to use $\phi$
-centroids as well as image positions of reflections in indexing, and
-therefore operates most reliably on one or more \emph{wedges} of
+Unlike Mosflm and Labelit, the indexing in XDS uses $\phi$
+centroids as well as positions on the image of reflections, and
+therefore operates most reliably when given one or more \emph{wedges} of
 images. Indeed, it is perfectly possible to index with peaks taken
 from every image in the sweep, a process which may be desirable in some
 circumstances. The indexing algorithm is however less robust to
-errors in the direct beam position than the modified DPS procedure in
+errors in the direct beam position than the procedure in
 Labelit. The usual procedure in \emph{xia2} is therefore to first
-index with Labelit and, if necessary repeat this indexing with XDS
-using the refined beam centre and selected cell and symmetry. 
+index with Labelit and repeat this indexing with XDS
+using the refined beam centre and selected cell and symmetry. However
+this behaviour is under the user's control \emph{via} command-line options.
 
-Where Mosflm makes explicit assumptions about the experimental
+Where Mosflm and Labelit make explicit assumptions about the experimental
 geometry, XDS allows a general rotation axis and beam vector and will
 typically refine these during the indexing step. Therefore, if the
-intention is to use XDS for integration it will be necessary to
-repeat the indexing of the data. Determination of the optimum
-selection of images for this step is therefore necessary.
+intention is to use XDS for integration it is necessary to
+repeat the indexing of the data if Labelit or Mosflm were used for the
+initial characterisation. Determination of the optimum
+selection of images for indexing with XDS is therefore necessary.
+
+\begin{figure}
+\caption{Mean normalised metric penalty for the correct autoindexing 
+solution from XDS, as a function of the number of $5^{\circ}$ wedges used.
+The 0 point corresponds to the use of all images. From these results it is
+clear that the use of three wedges, rather than the full data set, works
+well.
+\label{figure:xds_n_images}}
+\centering
+\includegraphics[scale=0.5]{figures/xds_n_wedges.pdf}
+\end{figure}
 
 By anology with Labelit, data were indexed with a triclinic basis
 from all images and from one to ten $5^{\circ}$ wedges, with the
 resulting triclinic cell used with \verb|iotbx.lattice_symmetry| to
 compute the metric penalty for the correct lattice. As may be seen
-from FIXME FIGURE, use of a single $5^{\circ}$ wedge gave the poorest
+from Figure~\ref{figure:xds_n_images},
+use of a single $5^{\circ}$ wedge gave the poorest
 results followed by the use of all images. The use of two and three
 wedges gave further improvement, with no improvement observed
 subsequently. Following from this, various wedge sizes were tested and
@@ -206,9 +273,14 @@ though a slight benefit was observed for using $\sim 5^{\circ}$ wedges
 45^{\circ}$ though little improvement was found beyond $\sim
 20^{\circ}$ (also not shown.)  
 
-[FIXME FIGURE]
-
-[FIXME section on selection of indexing solution if XDS is used.]
+In the case that XDS is used for the initial indexing, it is necessary
+to select a proposed solution from the 44 lattice characters output by
+XDS. In the analysis no solutions with a penalty higher than 40 were
+found to be correct, so with no guidance the system will select the
+highest symmetry solution with a penalty lower than this threshold. If
+however the symmetry has been given by the user this limit is raised
+to 200. As with Labelit, in cases of multiple cell possibilities for a
+given lattice the one with the lowest penalty is chosen.
 
 \subsection{Integration}
 
