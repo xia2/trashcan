@@ -29,7 +29,7 @@ FIXME a synopsis will appear here!
 \begin{abstract}
 
 The usage of the data reduction expert system \emph{xia2} was
-presented in an earlier article (FIXME CITE.) Here the decision making
+presented in an earlier article \cite{Winter:ea5113}. Here the decision making
 protocols employed in the system are presented, with a discussion
 of how these were determined, and how they may be applied in interactive
 processing. 
@@ -160,7 +160,7 @@ defined as the deviation from the constraints for each Bravais lattice
 \cite{Grosse-Kunstleve:sh5006} is appropriate as this is a test for
 internal consistency 
 and is also relevent for automatic strategy systems such as EDNA
-(FIXME CITE.) With this in mind, a secondary constraint is raised:
+\cite{Incardona:wa5014}. With this in mind, a secondary constraint is raised:
 there is a benefit in using few rather than many images.
 
 \begin{figure}
@@ -281,6 +281,8 @@ highest symmetry solution with a penalty lower than this threshold. If
 however the symmetry has been given by the user this limit is raised
 to 200. As with Labelit, in cases of multiple cell possibilities for a
 given lattice the one with the lowest penalty is chosen.
+
+% got as far as here
 
 \subsection{Integration}
 
@@ -746,5 +748,9 @@ cached. Ultimately this makes the entire xia2 process a ``print''
 statement, showing the merging statistics and the location of the
 output reflection files.
 
+\bibliography{xia2references}{}
+%\referencelist[xia2references]
+%\bibliographystyle{iucr}
+\bibliographystyle{plain}
 
 \end{document}
