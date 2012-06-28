@@ -103,7 +103,7 @@ addition, Labelit \cite{Sauter:dd5008} and CCTBX
 \cite{Grosse-Kunstleve:ks0118} are also 
 extensively used in the analysis.
 
-\section{Decision Making for Data Reduction}
+\section{Decision Making for Data Reduction: Characterisation}
 
 As mentioned above, the crystallographic workflow is considered within
 \emph{xia2} in three phases - characterisation, integration and
@@ -114,11 +114,7 @@ around the system, in particular from later stages to earlier.
 Here, the decisions \emph{within} each phase will be considered for
 each of the software packages supported, including special cases and
 advice the user about appropriate \emph{xia2} options to use where
-appropriate.
-
-\subsection{Characterisation}
-
-The objective of the characterisation stage is to determine:
+appropriate. The objective of the characterisation stage is to determine:
 
 \begin{itemize}
 \item{A list of possible Bravais lattice options and appropriate cell
@@ -136,7 +132,7 @@ are: the selection of images to use for indexing, the thresholds to
 use for indexing, selection of the ``best'' solution and analysis to
 ensure that the selected solution appears to be satisfactory. 
 
-\subsubsection{Labelit and Mosflm}
+\subsection{Labelit and Mosflm}
 
 Labelit and Mosflm share the same underlying one-dimensional FFT
 indexing algorithm \cite{Steller:mf0013} though the
@@ -225,7 +221,7 @@ options are saved. It is important to note that this selection of the
 highest symmetry plausible solution is reasonable as it will be
 substantially challenged in subsequent analysis steps.
 
-\subsubsection{XDS}
+\subsection{XDS}
 
 Unlike Mosflm and Labelit, the indexing in XDS uses $\phi$
 centroids as well as positions on the image of reflections, and
@@ -284,13 +280,13 @@ given lattice the one with the lowest penalty is chosen.
 
 % got as far as here
 
-\subsection{Integration}
+\section{Decision Making for Data Reduction: Integration}
 
 The objective of the integration step is to:
 
 \begin{itemize}
-\item{Accurately measure the intensities of the diffraction spots.}
-\item{Verify the results of characterisation, i.e. test whether the
+\item{Accurately measure the intensities of the reflections.}
+\item{Validate the results of characterisation, i.e. test whether the
     lattice assigned in the characerisation step is appropriate.}
 \item{Provide a refined model for the experimental geometry and
     crystal lattice.}
@@ -308,7 +304,7 @@ as is the case inside \emph{xia2}, an equivalent assessment is
 needed. This assessment depends on the program used, and will be
 discussed shortly.
 
-\subsubsection{Mosflm}
+\subsection{Mosflm}
 
 A typical interactive integration session with Mosflm will start with
 indexing followed by the refinement of the cell, once the lattice has
@@ -321,72 +317,77 @@ alternative programs may be used for some of the steps, some effort
 must be made to reproduce the program state. This, coupled with the
 cell refinement step, may be characterised as preparation for
 integration. The decision making will therefore be separated into
-preparation and integration proper.
+preparation for integration and integration proper.
 
 The preparation for integration is primarily to set up Moslfm into
 a suitable state for performing integration. This will require the
-selection of images for the cell refinement prior to integration and
+selection of images for the cell refinement and
 the configuration of the program state. To determine rules for the
 selection of images a similar process was followed to the selection of
 images for indexing with XDS, allowing for an additional constraint of
 the use of 30 frames or fewer in cell refinement, with a similar
-result. In essence, the cell refinement was performed in P1 for the
+conclusion. In essence, the cell refinement was performed in P1 for the
 sweeps used earlier, and the resulting cell constants scored
 \emph{via} metric penalty, resulting in the use of three small wedges
-of data spaced by ideally $45^{\circ}$. To prepare the program state
+of data spaced by ideally $45^{\circ}$. To robustly prepare the program state
 for cell refinement however it is necessary to first gather the
 reflection profile parameters that would usually be obtained during
-indexing. To achieve this aim an incidental indexing step is
+indexing. To achieve this an incidental indexing step is
 performed, where the spot parameters and an estimate of the resolution
-limit are retained but the other results ignored. It was found that
-applying this resolution limit during the cell refinement gave rise to
+limit are retained from the program output
+but the other results ignored. It was found that
+applying this rather conservative
+resolution limit during the cell refinement gave rise to
 much more reliable results.
 
 To approximate the visual assessment described above, the cell
-refinement is performed with the selected lattice from
-characterisation and in P1, with the orientation matrix from
+refinement is performed with the proposed lattice from
+characterisation and with a triclinic 
+basis, with the orientation matrix from
 characterisation transformed appropriately. When the R.M.S. deviations
 between the observed and predicted spot positions are compared in a
-pairwise manner (i.e. as a function of frame and cycle) between the
-correct lattice and P1 a ratio may be calculated. It was found that in
+pairwise manner (i.e. as a function of frame number and refinement
+cycle) between the proposed and triclinic lattices
+a ratio may be calculated. It was found that in
 all cases when the lattice had been correctly assigned this ratio was
 less than 1.5. However, in cases where the lattice had pseudosymmetry
+(i.e. monoclinic with $\beta \sim 90^{\circ}$)
 the ratio exceeded this value, and is therefore used as a
 cutoff. Intuitively this makes sense: if the application of the
 lattice constraints makes the aignment of the predictions with the
 observed spot positions 50\% worse the lattice constraints are
-unlikely to be correct. If this is the case then that solution may be
+unlikely to be correct. If this is the case that solution may be
 eliminated from consideration and the next lower symmetry lattice
 considered, a process which takes place within the characterisation.
-Other tests, comparing the deviations of the refined P1 cell
-parameters with the constraints from the lattice, in terms of the
-error estimates on those parameters, were found to be unreliable.
-
-Once the integration proper may begin there are a number of choices to
-be made:
+Other tests, such as comparing the deviation of the refined triclinic
+cell constants to those satisfying the lattice symmetry as a function
+of the estimated standard deviation of those constraints was found to
+be unreliable. Once the preparation is complete there are a number of
+choices to be made for the integration proper:
 
 \begin{itemize}
 \item{Whether to fix the cell constants during integration.}
 \item{Whether to perform the integration with the lattice constraints
-    applied, as recommended by the Mosflm authors.}
-\item{Whether to apply a sensible resolution limit during integration,
+    applied, as recommended by the Mosflm authors, or with a triclinic
+    basis.}
+\item{Whether to apply a resolution limit during integration,
     as opposed to integrating across the entire active area.}
 \end{itemize}
 
-Wheras the choices to date have been assessed in terms of the accuracy
+Wheras the previous choices have been assessed in terms of the accuracy
 of the resulting cell constants, here the metric will need to relate
 to the accuracy of the observations, best observed by scaling the data
 and considering the merging statistics. Provided that the extent of
 the data are unchanged (i.e. same image range, same resolution limits)
 $R_{\rm{merge}}$ will be a reliable indicator of accuracy. To make
-this assessment, Pointless (FIXME CITE) and Scala (FIXME CITE) were
+this assessment, Pointless \cite{Evans:ba5084} and Scala were
 used, the latter with a ``standard'' scaling model\footnote{Smoothed
   scaing on rotation with $5^{\circ}$ intervals, secondary absorption
   correction and smoothed $B$ factor correction with $20^{\circ}$
   intervals.}
-which is the default in CCP4i and was therefore considered
+(the default in CCP4i) and was therefore considered
 reasonable. Protocols were determined for integration to assess each
-of the earlier choices, by comparison with the procedures recommended
+of the above choices, by comparison with the procedures recommended
 by the program authors. In summary, it was found that fixing the cell
 constants during integration was helpful however applying a resolution
 cutoff made little difference, as did applying the Bravais lattice
@@ -394,15 +395,16 @@ constraints. The conclusion was therefore to integrate across the
 active area of the detector, fixing the cell constants and applying
 the lattice constraints, though in hindsight there are arguments
 against the latter and developments are underway to perform all
-processing in P1.
+processing in with a triclinic basis.
 
-\subsubsection{XDS}
+\subsection{XDS}
 
 Where Mosflm is typically run through the graphical user interface
-iMosflm, XDS can only be run from scripts, making it ideal for usage
+iMosflm, XDS is run on the command-line with a plain text input file,
+making it ideal for usage 
 within an automated system. The advised use of XDS is to perform all
 processing with a triclinic basis, then apply the Bravais lattice
-constraints at the final step (i.e. in the postrefinement.) However it
+constraints at the final step (i.e. in the postrefinement and scaling.) However it
 is possible, but by no means mandatory, to ``recycle'' parameters from
 the later stages of processing and rerun the integration. The aim here
 is to determine the choices which will generally give rise to the best
@@ -421,13 +423,12 @@ choices are:
 \end{itemize}
 
 \noindent
-These may be compared with the advised protocol stated above. Using
-the same data as were used for determination of Mosflm choices, it was
-clear that any of these changes to the strategy were polishing the
+These may be compared with the straightforward protocol described above. Using
+the same data as were used for Mosflm, it was
+clear that any of these changes to the strategy were ``polishing'' the
 data, with an average change in $R_{\rm{merge}}$ of around 2\% of the
 value. The only marked improvement was found from recycling the
-reflection profile parameters, though using the postrefined
-orientation matrix etc. seems reasonable, since it will be necessary
+reflection profile parameters, however it will then be necessary
 to reintegrate the full data set.
 
 In processing the data with Mosflm the selection of Bravais lattice
@@ -436,9 +437,10 @@ performed after integration allowing the lattice to be tested in a
 similar manner, once again with a 50\% threshold. Currently in
 \emph{xia2} the integration is performed with the Bravais constraints
 applied, for historical reasons, though performing the integration
-with a triclinic basis is planned. 
+with a triclinic basis is planned. The same global refinement may then
+be performed.
 
-\subsection{Scaling}
+\section{Decision Making for Data Reduction: Scaling}
 
 While indexing and integration operate on sweeps in isolation,
 scaling must consider the data set as a whole. As such, it is at this
@@ -458,7 +460,7 @@ XSCALE are natural for the main scaling step. However a host of other
 programs from CCP4 and elsewhere (including Cad, Truncate and
 Pointless) are used to help in this process.
 
-\subsubsection{Preparation}
+\subsection{Preparation}
 
 In the preparation phase the data from integration are tested for
 internal consistency both within and between sweeps. The first test is
@@ -494,7 +496,7 @@ for the benefit of the downstream sructure factor amplitudes, though
 often convenient for the program user. When sorting and scaling the
 data are put into the order in which they were collected.
 
-\subsubsection{Scaling - Scala}
+\subsection{Scaling, with Scala}
 
 Though the scaling protocol recommended in the Scala documentation
 (smoothed scales over $5^{circ}$ spacing in rotation, absorption
@@ -528,7 +530,7 @@ Historically, scaling included an iterative process to
 determine appropriate correction factors for the error estimates. This
 procedure is now performed by Scala and Aimless automatically.
 
-\subsubsection{Scaling - XSCALE}
+\subsection{Scaling, with XSCALE}
 
 Where scaling with Scala applies a parameterised model to the data
 in order to minimise the differences between symmetry related
@@ -564,7 +566,7 @@ sweep structure and merged with Scala or Aimless, as this gives an
 easily interpreted report on data quality and also a route into
 producing MTZ files for the subsequent post processing, discussed below.
 
-\subsubsection{Resolution Limit Calculation}
+\subsection{Resolution Limit Calculation}
 
 Early in the development of \emph{xia2} the resolution limits were
 determined from an analysis of the output of Scala, which proved to be
@@ -589,7 +591,7 @@ merging. $CC\frac{1}{2}$ has since been proposed as a more robust
 choice for resolution limit calculation (Evans, private communication)
 which will be investigated shortly.
 
-\subsubsection{Post Processing}
+\subsection{Post Processing}
 
 From a certain perspective scaled and merged intensities are the end
 product of the data integration and scaling. It is however helpful to
