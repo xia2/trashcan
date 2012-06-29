@@ -23,7 +23,8 @@ Manchester, \country{UK}}
 \clearpage
 
 \begin{synopsis}
-FIXME a synopsis will appear here!
+The basis for decision making in the program \emph{xia2} is described,
+also giving guidelines which can be applied in interactive processing.
 \end{synopsis}
 
 \begin{abstract}
@@ -794,9 +795,114 @@ the ``main program'' inside \emph{xia2} is in effect a print statement,
 with all of the processing performed as a side-effect of providing the
 information to show in the output.
 
+\section{Example: Transketolase}
+
+With real data it becomes possible to illustrate the process of data
+analysis using \emph{xia2} and to clearly identify the information
+provided to guide users through the decisions made. The data
+used here were collected at 100K at Diamond Light Source, beamline
+I04-1, with a Pilatus 2M detector. The data set consisted of 1800
+frames measured with $0.1^{\circ}$ width and 0.1s exposure time.
+The protein crystals were of
+Lactobacillus salivarius UC188 transketolase (E.C. 2.2.1.1, Tkt), a
+ubiquitous enzyme responsible for the transfer of a dihydroxyethyl
+moiety from a ketose sugar to an aldose sugar in the pentose phosphate
+pathway of metabolism. Crystals were grown from protein in complex
+with the cofactor, thiamine pyrophosphate (TPP) and a divalent Mg2+
+ion taken from magnesium chloride. This data was collected as part of
+a high throughput structure determination project being carried out as
+a collaboration between Diamond Light Source and the Oxford Protein
+Production Facility (paper in preparation.) As such it provides an
+ideal case study, since automated data integration running on the
+beamline as the data are collected provides an essential part of the
+structure determination pipeline. 
+
+The analysis of this data proceeded in a straightforward fashion from
+the command-line 
+\verb|xia2 -3di -project P100TRANSK -crystal OPPF4501 /path/to/data|.
+The data were first indexed with a hexagonal primitive lattice, and
+integrated with this basis. In postrefinement, the R.M.S. deviation
+ratios for this lattice when compared with the triclinic were 1.02 and
+1.07 for the positional and angular deviations respectively, showing
+that the Bravais lattice choice was consistent with the data, however
+the integration was repeated with an updated model for the reflection
+extent and refined orientation. In the second pass of integration the
+measurements were reported to be noticably stronger. Pointgroup
+analysis with Pointless indicated $P321$ consistent with the lattice
+choice, and the spacegroup was assigned as one of $P3_121$ or $P3_221$
+based on the systematic anbsence analysis. After the first round of
+scaling the resolution was estimated to be $\sim 2.3$\AA, after which
+the scaling was repeated and several rounds of outlier rejection
+performed. Finally the merging was performed with Scala, giving the
+statistics shown in Table~\ref{table:oppf4501}. 
+
+\begin{table}
+\caption{Data collection and merging statistics for OPPF4501.
+\label{table:oppf4501}}
+\begin{tabular}{lccc}
+Space group & $P3_121$ & & \\
+High resolution limit                   &	  2.32	& 10.38	&  2.32\\
+Low resolution limit                    &	 53.79	& 53.79	&  2.38\\
+Completeness                            &	 99.9	& 99.2&	100.0\\
+Multiplicity                            &	  9.7&	  8.6	& 10.2\\
+I/sigma                                 &	 15.6&	 44.6	&  3.6\\
+Rmerge                                  &	0.124&	0.030&	0.691\\
+Rmeas(I)                                &	0.131&	0.032&	0.727\\
+Rpim(I)                                 &	0.042&	0.011&	0.225\\
+Wilson B factor                         &	35.438   & & \\
+Total observations                      &	270815	&3301&	20426\\
+Total unique                            &	27958&	385&	2000\\
+\end{tabular}
+\end{table}
+
+Subsequent analysis showed a substantial gap between the
+$R_{\rm{work}}$ and $R_{\rm{free}}$ ($\sim 0.16$ and $\sim 0.24$
+respectively) in refinement. The investigation included a full repeat
+of the structure solution and refinement in $P1$, with the data
+reprocessed by simply adding \verb|-spacegroup P1| to the command-line
+above. Analysis of this structure however showed that the conclusions
+reached by \emph{xia2} were appropriate.
+
 \section{Discussion}
 
-FIXME write this.
+The field of macromolecular crystallography includes a number of
+experts, each with their small field of highly specialised
+knowledge. With the increasing demand for high resolution
+macromolecular structures, throughput has increased and the number of
+macromolecular crystallographers has increased, while the number of
+experts has remained relatively stable. This has created an increase
+in demand for ``expert'' software which can perform analysis on behalf
+of the users, to interpret the data and provide results for subsequent
+analysis. \emph{xia2} provides a platform for analysis and decision
+making and makes extensive use of pre-existing software. By encoding
+decisions as hypotheses to be tested as analysis proceeds, \emph{xia2}
+has the flexibility to use data from all steps in the analysis. The
+architecture also allows extension to include new software as an when
+it becomes available to adapt to the demands of crystallograhers and
+keep pace with new developments.
+
+While the decision making protocols described above were developed to
+be embedded in \emph{xia2}, they apply equally in interactive
+processing. As such these may be useful to a new student of
+crystallography wishing to learn more about the analysis of
+diffraction data.
+
+\section{Acknowledgements}
+
+The author would like to thank the JCSG, Division of Structural Biology at
+the Wellcome Trust Centre for Human Genetics,
+SPINE and numerous users for providing the test data which was used in 
+developing this software. The author would also like to thank Harry Powell
+and Andrew Leslie for help with making the best use of \textsc{Mosflm},
+Phil Evans for help with \textsc{Scala} and \textsc{Pointless} including 
+specific changes to those programs, Wolfgang Kabsch and Kay Diederichs
+for help with XDS/XSCALE and Stephen Prince and Miroslav Papiz
+for help in preparing this manuscript and getting the author started in the
+field of X-ray crystallography. 
+Development work for \textsc{xia2} is currently supported by the Diamond
+Light Source Ltd., and was initially supported by the BBSRC
+through the e-Science pilot project e-HTPX, the EU Framework 6 through 
+BioXHit and CCP4.
 
 \bibliography{xia2references}{}
 %\referencelist[xia2references]
