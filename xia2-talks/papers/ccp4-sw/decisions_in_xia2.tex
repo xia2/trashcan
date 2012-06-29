@@ -296,7 +296,7 @@ The objective of the integration step is to:
 While these objectives have been listed in order of decreasing
 importance to the structure solution process, the second is perhaps
 most significant the development of an expert system. When processing
-interactively using for example iMosflm (FIXME CITE) it is
+interactively using for example iMosflm it is
 straightforward to see if the indexing solution is appropriate from a
 comparison of the observed and predicted reflection positions. When
 the analysis is performed with nothing in the way of visual feedback,
@@ -442,68 +442,101 @@ be performed.
 
 \section{Decision Making for Data Reduction: Scaling}
 
-While indexing and integration operate on sweeps in isolation,
-scaling must consider the data set as a whole. As such, it is at this
+While characterisation and integration operate on sweeps in isolation,
+scaling must consider all of the data at once. As such, it is at this
 point that all of the processed data are brought together and tested
 for consistency, both within individual sweeps (i.e. that the symmetry
 in intensity data is consistent with the Bravais lattice) and between
 sweeps (i.e. that the Bravais lattices are consistent and that the
-data are indexed in a consistent manner.) This requires careful
+data are indexed in a uniform manner.) This requires careful
 management of derived information as well as the possibiity for feedback to
 earlier processing steps. To assist with this the scaling step is
 split into three phases - the preparation, the scaling itself and then
-post-processing, where for example data sets are combined, structure
-factor amplitudes are computed and so forth.
+post-processing.
 
 Following the use of Mosflm and XDS, Scala (and now Aimless) and
-XSCALE are natural for the main scaling step. However a host of other
+XSCALE are natural for the main scaling step. However a number of other
 programs from CCP4 and elsewhere (including Cad, Truncate and
 Pointless) are used to help in this process.
 
 \subsection{Preparation}
 
+\begin{figure}
+\caption{Procedure to determine the crystal point group and Bravais
+  lattice consistent with the the diffraction data, taking input from
+  the indexing and analysis with Pointless.
+\label{figure:scaling_1}}
+\centering
+\includegraphics[scale=0.5]{figures/scaling-step-1.pdf}
+\end{figure}
+
 In the preparation phase the data from integration are tested for
 internal consistency both within and between sweeps. The first test is
 to determine whether the Bravais lattice used for processing is
-consistent with the apparent pointgroup of the data (FIXME FIGURE.)
+consistent with the apparent pointgroup of the data
+(Figure~\ref{figure:scaling_1}.)
 This test is performed by comparing the highest allowed Bravais
 lattice from processing with the most likely result from Pointless. If
 the two are consistent (for example, pointgroup P422 with lattice tP)
 the test is passed immediately. If the apparent pointgroup has higher
-symmetry than the allowed lattice, as may occur when
-non-crystallographic symmetry is closely aligned with the unit cell
+symmetry than the allowed lattice, as may occur when a
+non-crystallographic symmetry axis is closely aligned with the unit cell
 axes, that pointgroup is ignored and the next most likely tested. If
 however the most likely pointgroup has \emph{lower} symmetry than the
 Bravais lattice used for processing the latter is eliminated from
 consideration as discussed before and the data are reprocessed with
-the lattice corresponding to this pointgroup.
+the lattice corresponding to this pointgroup. This is to handle, for
+example, a monoclinic lattice with $\beta$ angle indistinguishable
+from $90^{\circ}$. 
+
+\begin{figure}
+\caption{Procedure for combining pointgroup information from all
+  sweeps, following on from \ref{figure:scaling_1}, and assuming that
+  the lowest symmetry lattice is correct.
+\label{figure:scaling_2}}
+\centering
+\includegraphics[scale=0.5]{figures/scaling-step-2.pdf}
+\end{figure}
 
 Once this test has been passed for all sweeps the data will have been
 processed with a lattice consistent with the pointgroup symmetry of
 the data. However, it may be the case (for example from a low and high
 resolution pass) that the conclusions for one sweep differ from those
-from another. In that case (FIXME FIGURE) the lowest symmetry Bravais
-lattice is assumed for all sweeps. If at this stage the pointgroup
+from another. In that case (Figure~\ref{figure:scaling_2}) the lowest
+symmetry Bravais lattice\footnote{Defined to be the lattice with
+  fewest constraints}
+is assumed for all sweeps. If at this stage the pointgroup
 conclusions remain inconsistent an error is raised as it is likely
 that something has gone wrong - for example an inconsistent data set
 has been included in the processing. 
 
+\begin{figure}
+\caption{Procedure to establish uniform indexing of all sweeps,
+following on from \ref{figure:scaling_2}, which allows for intrinsic
+ambiguity in the origin choice where the lattice symmetry is higher
+than the pointgroup symmetry.
+\label{figure:scaling_3}}
+\centering
+\includegraphics[scale=0.5]{figures/scaling-step-3.pdf}
+\end{figure}
+
 Finally, it is necessary to ensure that the data are consistently
 indexed to cope with cases where there may be indexing ambiguity,
-using Pointless (FIXME FIGURE.) At this stage the most likely
+using Pointless (Figure~\ref{figure:scaling_3}.) At this stage the
+most likely
 spacegroup is also determined from the systematic absences, primarily
 for the benefit of the downstream sructure factor amplitudes, though
 often convenient for the program user. When sorting and scaling the
-data are put into the order in which they were collected.
+data are put into the sweep order in which they were collected.
 
 \subsection{Scaling, with Scala}
 
 Though the scaling protocol recommended in the Scala documentation
-(smoothed scales over $5^{circ}$ spacing in rotation, absorption
+(smoothed scales over $5^{\circ}$ spacing in rotation, absorption
 correction with 6 orders of spherical harmonics, $B-$factor correction
-smoothed over $20^{circ}$ spacing in rotation) works well in many
+smoothed over $20^{\circ}$ spacing in rotation) works well in many
 cases there are examples when better results may be achieved by
-applying for example by including the tails correction or excluding the
+applying for example by including the ``tails'' correction or excluding the
 decay. As such it is worthwhile to perform a search to decide the most
 appropriate model for scaling, which is complicted by the need for a
 protocol for decision making. It was found that using Scala
@@ -514,9 +547,10 @@ considered are unchanged. However, this was found to give an excessive
 bias towards corrections for the high resolution data so the low
 resolution $R_{\rm{merge}}$ is also taken into account. Finally, in
 some cases the combination of scaling corrections may also converge
-badly, which is taken to be an indication of a poor model. Therefore,
+badly or not at all, which is taken to be an indication of a poor
+scaling model. Therefore, 
 the resulting protocol is as follows: scaling with only smoothed scale
-factors over $5^{circ}$ spacing in rotation gives a reference
+factors over $5^{\circ}$ spacing in rotation gives a reference
 convergence rate. Then seven other protocols are tested: with and
 without decay, absorption and partiality correction, with the model
 which gives the best merging residuals while converging in less than
@@ -526,7 +560,7 @@ In terms of the parameterisation of the scaling, it was found that for
 typical data adjusting the rotation range for the scale and
 $B$-factors and the number of spherical harmonics used from the
 defaults suggested in the documentation was of little benefit.
-Historically, scaling included an iterative process to
+Historically, scaling in \emph{xia2} included an iterative process to
 determine appropriate correction factors for the error estimates. This
 procedure is now performed by Scala and Aimless automatically.
 
@@ -547,19 +581,20 @@ isolation. The same corrections are applied in XSCALE to all of the
 data simultaneously. It was found that performing the scaling twice
 gave no improvement but did effectively double the number of
 parameters used, so the choice made in \emph{xia2} is to apply all of
-the scaling corrections in XSCALE with the minimum used in the XDS
+the scaling corrections in XSCALE and apply the minimum in the XDS
 CORRECT step. It was found that the application of all scaling factors
-systematically gives the lowest merging residual, so this is the
-default choice in \emph{xia2} though a user option is available to
+(i.e. correcting for decay, detector modulation and absorption)
+systematically gives the lowest merging residual so this is the
+default choice in \emph{xia2}, though a user option is available to
 control this choice. In scaling, all of the sweeps corresponding to
-each wavelenth are scaled into a single data set but not merged, and
-all sweeps are scaled in one run. 
+each wavelenth are scaled together but not merged, and
+all wavelengths are scaled simultaneously. 
 
-After the initial scaling, resolution limits will be calculated
-following the procedures set out below, which are used for subsequent
+After the initial scaling, resolution limits are calculated
+following the procedures set out below, which are then used for subsequent
 XSCALE runs. During scaling XSCALE suggests a
 list of reflections which do not appear to belong to the data set as a
-whole - these are subsequently excluded in an iterative manner.
+whole - ``aliens'' - these are subsequently excluded in an iterative manner.
 
 After scaling the unmerged data are reformatted into their original
 sweep structure and merged with Scala or Aimless, as this gives an
@@ -572,8 +607,8 @@ Early in the development of \emph{xia2} the resolution limits were
 determined from an analysis of the output of Scala, which proved to be
 unreliable. Resolution limits are now calculated directly from the
 scaled intensity data themselves, using routines developed using
-CCTBX, which allows the same procedures to be used for data from Scala
-and XSCALE hence giving more consistent results.
+the CCTBX toolbox, allowing the same procedures to be used for data from Scala
+and XSCALE, giving more consistent results.
 
 The resolution limit calculations themselves use the merged and
 unmerged $\frac{I}{\sigma_I}$ values, the completeness and the
@@ -582,13 +617,18 @@ the first two considered by default with values of 2 and 1
 respectively. The cutoff applied to the unmerged data was found to be
 helpful when considering data with very high multiplicity - though the
 multiplicity provides a boost to the apparent $\frac{I}{\sigma_I}$,
-the resulting measurements were found to be distributed more like a
-normal distrbution than an exponential distribution (i.e. Wilson) as would be
-expected, as judged by the $E^4$ plot from Truncate. This is assumed
-to be a result of a limited modelling of the correct errors for weak
+the resulting measurements were found in some cases
+to be distributed more like a
+normal distrbution than an exponential (i.e. Wilson) distribution as
+would be
+expected, as judged by the $E^4$ plot from Truncate (not shown.)
+This is assumed
+to be a result of a poor estimation of the errors for weak
 reflections, giving rise to systematic effects in
-merging. $CC\frac{1}{2}$ has since been proposed as a more robust
-choice for resolution limit calculation (Evans, private communication)
+merging. $CC\frac{1}{2}$ and $CC^*$
+have since been proposed as a more robust
+choice for resolution limit calculation (Evans \& Murshudov, this
+volume and \cite{Karplus25052012})
 which will be investigated shortly.
 
 \subsection{Post Processing}
@@ -604,22 +644,22 @@ data for downstream analysis:
 \end{itemize}
 
 \noindent
-The former of these requires the ``truncate'' procedure (FIXME CITE)
+The former of these uses the ``truncate'' procedure \cite{French:a15572}
 where negative intensities are corrected to give small positive
 values. However, to best perform this correction it is necessary to
 remove systematically absent reflections from the data set, hence the
-spacegroup identification performed earlier, during the preparation
+spacegroup identification performed earlier during the preparation
 step. At this stage it is also helpful to get the overall scale for
 the amplitudes correct - if the amino acid sequence is provided, the
-number of molecules in the asymmetric unit is estimated (FIXME CITE
-Kanterjeiff and Rupp) to give an estimate of the total number of atoms
+number of molecules in the asymmetric unit is estimated \cite{KantardjieffRupp}
+to give an estimate of the total number of atoms
 and hence the appropriate scale factor to apply. In the absence of
 this information it is assumed that the unit cell contains 50\%
 solvent, with the remaining space filled with ``average'' protein. 
 
 While the determination of the average unit cell is not a fundamental
 part of the analysis, it is nevertheless helpful for downstream
-analysis. This is computed in \emph{xia2} as an average from the
+calculations. This is computed in \emph{xia2} as an average from the
 sweeps, weighted by the number of reflections in each sweep, hence
 giving a bias towards higher resolution data sets.
 
@@ -635,9 +675,10 @@ interaction between the analysis and the data.
 \subsection{Data Management}
 
 As an expert system can only make decisions based on the information
-available, careful management of data is critical. Most data structures
-familiar to MX users deal with static
-information, for example coordinate files and reflection data. Here 
+available, careful management of data is critical. Most data familiar
+familiar to macromolecular crystallographers deal with static
+information, for example coordinate files and reflection data. 
+Within xia2 however
 the knowledge at any stage is a \emph{hypothesis} and hence
 subject to change following subsequent analysis. As such it is
 important to track the provenance of any derived information, such
@@ -649,18 +690,19 @@ descibe this treatment.
 
 The main information provided to the system is the raw diffraction
 data, with suitable metadata (i.e. image headers) to describe the
-experiment. In many cases this information will be sufficient to build
+experiment. In the majority of
+cases this information will be sufficient to build
 a useful model of the experiment. Within \emph{xia2} the raw data are
 structured in terms of sweeps of diffraction data, which belong to
 wavelengths (which are merged to a single MTZ data set in the output)
 which in turn belong to crystals. The crystals are contained within
-projects, but this does not currently take part in the analysis. They
+projects, but this does not currently take part in the analysis. Crystals
 are also the fundamental unit of data for scaling. All of these
-objects (project, crystal, wavelength, sweep) map directly onto
+data structures (project, crystal, wavelength, sweep) map directly onto
 objects within \emph{xia2} and initially contain only static data -
 that is, the information derived from image headers or from user
 input. However, starting from this input information it is possible to
-perform some analysis as described above, and draw some
+perform analysis as described earlier, and draw 
 conclusions. Although it would be possible to store the results of
 this analysis in these data objects, it would be necessary to ensure
 that they are kept up-to-date which would generate a substantial
@@ -688,23 +730,33 @@ program specific and implemented in \emph{MosflmIndexer} and
 \emph{LabelitIndexer}, respectively. The application of a standard
 interface however allows a standard two-way link to a sweep to be
 made, passing in generic information needed for indexing, receiving
-generic results from indexing.
+generic results from the analysis.
 
 While this approach adds an extra degree of separation between the
 data and the analysis programs, it allows for generic aspects of the
 analysis to be centralised and the freedom to extend, including
 new software as it is developed. 
 
+\begin{figure}
+\caption{General flow of expert system interfaces, showing how the
+  prepare, do and finish functions are used. Decisions are diamonds,
+  processing tasks as rectangles.
+\label{figure:fig6}}
+\centering
+\includegraphics[scale=0.5]{figures/Fig6.pdf}
+\end{figure}
+
 Within each interface (\emph{Indexer} and \emph{Integrater}, linked to
 sweeps and 
 \emph{Scaler} linked to the crystal) there are three standard phases -
 prepare, do and 
-finish, arranged in a loop (FIXME FIGURE.) The status of each phase is
+finish, arranged in a loop (Figure~\ref{figure:fig6}.) 
+The status of each phase is
 managed internally and each phase will be performed until it is
 completed or an error occurs. Once the finish phase is completed any
 results which have been derived are assumed valid, however in requests
 for information the interface will check that this is the case, and if
-not will perform the necessary steps. If some input information is
+not will repeat the necessary steps. If some input information is
 changed this may invalidate the internal state, ensuring that next
 time results are requested they are recalculated taking into account
 this new information. While this structure is complex, the
@@ -714,19 +766,20 @@ real benefit is felt when through the the data management hierarchy.
 
 The benefit to having standard interfaces to all of the analysis
 steps, and linking those analysis steps to the data hierarchy, is that
-it is clear what the source of a particular piece of information
-is. For example, if a sweep is asked for the unit cell and Bravais
+the source of a particular piece of information
+is clear. For example, if a sweep is asked for the unit cell and Bravais
 lattice it may delegate this request to it's indexer. If the data have
-been indexed already and the result not invalidated it may be returned
+been indexed already and the result has not been invalidated it may be returned
 immediately. If no indexing has been performed this may be done
 implicitly, in order to deliver the result. If that result is
 subsequently eliminated, the next request for the unit cell will give
-the next solution, perhaps repeating the indexing if necessary to
+the next solution, perhaps repeating the indexing as necessary to
 refine this result. 
 
 There are two main outcomes of this. First, in scaling preparation, 
-the intensities are requested from integraters and cell and lattice
-information from the indexer. If from pointgroup analysis this
+the intensities are requested from integraters which in turn request
+the cell and lattice
+information from the indexer. If in pointgroup analysis this
 lattice is shown to be incorrect it may be eliminated and new
 values requested for the cell, lattice and intensities. If necessary
 the full integration of the data set will be performed implicitly,
@@ -737,18 +790,13 @@ Secondly, the full processing
 of the data, from indexing through to scaling of all data from a
 crystal, may be performed implicitly by requesting the location of the
 final scaled and merged intensity data from the crystal. To this end,
-the ``main program'' inside \emph{xia2} is in fact a print statement,
+the ``main program'' inside \emph{xia2} is in effect a print statement,
 with all of the processing performed as a side-effect of providing the
 information to show in the output.
 
 \section{Discussion}
 
-Lots of experts, each with a very small domain of expertise. They are
-always consulted, neat coding ensures that if the values are out of
-date when requested they are recalculated, otherwise
-cached. Ultimately this makes the entire xia2 process a ``print''
-statement, showing the merging statistics and the location of the
-output reflection files.
+FIXME write this.
 
 \bibliography{xia2references}{}
 %\referencelist[xia2references]
