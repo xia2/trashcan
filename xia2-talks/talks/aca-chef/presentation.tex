@@ -26,9 +26,84 @@
 \frame{
 \frametitle{Overview}
 \begin{itemize}
-\item{Odds}
-\item{Ends}
+\item{Strategy, background, caveats}
+\item{Review of statistics}
+\item{Example cases}
+\item{New statistic - $R_{cp}(d)$}
+\item{More example cases}
 \end{itemize}
 }
+
+\frame{
+\frametitle{Strategy, background and caveats}
+\begin{itemize}
+\item{Radiation damage gives rise to lots of changes}
+\item{Will only discuss changes to measured \emph{intensities}}
+\item{Assume sufficient data for scaling, analyse after corrections applied}
+\item{Make no assumptions about scaling \emph{program}}
+\item{Looking to answer the question: would this data set have been
+    more useful if I stopped collecting data earlier - balancing:
+\begin{itemize}
+\item{Gains from additional measurements}
+\item{Losses due to systematic differences reducing signal}
+\end{itemize}
+}
+\item{Assume sufficient multiplicity that above question is meaningful}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Not looking for}
+\begin{itemize}
+\item{Changes to unit cell}
+\item{Sample $B$-factor}
+\item{Vanishing diffraction}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Looking for}
+\begin{itemize}
+\item{Changes to measured \emph{intensities}}
+\end{itemize}
+}
+
+\frame{
+\frametitle{$R_{\rm{merge}}$}
+\begin{equation}
+R_{\rm{merge}} = 
+\frac{\sum_{\underline{h}} \sum_j | I_{{\underline{h}}j} - 
+\overline{I}_{\underline{h}} |}
+{\sum_{\underline{h}} \sum_j I_{{\underline{h}}j}}
+\end{equation}
+}
+
+\frame{
+\frametitle{$R_{\rm{d}}$, Diederichs (2006)}
+\begin{equation}
+R_d = \frac{\sum_{{\underline{h}}} \sum_{|b_j - b_i| = d}
+|I_{\underline{h}j} - I_{\underline{h}i}|}
+{\sum_{{\underline{h}}} \sum_{|b_j - b_i| = d}
+\frac{1}{2}|I_{\underline{h}j} + I_{\underline{h}i}|}
+\end{equation}
+}
+
+\frame{
+\frametitle{Application to Example Sets}
+...
+}
+
+\frame{
+\frametitle{$R_{cp}(d)$, \emph{Cumulative-Pairwise} Residual}
+\begin{equation}
+R_{cp}(d) = \frac{\sum_{\lambda} \sum_{\underline{h}} \sum_{
+{i \neq j}, i:d_i \leq d, j:d_j \leq d} |I_{\underline{h}i} - 
+I_{\underline{h}j}|}
+{\sum_{\lambda} \sum_{\underline{h}} 
+\sum_{i \neq j, i:d_i \leq d, j:d_j \leq d} \frac{1}{2}|I_{\underline{h}i} + 
+I_{\underline{h}j}|}
+\end{equation}
+}
+
 
 \end{document}
