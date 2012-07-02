@@ -1,7 +1,7 @@
 gnuplot << eof
 set terminal epslatex size 4,2.82 standalone color colortext 9
 set output 'rd.tex'
-set xlabel 'Image number'
+set xlabel 'Image number difference'
 set ylabel 'Rd'
 set xrange [0:900] 
 set yrange [0:0.1]
