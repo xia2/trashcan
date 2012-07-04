@@ -1,0 +1,24 @@
+For AUTOMATIC/DEFAULT/SAD
+High resolution limit                             2.01    8.98    2.01
+Low resolution limit                             29.85   29.84    2.06
+Completeness                                     71.2    97.3    13.5
+Multiplicity                                      5.3     6.0     2.1
+I/sigma                                          14.7    21.6     2.3
+Rmerge                                          0.063   0.043   0.405
+Rmeas(I)                                        0.086   0.067   0.707
+Rmeas(I+/-)                                     0.076   0.052   0.568
+Rpim(I)                                         0.034   0.027   0.470
+Rpim(I+/-)                                      0.041   0.028   0.397
+Wilson B factor                                 33.264
+Partial bias                                    0.000   0.000   0.000
+Anomalous completeness                           65.1    97.6    10.6
+Anomalous multiplicity                            2.9     3.3     1.1
+Anomalous correlation                            0.388   0.613   0.690
+Anomalous slope                                 1.589   0.000   0.000
+Total observations                              40714   775     228
+Total unique                                    7685    130     111
+Assuming spacegroup: P 1 21 1
+Unit cell:
+32.660  59.690  43.220
+90.000 105.520  90.000
+
