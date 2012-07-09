@@ -1,7 +1,7 @@
 gnuplot << eof
 set terminal epslatex size 4,2.82 standalone color colortext 9
 set output 'rcp2.tex'
-set xlabel 'Total number of frames'
+set xlabel 'Extent of data set / $^{\circ}$'
 set ylabel 'Rcp'
 set y2label 'Completeness'
 set yrange [0:0.08]
