@@ -31,6 +31,7 @@
 \item{Example cases}
 \item{New statistic - $R_{cp}(d)$}
 \item{More example cases}
+\item{Discussion, acknowledgements}
 \end{itemize}
 }
 
@@ -39,23 +40,12 @@
 \begin{itemize}
 \item{All data described processed with xia2 / XDS i.e. using
     ``standard methods''}
-\item{All this will show is a new tool and some instances where it is
-    useful} 
+\item{All this will show is a new tool and some instances where it
+    could be useful} 
 \item{All calculations independent of data analysis program used}
-\item{Program to perform these calculations included with xia2: pychef}
-\end{itemize}
-}
-
-\frame{
-\frametitle{Acknowledgements}
-\begin{itemize}
-\item{Miroslav Papiz, Steve Prince for converstion which got this
-    started, inspriation for the name \emph{chef}}
-\item{Kay Diederichs for $R_d$, as well as 0-dose with Sean McSweeney
-    and Raimond Ravelli}
-\item{Phil Evans for useful discussions on this subject}
-\item{Ed Mitchell, Diamond Staff, JCSG and Christian Siebold for the
-    examples shown}
+\item{Program to perform these calculations included with xia2:
+    pychef}
+\item{Discussion assumes sample bathed in beam}
 \end{itemize}
 }
 
@@ -63,33 +53,25 @@
 \frametitle{Strategy}
 \begin{itemize}
 \item{Radiation damage gives rise to lots of changes}
-\item{Will only discuss changes to measured \emph{intensities}}
-\item{Assume sufficient data for scaling, analyse after corrections applied}
-\item{Make no assumptions about scaling \emph{program}}
-\item{Looking to answer the question: would this data set have been
-    more useful if I stopped collecting data earlier - balancing:
-\begin{itemize}
-\item{Gains from additional measurements}
-\item{Losses due to systematic differences reducing signal}
-\end{itemize}
-}
-\item{Assume sufficient multiplicity that above question is meaningful}
-\end{itemize}
-}
-
-\frame{
-\frametitle{Not looking for}
+\item{Will only discuss changes to measured \emph{intensities}
+    i.e. not
 \begin{itemize}
 \item{Changes to unit cell}
 \item{Sample $B$-factor}
 \item{Vanishing diffraction}
 \end{itemize}
 }
-
-\frame{
-\frametitle{Looking for}
+\item{Assume sufficient data for scaling, analyse after corrections applied}
+\item{Make no assumptions about scaling \emph{program}}
+\item{Looking to answer the question: would this data set have been
+    more useful if I stopped collecting data earlier - balancing:
 \begin{itemize}
-\item{Changes to measured \emph{intensities}}
+\item{Gains from additional measurements i.e. multiplicity}
+\item{Losses due to systematic changes reducing signal}
+\end{itemize}
+}
+\item{Assume sufficient multiplicity that above question is meaningful
+  c.f. zero-dose}
 \end{itemize}
 }
 
@@ -238,7 +220,7 @@ Measures: including data to a point $d$, how internally consistent are they?
 \frame{
 \frametitle{In English?}
 \begin{itemize}
-\item{For each wavelength, for each reflection, accumulate generally
+\item{For each wavelength, for each $HKL$, accumulate generally
     how different the intensities are up to some dose $d$}
 \item{Then plot this as a function of $d$}
 \item{And while you're there record how complete wavelengths are up to
@@ -300,7 +282,8 @@ Measures: including data to a point $d$, how internally consistent are they?
     easy to interpret}
 \item{Processed data set 32 times - $0^{\circ} - 45^{\circ}$,
     $0^{\circ} - 90^{\circ}$, ..., $0^{\circ} - 1440^{\circ}$ to fixed
-  resolution limit (1.76\AA), used 30\AA\ to 3\AA\ to compute Patterson}
+  resolution limit (1.65\AA), used 30\AA\ to 3\AA\ to compute
+  Patterson}
 \end{itemize}
 }
 
@@ -326,7 +309,10 @@ Measures: including data to a point $d$, how internally consistent are they?
   representation of the sample}
 \item{Peak in anomalous difference Patterson using this much data}
 \item{N.B. phasing works with subset, full data set, just using SHELX
-    C/D/E - George have you fiddled the methods? This didn't used to work!}
+    C/D/E - George have you fiddled the methods? This didn't used to
+    work!}
+\item{Zero-dose gave peak height of 16.07$\sigma$ - slightly better
+    than the $360^{\circ}$ set but with $4\times$ the measurements used}
 \end{itemize}
 }
 
@@ -479,6 +465,33 @@ Total unique & 7685 &  & 130 &  & 111 &  \\
     solution}
 \item{``Good'' solutions from SHELXD were verified to be correct}
 \item{This tool possibly most useful with shutterless data collection}
+\item{Anisotropic diffraction: typically related to symmetry, symmetry
+    used in calculation so not sure what effects are likely to be...}
+\item{For reference: used zero-dose extrapolation in XSCALE, get 27.23
+    / 13.57 for CC / CCweak}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Conclusions}
+\begin{itemize}
+\item{Makes no changes to the intensity values - only asks the
+    question ``what happens if I stopped collecting earlier?''}
+\item{Makes no model of the radiation damage}
+\item{Works with your existing software in a graceful way}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Acknowledgements}
+\begin{itemize}
+\item{Miroslav Papiz, Steve Prince for converstion which got this
+    started, inspriation for the name \emph{chef}}
+\item{Kay Diederichs for $R_d$, as well as 0-dose with Sean McSweeney
+    and Raimond Ravelli}
+\item{Phil Evans for useful discussions on this subject}
+\item{Ed Mitchell, Diamond Staff, JCSG and Christian Siebold for the
+    examples shown}
 \end{itemize}
 }
 
