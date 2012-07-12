@@ -45,7 +45,6 @@
 \item{All calculations independent of data analysis program used}
 \item{Program to perform these calculations included with xia2:
     pychef}
-\item{Discussion assumes sample bathed in beam}
 \end{itemize}
 }
 
@@ -61,8 +60,8 @@
 \item{Vanishing diffraction}
 \end{itemize}
 }
-\item{Assume sufficient data for scaling, analyse after corrections applied}
-\item{Make no assumptions about scaling \emph{program}}
+\item{Assume sufficient data for scaling, analyse after corrections
+    applied, no assumptions about scaling \emph{program}}
 \item{Looking to answer the question: would this data set have been
     more useful if I stopped collecting data earlier - balancing:
 \begin{itemize}
@@ -71,19 +70,19 @@
 \end{itemize}
 }
 \item{Assume sufficient multiplicity that above question is meaningful
-  c.f. zero-dose}
+  (same as zero-dose)}
 \end{itemize}
 }
 
 \frame{
 \frametitle{$R_{\rm{merge}}$}
 \begin{equation}
-R_{\rm{merge}} = 
-\frac{\sum_{\underline{h}} \sum_j | I_{{\underline{h}}j} - 
+R_{\rm{merge}}(i) = 
+\frac{\sum_{\underline{h}} \sum_{j:\rm{image} = i} | I_{{\underline{h}}j} - 
 \overline{I}_{\underline{h}} |}
-{\sum_{\underline{h}} \sum_j I_{{\underline{h}}j}}
+{\sum_{\underline{h}} \sum_{j:\rm{image} = i} I_{{\underline{h}}j}}
 \end{equation}
-Measures: how well reflections on frame $j$ agree with the average
+Measures: how well reflections on frame $i$ agree with the average
 values of those reflections.
 }
 
@@ -214,7 +213,8 @@ I_{\underline{h}j}|}
 \sum_{i \neq j, i:d_i \leq d, j:d_j \leq d} \frac{1}{2}|I_{\underline{h}i} + 
 I_{\underline{h}j}|}
 \end{equation}
-Measures: including data to a point $d$, how internally consistent are they?
+Measures: including data to a point $d$, how internally consistent are
+the measurements?
 }
 
 \frame{
@@ -238,7 +238,8 @@ Measures: including data to a point $d$, how internally consistent are they?
 \frame{
 \frametitle{Comments and observations}
 \begin{itemize}
-\item{At the start always 'noisy' as there are few pairs}
+\item{At the start always 'noisy' as there are few pairs - only trust
+    once data are e.g. 50\% complete}
 \item{Most interesting is what happens after the data are fairly
     complete - in this case, nothing}
 \item{Even more interesting is to use \emph{dose} as the baseline
@@ -377,6 +378,13 @@ Total unique & 7685 &  & 130 &  & 111 &  \\
 }
 
 \frame{
+\frametitle{Per-image analysis (DISTL)}
+\begin{center}
+\includegraphics[scale=0.45]{figures/gold/pia.png}
+\end{center}
+}
+
+\frame{
 \frametitle{Interpretation}
 \begin{itemize}
 \item{Detector too far back - low completeness at high resolution}
@@ -397,8 +405,8 @@ Total unique & 7685 &  & 130 &  & 111 &  \\
 \begin{itemize}
 \item{Clear radiation damage according to this measure}
 \item{Data essentially as complete as they can be half way through}
-\item{Assert: using 900 frames of the data will work better than all
-    1800}
+\item{Assert: using 900 frames / $180^{\circ}$ of the data will
+    work better than the full set}
 \item{Test: use SHELXD (via ``Fast EP'' at Diamond)}
 \end{itemize}
 }
@@ -464,9 +472,6 @@ Total unique & 7685 &  & 130 &  & 111 &  \\
 \item{Subset of data currently being used with native for structure
     solution}
 \item{``Good'' solutions from SHELXD were verified to be correct}
-\item{This tool possibly most useful with shutterless data collection}
-\item{Anisotropic diffraction: typically related to symmetry, symmetry
-    used in calculation so not sure what effects are likely to be...}
 \item{For reference: used zero-dose extrapolation in XSCALE, get 27.23
     / 13.57 for CC / CCweak}
 \end{itemize}
@@ -475,10 +480,24 @@ Total unique & 7685 &  & 130 &  & 111 &  \\
 \frame{
 \frametitle{Conclusions}
 \begin{itemize}
+\item{This tool possibly most useful with shutterless data collection}
+\item{Anisotropic diffraction: typically related to symmetry, symmetry
+    used in calculation so not sure what effects are likely to be...}
 \item{Makes no changes to the intensity values - only asks the
     question ``what happens if I stopped collecting earlier?''}
+\item{Does not depend on an average value, only on differences between
+    individual masurements}
 \item{Makes no model of the radiation damage}
 \item{Works with your existing software in a graceful way}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Next step}
+\begin{itemize}
+\item{Extending to multi-crystal data analysis - all samples start at
+    dose 0, may decay at different rates, total completeness
+    available}
 \end{itemize}
 }
 
