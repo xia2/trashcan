@@ -78,12 +78,12 @@
 \frametitle{$R_{\rm{merge}}$}
 \begin{equation}
 R_{\rm{merge}}(i) = 
-\frac{\sum_{\underline{h}} \sum_{j:\rm{image} = i} | I_{{\underline{h}}j} - 
+\frac{\sum_{\underline{h}} \sum_{j: i = \rm{image}} | I_{{\underline{h}}j} - 
 \overline{I}_{\underline{h}} |}
-{\sum_{\underline{h}} \sum_{j:\rm{image} = i} I_{{\underline{h}}j}}
+{\sum_{\underline{h}} \sum_{j: i = \rm{image}} I_{{\underline{h}}j}}
 \end{equation}
 Measures: how well reflections on frame $i$ agree with the average
-values of those reflections.
+values of those reflections. This is reported by Scala.
 }
 
 \frame{
@@ -94,7 +94,8 @@ R_d = \frac{\sum_{{\underline{h}}} \sum_{|b_j - b_i| = d}
 {\sum_{{\underline{h}}} \sum_{|b_j - b_i| = d}
 \frac{1}{2}|I_{\underline{h}j} + I_{\underline{h}i}|}
 \end{equation}
-Measures: how well reflections separated by $d$ frames agree.
+Measures: how well reflections separated by $d$ frames agree. This is
+reported by XDSSTAT.
 }
 
 \frame{
