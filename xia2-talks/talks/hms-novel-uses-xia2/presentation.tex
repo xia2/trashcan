@@ -34,4 +34,161 @@
 \end{itemize}
 }
 
+\frame{
+\frametitle{Context / Background}
+\begin{itemize}
+\item{\emph{xia2} developed as part of e-HTPX project}
+\item{Started work on DNA project in 2002 - kept this in mind}
+\item{Original thoughts behind xia2 were to cover scope from data
+    collection through reduction to phasing / refinement}
+\item{Implemented middle bit}
+\end{itemize}
+}
+
+\frame{
+\frametitle{\emph{xia2} at Diamond Light Source}
+\begin{itemize}
+\item{Full functionality available to users}
+\item{Run automatically (has been so for five years or so) on a
+    per-sweep basis - xia2 -blah -image /path/to/an/image}
+\item{Automatic running essentially fire and forget - results
+    available to user, not integrated into data collection system}
+\item{Rather than providing fine grained user control, run several
+    jobs}
+\item{Inspired development of fast DP - a very much cut down
+    ``script'' for performing simple data analysis with XDS}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Issues with this approach}
+\begin{itemize}
+\item{Lack of user interaction}
+\item{Does not sit nicely with e.g. MAD, multi-sweep data collection
+    (which we have plans for)}
+\item{Does not give feedback directly to the user (which we can mend,
+    and are working on)}
+\item{\emph{Does not handle incremental feedback well}}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Lower-level interaction}
+\begin{itemize}
+\item{Main \emph{xia2} program is a print statement (really) - all
+    processing performed to deliver the results of this print
+    statement}
+\item{However, the code is \emph{just Python}}
+\item{Let's look at a lower level interaction}
+\end{itemize}
+}
+
+\begin{frame}[fragile]
+\tiny{
+\begin{verbatim}
+    from Handlers.PipelineSelection import add_preference
+    directory, image = os.path.split(sys.argv[1])
+
+    from XProject import XProject
+    from XCrystal import XCrystal
+    from XWavelength import XWavelength
+   
+    xp = XProject(name = 'example')
+    xc = XCrystal('demonstration', xp)
+    xw = XWavelength('native', xc)
+    xw.add_sweep('native', directory, image)
+   
+    print 'Scaled data: %s' % xc.get_scaled_merged_reflections()['mtz']
+\end{verbatim}
+}
+\end{frame}
+
+\frame{
+\frametitle{Observations}
+\begin{itemize}
+\item{Code above will work}
+\item{It will also write a lot of junk to stdout}
+\item{May also generate extra directories - full fat version next slide}
+\end{itemize}
+}
+
+\begin{frame}[fragile]
+\tiny{
+\begin{verbatim}
+    from Handlers.PipelineSelection import add_preference
+    from Handlers.Streams import streams_off
+    from Handlers.Environment import Environment
+
+    Environment.dont_setup()
+    streams_off()
+
+    add_preference('indexer', 'labelit')
+    add_preference('integrater', 'xdsr')
+    add_preference('scaler', 'xdsr')
+
+    directory, image = os.path.split(sys.argv[1])
+
+    from XProject import XProject
+    from XCrystal import XCrystal
+    from XWavelength import XWavelength
+   
+    xp = XProject(name = 'example')
+    xc = XCrystal('demonstration', xp)
+    xw = XWavelength('native', xc)
+    xw.add_sweep('native', directory, image)
+   
+    print 'Scaled data: %s' % xc.get_scaled_merged_reflections()['mtz']
+\end{verbatim}
+}
+\end{frame}
+
+\frame{
+\frametitle{Moving on}
+\begin{itemize}
+\item{This code will \emph{silently} process your data, scale and
+    return a merged MTZ file containing intensities and amplitudes}
+\item{Provided handle to xp or xc kept can interrogate nearly everything}
+\item{\emph{Aha!} why can't I just add another sweep and get
+    reflections again? Bugs}
+\item{Code was never written to work like this, though with a couple
+    of hours work could be}
+\end{itemize}
+}
+
+\frame{
+\frametitle{How does this help?}
+\begin{itemize}
+\item{Lower level access to \emph{xia2} machinery}
+\item{More control from caller pespective}
+\item{Capability to provide user interface - user can (in principle)
+    add and remove sweeps, tweak processing on live system}
+\item{Capability for system to keep adding sweeps (say multi-crystal
+    environment) until complete data set achieved}
+\end{itemize}
+}
+
+\frame{
+\frametitle{What needs doing?}
+\begin{itemize}
+\item{Mainly resolving dependencies in the analysis - xia2 is dynamic}
+\item{e.g. when sweep added to wavelength, scaling needs repeating -
+    when images added to a sweep integration needs repeating}
+\item{Probably a couple of days work}
+\item{Oh, and moving all command options to Phil parameters}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Discussion, acknowledgements}
+\begin{itemize}
+\item{Kept talk short so can show code}
+\item{Thanks to Nick Sauter for suggesting this - moving in an
+    interesting direction}
+\item{\emph{xia2} funded through BBSRC e-Science e-HTPX project, CCP4,
+    BioXHit and Diamond Light Source}
+\item{Users, providers of test data, lots of people who have provided
+    input into project}
+\end{itemize}
+}
+
 \end{document}
