@@ -48,7 +48,7 @@
 \frame{
 \frametitle{\emph{xia2} at Diamond Light Source}
 \begin{itemize}
-\item{Full functionality available to users}
+\item{Full functionality available to users manually}
 \item{Run automatically (has been so for five years or so) on a
     per-sweep basis - xia2 -blah -image /path/to/an/image}
 \item{Automatic running essentially fire and forget - results
@@ -56,7 +56,8 @@
 \item{Rather than providing fine grained user control, run several
     jobs}
 \item{Inspired development of fast DP - a very much cut down
-    ``script'' for performing simple data analysis with XDS}
+    ``script'' for performing simple data analysis with XDS, in very
+    short time}
 \end{itemize}
 }
 
@@ -64,8 +65,8 @@
 \frametitle{Issues with this approach}
 \begin{itemize}
 \item{Lack of user interaction}
-\item{Does not sit nicely with e.g. MAD, multi-sweep data collection
-    (which we have plans for)}
+\item{Per-sweep \emph{xia2} problem: does not sit nicely with
+    e.g. MAD, multi-sweep data collection}
 \item{Does not give feedback directly to the user (which we can mend,
     and are working on)}
 \item{\emph{Does not handle incremental feedback well}}
@@ -175,6 +176,18 @@
     when images added to a sweep integration needs repeating}
 \item{Probably a couple of days work}
 \item{Oh, and moving all command options to Phil parameters}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Next steps: DIALS}
+\begin{itemize}
+\item{Project part of Biostruct-X EU FP7 project, funded by EU,
+    Diamond Light Source and CCP4}
+\item{Collaborating with Nick Sauter / New Horizons}
+\item{Aim to develop new integration framework and algorithms - next
+    talk}
+\item{Aim to provide interface \emph{via} \emph{xia2}}
 \end{itemize}
 }
 
