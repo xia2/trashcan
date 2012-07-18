@@ -205,6 +205,19 @@ reported by XDSSTAT.
 }
 
 \frame{
+\frametitle{Properties}
+\begin{itemize}
+\item{Computing pairwise differences avoids need for average value}
+\item{Integrating differences up to some dose $d$ reproduces
+    experiment}
+\item{Organising in terms of dose, integrating across wavelengths and
+    sweeps allows evolution of sample to be described}
+\item{While performing analysis, compute completeness (anomalous and
+    native) for each wavelength as function of $d$}
+\end{itemize}
+}
+
+\frame{
 \frametitle{$R_{cp}(d)$, \emph{Cumulative-Pairwise} Residual}
 \begin{equation}
 R_{cp}(d) = \frac{\sum_{\lambda} \sum_{\underline{h}} \sum_{
@@ -311,8 +324,7 @@ the measurements?
   representation of the sample}
 \item{Peak in anomalous difference Patterson using this much data}
 \item{N.B. phasing works with subset, full data set, just using SHELX
-    C/D/E - George have you fiddled the methods? This didn't used to
-    work!}
+    C/D/E}
 \item{Zero-dose gave peak height of 16.07$\sigma$ - slightly better
     than the $360^{\circ}$ set but with $4\times$ the measurements used}
 \end{itemize}
