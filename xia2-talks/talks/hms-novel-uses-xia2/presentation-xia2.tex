@@ -37,7 +37,8 @@
 \frame{
 \frametitle{Context / Background}
 \begin{itemize}
-\item{\emph{xia2} developed as part of e-HTPX project}
+\item{\emph{xia2} initially developed as part of e-HTPX project,
+    supported by CCP4 and EU, now Diamond Light Source}
 \item{Started work on DNA project in 2002 - kept this in mind}
 \item{Original thoughts behind xia2 were to cover scope from data
     collection through reduction to phasing / refinement}
@@ -62,14 +63,45 @@
 }
 
 \frame{
+\frametitle{Benefits with this approach}
+\begin{itemize}
+\item{Lack of user interaction - they can get on with data collection}
+\item{Now considered by users a beamline component - they complain on
+    feedback forms when it fails}
+\item{All data is processed during the beam time  - users can plan
+    experiments properly}
+\end{itemize}
+}
+
+\frame{
 \frametitle{Issues with this approach}
 \begin{itemize}
 \item{Lack of user interaction}
+\item{Timescale, hence Fast DP (next slide)}
 \item{Per-sweep \emph{xia2} problem: does not sit nicely with
     e.g. MAD, multi-sweep data collection}
 \item{Does not give feedback directly to the user (which we can mend,
     and are working on)}
 \item{\emph{Does not handle incremental feedback well}}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Fast DP}
+\includegraphics[scale=0.4]{fast-dp-diagram.pdf}
+}
+
+\frame{
+\frametitle{Dimple}
+\includegraphics[scale=0.4]{dimple-diagram.pdf}
+}
+
+\frame{
+\frametitle{Per-image analysis}
+\begin{itemize}
+\item{Run DISTL on every image / 250 from wedge, plot}
+\item{Gives near real-time feedback on diffraction}
+\item{Very useful tool for showing identification of sample}
 \end{itemize}
 }
 
@@ -183,8 +215,7 @@
 \frametitle{Next steps: DIALS}
 \begin{itemize}
 \item{Project part of Biostruct-X EU FP7 project, funded by EU,
-    Diamond Light Source and CCP4}
-\item{Collaborating with Nick Sauter / New Horizons}
+    Diamond Light Source and CCP4, collaborating with New Horizons}
 \item{Aim to develop new integration framework and algorithms - next
     talk}
 \item{Aim to provide interface \emph{via} \emph{xia2}}
