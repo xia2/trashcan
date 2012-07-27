@@ -30,7 +30,18 @@
 \item{At Diamond Light Source}
 \item{Options for lower level interaction}
 \item{How does this help?}
-\item{Discussion, acknowledgements}
+\end{itemize}
+}
+
+\frame{
+\frametitle{Acknowledgements}
+\begin{itemize}
+\item{Thanks to Nick Sauter for suggesting this - moving in an
+    interesting direction}
+\item{\emph{xia2} funded through BBSRC e-Science e-HTPX project, CCP4,
+    BioXHit and Diamond Light Source}
+\item{Users, providers of test data, lots of people who have provided
+    input into project, Diamond Light Source staff}
 \end{itemize}
 }
 
@@ -43,6 +54,9 @@
 \item{Original thoughts behind xia2 were to cover scope from data
     collection through reduction to phasing / refinement}
 \item{Implemented middle bit}
+\item{\emph{xia2} is properly free open source software}
+\item{\emph{xia2} possible conduit for delivering DIALS software to
+    beamlines}
 \end{itemize}
 }
 
@@ -63,6 +77,29 @@
 }
 
 \frame{
+\frametitle{Fast DP}
+Fast processing with Fast DP - script which runs XDS on up to 480 cpus
+to deliver data reduction (frames to merged MTZ, merging stats) in
+under 2 minutes, even for 1800 frame Pilatus sets.
+\includegraphics[scale=0.4]{fast-dp-diagram.pdf}
+}
+
+\frame{
+\frametitle{Dimple}
+Following Fast DP - compute difference map from known native
+structure, particularly useful for industry. Map available within a
+few minutes of the experiment.
+\includegraphics[scale=0.4]{dimple-diagram.pdf}
+}
+
+\frame{
+\frametitle{Per-image analysis}
+Run DISTL on every image / 250 from wedge, plot - gives near real-time
+feedback on diffraction. Useful for characterising what happened to sample.
+\includegraphics[scale=0.4]{pia.png}
+}
+
+\frame{
 \frametitle{Benefits with this approach}
 \begin{itemize}
 \item{Lack of user interaction - they can get on with data collection}
@@ -80,33 +117,14 @@
 \item{Timescale, hence Fast DP (next slide)}
 \item{Per-sweep \emph{xia2} problem: does not sit nicely with
     e.g. MAD, multi-sweep data collection}
-\item{Does not give feedback directly to the user (which we can mend,
-    and are working on)}
+\item{Feedback to user is not assertive i.e. direct feedback to data
+    collection system}
 \item{\emph{Does not handle incremental feedback well}}
 \end{itemize}
 }
 
 \frame{
-\frametitle{Fast DP}
-\includegraphics[scale=0.4]{fast-dp-diagram.pdf}
-}
-
-\frame{
-\frametitle{Dimple}
-\includegraphics[scale=0.4]{dimple-diagram.pdf}
-}
-
-\frame{
-\frametitle{Per-image analysis}
-\begin{itemize}
-\item{Run DISTL on every image / 250 from wedge, plot}
-\item{Gives near real-time feedback on diffraction}
-\item{Very useful tool for showing identification of sample}
-\end{itemize}
-}
-
-\frame{
-\frametitle{Lower-level interaction}
+\frametitle{Lower-level interaction with \emph{xia2}}
 \begin{itemize}
 \item{Main \emph{xia2} program is a print statement (really) - all
     processing performed to deliver the results of this print
@@ -185,6 +203,8 @@
     reflections again? Bugs}
 \item{Code was never written to work like this, though with a couple
     of hours work could be}
+\item{Move control of system from command-line input to Phil objects -
+    more easily embedded}
 \end{itemize}
 }
 
@@ -203,36 +223,28 @@
 \frame{
 \frametitle{What needs doing?}
 \begin{itemize}
-\item{Mainly resolving dependencies in the analysis - xia2 is dynamic}
-\item{e.g. when sweep added to wavelength, scaling needs repeating -
-    when images added to a sweep integration needs repeating}
-\item{Probably a couple of days work}
-\item{Oh, and moving all command options to Phil parameters}
+\item{Mainly resolving dependencies in the analysis - xia2 is dynamic
+    enough already
+\begin{itemize}
+\item{e.g. when sweep added to wavelength, scaling needs repeating}
+\item{e.g. when images added to a sweep integration needs repeating}
+\end{itemize}
+}
+\item{Probably a couple of days work - not hours, I tried the other day}
+\item{Testing - this is an approach which has never been tested inside
+    xia2 though should work}
 \end{itemize}
 }
 
-\frame{
-\frametitle{Next steps: DIALS}
-\begin{itemize}
-\item{Project part of Biostruct-X EU FP7 project, funded by EU,
-    Diamond Light Source and CCP4, collaborating with New Horizons}
-\item{Aim to develop new integration framework and algorithms - next
-    talk}
-\item{Aim to provide interface \emph{via} \emph{xia2}}
-\end{itemize}
-}
-
-\frame{
-\frametitle{Discussion, acknowledgements}
-\begin{itemize}
-\item{Kept talk short so can show code}
-\item{Thanks to Nick Sauter for suggesting this - moving in an
-    interesting direction}
-\item{\emph{xia2} funded through BBSRC e-Science e-HTPX project, CCP4,
-    BioXHit and Diamond Light Source}
-\item{Users, providers of test data, lots of people who have provided
-    input into project}
-\end{itemize}
-}
+%\frame{
+%\frametitle{Next steps: DIALS}
+%\begin{itemize}
+%\item{Project part of Biostruct-X EU FP7 project, funded by EU,
+%    Diamond Light Source and CCP4, collaborating with New Horizons}
+%\item{Aim to develop new integration framework and algorithms - next
+%    talk}
+%\item{Aim to provide interface \emph{via} \emph{xia2}}
+%\end{itemize}
+%}
 
 \end{document}
