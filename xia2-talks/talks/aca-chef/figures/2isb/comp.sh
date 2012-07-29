@@ -5,9 +5,9 @@ set xlabel 'Image number'
 set ylabel 'Anomalous completeness'
 set xrange [0:90] 
 set yrange [0:1]
-plot 'comp1.dat' using 1:5 with lines title 'Inflection', \
-'comp2.dat' using 1:5 with lines title 'Low remote', \
-'comp3.dat' using 1:5 with lines title 'Peak'
+plot 'comp1.dat' using 1:5 with lines lw 4 title 'Inflection', \
+'comp2.dat' using 1:5 with lines lw 4 title 'Low remote', \
+'comp3.dat' using 1:5 with lines lw 4 title 'Peak'
 
 eof
 

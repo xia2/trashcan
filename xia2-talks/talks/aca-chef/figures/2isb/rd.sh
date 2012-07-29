@@ -5,9 +5,9 @@ set xlabel 'Image number difference'
 set ylabel 'Rd'
 set xrange [0:90] 
 set yrange [0:0.3]
-plot 'rd1.dat' using 1:2 with lines title 'Inflection', \
-'rd2.dat' using 1:2 with lines title 'Low remote', \
-'rd3.dat' using 1:2 with lines title 'Peak'
+plot 'rd1.dat' using 1:2 with lines lw 2 title 'Inflection', \
+'rd2.dat' using 1:2 with lines lw 2 title 'Low remote', \
+'rd3.dat' using 1:2 with lines lw 2 title 'Peak'
 
 eof
 

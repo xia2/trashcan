@@ -10,9 +10,9 @@ set xrange [0:360]
 set ytics nomirror
 set y2tics nomirror
 set key right bottom
-plot '1800_rcp.dat' using (0.2 * \$1):10 with lines title 'Rcp', \
-'1800_completeness.dat' using (0.2 * \$1):2 with lines title 'Completeness' axis x1y2, \
-'1800_completeness.dat' using (0.2 * \$1):5 with lines title 'Anomalous' axis x1y2
+plot '1800_rcp.dat' using (0.2 * \$1):10 with lines lw 4 title 'Rcp', \
+'1800_completeness.dat' using (0.2 * \$1):2 with lines lw 4 title 'Completeness' axis x1y2, \
+'1800_completeness.dat' using (0.2 * \$1):5 with lines lw 4 title 'Anomalous' axis x1y2
 eof
 
 cat 1800_rcp2.tex | python ../fix.py > 1800_rcp2.tmp

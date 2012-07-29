@@ -5,7 +5,7 @@ set xlabel 'Image number difference'
 set ylabel 'Rd'
 set xrange [0:900] 
 set yrange [0:0.1]
-plot 'rd.dat' using 1:2 with lines notitle
+plot 'rd.dat' using 1:2 with lines lw 2 notitle
 eof
 
 cat rd.tex | python ../fix.py > rd.tmp

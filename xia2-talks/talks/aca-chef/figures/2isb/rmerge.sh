@@ -5,9 +5,9 @@ set xlabel 'Image number'
 set ylabel 'Rmerge'
 set xrange [0:90] 
 set yrange [0:0.25]
-plot 'rmerge1.dat' using 2:9 with lines title 'Inflection', \
-'rmerge2.dat' using 1:9 with lines title 'Low remote', \
-'rmerge3.dat' using 1:9 with lines title 'Peak'
+plot 'rmerge1.dat' using 2:9 with lines lw 2 title 'Inflection', \
+'rmerge2.dat' using 1:9 with lines lw 2 title 'Low remote', \
+'rmerge3.dat' using 1:9 with lines lw 2 title 'Peak'
 
 eof
 

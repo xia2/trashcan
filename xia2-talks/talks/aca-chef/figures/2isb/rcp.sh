@@ -10,10 +10,10 @@ set y2range [0:1.05]
 set ytics nomirror
 set y2tics nomirror
 set key right bottom
-plot 'rcp.dat' using 1:10 with lines title 'Rcp', \
-'comp1d.dat' using 1:2 with lines title 'Inflection' axis x1y2, \
-'comp2d.dat' using 1:2 with lines title 'Low remote' axis x1y2, \
-'comp3d.dat' using 1:2 with lines title 'Peak' axis x1y2
+plot 'rcp.dat' using 1:10 with lines lw 4 title 'Rcp', \
+'comp1d.dat' using 1:2 with lines lw 4 title 'Inflection' axis x1y2, \
+'comp2d.dat' using 1:2 with lines lw 4 title 'Low remote' axis x1y2, \
+'comp3d.dat' using 1:2 with lines lw 4 title 'Peak' axis x1y2
 eof
 
 cat rcp2.tex | python ../fix.py > rcp2.tmp

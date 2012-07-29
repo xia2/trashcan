@@ -5,7 +5,7 @@ set xlabel 'Image number'
 set ylabel 'Rmerge'
 set xrange [0:1440] 
 set yrange [0:0.20]
-plot 'rmerge.dat' using 2:9 with lines notitle
+plot 'rmerge.dat' using 2:9 with lines lw 2 notitle
 eof
 
 cat rmerge.tex | python ../fix.py > rmerge.tmp
