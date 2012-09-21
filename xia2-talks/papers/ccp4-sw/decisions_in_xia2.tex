@@ -77,12 +77,12 @@ Taken from the top level, the workflow of data reduction for
 macromolecular crystallography (MX) can be considered as three phases:
 (i) characterisation and (ii) integration of data from individual sweeps,
 followed by (iii) scaling and merging of all sweeps taken from a given
-crystal. Decisions made at earlier stages has implications for
+crystal. Decisions made at earlier stages have implications for
 subsequent stages, and information from the later stages may
 contradict those earlier decisions. Any system to automate data
 reduction must therefore be sufficiently flexible to manage this
 situation gracefully, considering all decisions made as hypotheses
-that are subsequently tested. The system must also embody the workflow being
+that are subsequently tested. The system must also express the workflow being
 performed to give the structure into which to embed the decision
 making expertise.
 
@@ -90,12 +90,13 @@ making expertise.
 
 For any given choice there may be a set of optimum parameters for a
 specific example data set. There may however also be a set of
-parameters which can be 
+default parameters which can be 
 shown to generally work well with limited knowledge of the problem in
 hand, for example a general ``class'' of data sets.
 These \emph{guidelines} may be determined from a systematic
 analysis of a number of data sets, which should ideally be free of
-artefacts. This criterion highlighted the value of data from 
+artefacts, e.g. split spots, sample misalignment and ice rings. 
+This criterion highlighted the value of data from 
 structural genomics programs, where the published data are well
 characterised (i.e. the structure has been solved) and have been
 collected in a consistent manner. This has the benefit that the
@@ -129,25 +130,27 @@ made as well as decisions as to how to handle passing information
 around the system, in particular from later stages to earlier. 
 
 Here, the decisions \emph{within} each phase will be considered for
-each of the software packages supported, including special cases and
-advice the user about appropriate \emph{xia2} options to use where
-appropriate. The objective of the characterisation stage is to determine:
+each of the software packages used by \emph{xia2},
+including special cases and
+advice to the user about \emph{xia2} options to use where
+appropriate. The objective of the characterisation stage is to
+determine for a given sweep of images:
 
 \begin{itemize}
 \item{A list of possible Bravais lattice options and appropriate cell
     constants for each.}
 \item{Refined / updated values for the beam centre and distance.}
-\item{A lattice / cell proposal, based on an analysis of the possible
+\item{A lattice / cell proposal, based on an analysis of all of the possible
     options.}
 \end{itemize}
 
 \noindent
-for a given sweep of images. In addition, any crystal orientation
+In addition, any crystal orientation
 matrices calculated
 should also be available. For a given program, the choices to make
 are: the selection of images to use for indexing, the thresholds to
 use for indexing, selection of the ``best'' solution and analysis to
-ensure that the selected solution appears to be satisfactory. 
+ensure that the selected solution meets the acceptance criteria. 
 
 \subsection{Labelit and Mosflm}
 
@@ -159,13 +162,14 @@ the programs in indexing is similar, requiring only one analysis for
 the selection of images - though the analysis of solutions will depend
 on the program being used as they are scored differently.
 The authors of both Labelit and Mosflm recommend the use of two images
-for indexing, spaced by $\sim 90^{\circ}$ in rotation\footnote{Subsequently
-referred to as $\phi$ for brevity} giving a wide coverage of
+for indexing, spaced by $\sim 90^{\circ}$ in rotation (subsequently $\phi$ for
+brevity) giving a wide coverage of 
 reciprocal space over which to determine the basis vectors. 
 
 To optimise any process a scoring scheme is needed. Here the objective
 is to determine the selection of images which generally give the most
-accurate indexing solution. As the R.M.S. deviation between observed
+accurate indexing solution. As the minimum root mean square
+(R.M.S.) deviation between observed
 and predicted spot centres is a target of refinement and the ideal absolute
 values of the unit cell constants are poorly defined (at least at this
 stage) these represent poor metrics. The metric penalty however,
@@ -173,13 +177,14 @@ defined as the deviation from the constraints for each Bravais lattice
 \cite{Grosse-Kunstleve:sh5006} is appropriate as this is a test for
 internal consistency 
 and is also relevent for automatic strategy systems such as EDNA
-\cite{Incardona:wa5014}. With this in mind, a secondary constraint is raised:
-there is a benefit in using few rather than many images.
+\cite{Incardona:wa5014}. With this in mind, the use of few images may
+be desirable.
 
 \begin{figure}
 \caption{Mean normalised metric penalty as a function of number of
   images used for characterisation with Labelit, where smaller values
-  indicate more accurate solutions.
+  indicate more accurate solutions. The step from two images to three,
+  a factor of around 1.7, is much larger than any subsequent change.
 \label{figure:no_images}}
 \centering
 \includegraphics[scale=0.5]{figures/no_images.pdf}
@@ -188,13 +193,22 @@ there is a benefit in using few rather than many images.
 Data were taken from 86 sweeps from the JCSG archive, where  the
 following four
 criteria were met: the lattice was not pseudosymmetric, nor triclinic,
-autoindexing with a single image gave the ``correct'' result and at
-least $90^{\circ}$ of data were available. First, the number of images
+autoindexing with a single image gave the ``correct'' result and
+at least $90^{\circ}$ of data were available. The resulting sweeps had 
+resolution limits in the range 3.5\AA\ to 1.2\AA\.
+First, the number of images
 to use for indexing was considered. Figure~\ref{figure:no_images}
-shows the mean 
-normalized metric penalty\footnote{All of the metric penalties for a
-  given sweep were scaled over the range $0 - 1$, then this normalized
-  value averaged across all sweeps for a given number of images.} for
+shows the mean normalized metric penalty, calculated as follows:
+
+\begin{itemize}
+\item{all of the metric penalties for a
+  given sweep were scaled over the range $0 - 1$}
+\item{then this normalized
+  value averaged across all sweeps for a given number of images.}
+\end{itemize}
+
+\noindent
+for
 one to 15 images spread across the range $0 - 90^{\circ}$, where
 smaller values indicate a more accurate solution. Clearly the use of
 two images ($\sim 0.24$) gives a substantially more accurate result
@@ -214,7 +228,7 @@ improvement is clear.
 
 Following a similar procedure it was found
 (Figure~\ref{figure:phi_spacing_45a}) that a 
-spacing of $\sim 45^{\circ}$ generally gave the most accurate
+spacing of more than $\sim 20 - 30^{\circ}$ generally gave the most accurate
 solution. Extending this analysis to sweeps of up to $180^{\circ}$
 confirmed this result (not shown.) 
 
@@ -237,12 +251,14 @@ metric penalty where multiple options exist. In usual operation Mosflm
 makes a selection from the possible solutions which satisfies similar
 constraints, which is taken by \emph{xia2}. Once again, all possible
 options are saved. It is important to note that this selection of the
-highest symmetry plausible solution is reasonable as it will be
-substantially challenged in subsequent analysis steps.
+highest symmetry plausible solution is a reasonable approach as it will be
+challenged in subsequent analysis steps.
 
 \subsection{XDS}
 
-Unlike Mosflm and Labelit, the indexing in XDS uses $\phi$
+Unlike Mosflm and Labelit which assume the $\phi$ centroid is the
+centre of the image, 
+the indexing in XDS uses calculated $\phi$
 centroids as well as positions on the image of reflections, and
 therefore operates most reliably when given one or more \emph{wedges} of
 images. Indeed, it is perfectly possible to index with peaks taken
@@ -276,8 +292,9 @@ well.
 
 By anology with Labelit, data were indexed with a triclinic basis
 from all images and from one to ten $5^{\circ}$ wedges, with the
-resulting triclinic cell used with \verb|iotbx.lattice_symmetry| to
-compute the metric penalty for the correct lattice. As may be seen
+resulting triclinic cell used to
+compute the metric penalty for the correct lattice
+using tools from CCTBX. As may be seen
 from Figure~\ref{figure:xds_n_images},
 use of a single $5^{\circ}$ wedge gave the poorest
 results followed by the use of all images. The use of two and three
@@ -286,13 +303,12 @@ subsequently. Following from this, various wedge sizes were tested and
 no substantial trends, beyond using at least two frames, were found
 though a slight benefit was observed for using $\sim 5^{\circ}$ wedges
 (not shown.) Finally the ideal spacing was found to be $\sim
-45^{\circ}$ though little improvement was found beyond $\sim
-20^{\circ}$ (also not shown.)  
+20 - 30^{\circ}$ (also not shown.)  
 
 In the case that XDS is used for the initial indexing, it is necessary
 to select a proposed solution from the 44 lattice characters output by
 XDS. In the analysis no solutions with a penalty higher than 40 were
-found to be correct, so with no guidance the system will select the
+found to be correct, so with no guidance \emph{xia2} will select the
 highest symmetry solution with a penalty lower than this threshold. If
 however the symmetry has been given by the user this limit is raised
 to 200. As with Labelit, in cases of multiple cell possibilities for a
@@ -340,7 +356,8 @@ integration. The decision making will therefore be separated into
 preparation for integration and integration proper.
 
 The preparation for integration is primarily to set up Moslfm into
-a suitable state for performing integration. This will require the
+a suitable state for performing integration by setting the appropriate
+parameters. This will require the
 selection of images for the cell refinement and
 the configuration of the program state. To determine rules for the
 selection of images a similar process was followed to the selection of
@@ -352,7 +369,7 @@ sweeps used earlier, and the resulting cell constants scored
 of data spaced by ideally $45^{\circ}$. To robustly prepare the program state
 for cell refinement however it is necessary to first gather the
 reflection profile parameters that would usually be obtained during
-indexing. To achieve this an incidental indexing step is
+indexing. To achieve this an indexing step is
 performed, where the spot parameters and an estimate of the resolution
 limit are retained from the program output
 but the other results ignored. It was found that
@@ -360,7 +377,7 @@ applying this rather conservative
 resolution limit during the cell refinement gave rise to
 much more reliable results.
 
-To approximate the visual assessment described above, the cell
+To approximate the visual assessment described earlier, the cell
 refinement is performed with the proposed lattice from
 characterisation and with a triclinic 
 basis, with the orientation matrix from
@@ -373,14 +390,13 @@ all cases when the lattice had been correctly assigned this ratio was
 less than 1.5. However, in cases where the lattice had pseudosymmetry
 (i.e. monoclinic with $\beta \sim 90^{\circ}$)
 the ratio exceeded this value, and 1.5 is therefore used as a
-cutoff. Intuitively this makes sense: if the application of the
-lattice constraints makes the aignment of the predictions with the
-observed spot positions 50\% worse the lattice constraints are
-unlikely to be correct. If this is the case that solution may be
+cutoff. If in analysis the ratio exceeds this value the indexing
+solution is assumed to be incorrect. If this is the case that solution may be
 eliminated from consideration and the next lower symmetry lattice
 considered, a process which takes place within the characterisation.
 Other tests, such as comparing the deviation of the refined triclinic
-cell constants to those satisfying the lattice symmetry as a function
+cell constants to those satisfying the metric constraints for the 
+lattice symmetry as a function
 of the estimated standard deviation of those constraints was found to
 be unreliable. Once the preparation is complete there are a number of
 choices to be made for the integration proper:
@@ -401,15 +417,17 @@ and considering the merging statistics. Provided that the extent of
 the data are unchanged (i.e. same image range, same resolution limits)
 $R_{\rm{merge}}$ will be a reliable indicator of accuracy. To make
 this assessment, Pointless \cite{Evans:ba5084} and Scala were
-used, the latter with a ``standard'' scaling model\footnote{Smoothed
-  scaing on rotation with $5^{\circ}$ intervals, secondary absorption
-  correction and smoothed $B$ factor correction with $20^{\circ}$
-  intervals.}
-(the default in CCP4i.) Protocols were determined for integration to assess each
-of the above choices, by comparison with the procedures recommended
+used, the latter with a ``standard'' scaling model: smoothed
+scaing on rotation with $5^{\circ}$ intervals, secondary absorption
+correction and smoothed $B$ factor correction with $20^{\circ}$
+intervals, the default in CCP4i.
+Protocols were determined for integration to assess each
+of the above choices, though a 
+comparison with the procedures recommended
 by the program authors. In summary, it was found that fixing the cell
 constants during integration was helpful however applying a resolution
-cutoff made little difference, as did applying the Bravais lattice
+cutoff and instead integrating across the full face of the detector
+made little difference, as did applying the Bravais lattice 
 constraints. The conclusion was therefore to integrate across the
 active area of the detector, fixing the cell constants and applying
 the lattice constraints, though in hindsight there are arguments
@@ -442,18 +460,21 @@ choices are:
 \end{itemize}
 
 \noindent
-These may be compared with the straightforward protocol described above. Using
+These may be compared with the straightforward ``XDS default''
+protocol described above. Using
 the same data as were used for Mosflm, it was
 clear that any of these changes to the strategy were ``polishing'' the
 data, with an average change in $R_{\rm{merge}}$ of around 2\% of the
 value. The only marked improvement was found from recycling the
-reflection profile parameters, however it will then be necessary
-to reintegrate the full data set.
+reflection profile parameters, which define the grid for the
+transformation from the image to the Ewald sphere.
+To recycle these parameters it is necessary to reintegrate the full data set.
 
 In processing the data with Mosflm the selection of Bravais lattice
 was tested \emph{via} postrefinement. In XDS, global refinement is
 performed after integration allowing the lattice to be tested in a
-similar manner, once again with a 50\% threshold. Currently in
+similar manner, once again with allowing a ratio of no more than 1.5
+in the R.M.S. deviations. Currently in
 \emph{xia2} the integration is performed with the Bravais constraints
 applied, for historical reasons, though performing the integration
 with a triclinic basis is planned. The same global refinement may then
@@ -467,14 +488,15 @@ point that all of the processed data are brought together and tested
 for consistency, both within individual sweeps (i.e. that the symmetry
 in intensity data is consistent with the Bravais lattice) and between
 sweeps (i.e. that the Bravais lattices are consistent and that the
-data are indexed in a uniform manner.) This requires careful
+data are indexed in a consistent manner.) This requires careful
 management of derived information as well as the possibiity for feedback to
 earlier processing steps. To assist with this the scaling step is
 split into three phases - the preparation, the scaling itself and then
 post-processing.
 
 Following the use of Mosflm and XDS, Scala (and now Aimless) and
-XSCALE are natural for the main scaling step. However a number of other
+XSCALE, respectively, 
+are natural for the main scaling step. However a number of other
 programs from CCP4 and elsewhere (including Cad, Truncate and
 Pointless) are used to help in this process.
 
@@ -495,16 +517,21 @@ to determine whether the Bravais lattice used for processing is
 consistent with the apparent pointgroup of the data
 (Figure~\ref{figure:scaling_1}.)
 This test is performed by comparing the highest allowed Bravais
-lattice from processing with the most likely result from Pointless. If
+lattice from processing with the most likely result from 
+the analysis of intensities with Pointless. If
 the two are consistent (for example, pointgroup P422 with lattice tP)
-the test is passed immediately. If the apparent pointgroup has higher
+the test is passed immediately. If the Bravais lattice corresponding
+to the apparent pointgroup has higher
 symmetry than the allowed lattice, as may occur when a
 non-crystallographic symmetry axis is closely aligned with the unit cell
-axes, that pointgroup is ignored and the next most likely tested. If
-however the most likely pointgroup has \emph{lower} symmetry than the
-Bravais lattice used for processing the latter is eliminated from
-consideration as discussed earlier and the data are reprocessed with
-the lattice corresponding to this pointgroup. An example of this would
+axes, that pointgroup is ignored and the next most likely tested. 
+If
+however the bravais lattice corresponding to the most likely pointgroup has 
+\emph{lower} symmetry than the
+Bravais lattice used for processing the lattice used for processing
+is eliminated from
+consideration and the data are reprocessed with the correct lattice.
+An example of this would
 be a monoclinic lattice with $\beta$ angle indistinguishable
 from $90^{\circ}$. 
 
@@ -522,8 +549,7 @@ processed with a lattice consistent with the pointgroup symmetry of
 the data. However, it may be the case (for example from a low and high
 resolution pass) that the conclusions for one sweep differ from those
 from another. In that case (Figure~\ref{figure:scaling_2}) the lowest
-symmetry Bravais lattice\footnote{Defined to be the lattice with
-  fewest constraints}
+symmetry Bravais lattice
 is assumed for all sweeps. If at this stage the pointgroup
 conclusions remain inconsistent an error is raised as it is likely
 that something has gone wrong - for example an inconsistent data set
@@ -546,7 +572,8 @@ most likely
 spacegroup is also determined from the systematic absences, primarily
 for the benefit of the downstream sructure factor amplitudes, though
 often convenient for the program user. When sorting and scaling the
-data are put into the sweep order in which they were collected.
+data are put into the sweep order in which they were collected by
+appropriate renumbering of the batches.
 
 \subsection{Scaling with Scala}
 
@@ -573,7 +600,7 @@ factors over $5^{\circ}$ spacing in rotation to give a reference
 convergence rate. Then seven other protocols are tested: with and
 without decay, absorption and partiality correction, with the model
 which gives the best merging residuals while converging in less than
-twice the time of the simple run selected. 
+twice the number of cycles of the simple run selected. 
 
 In terms of the parameterisation of the scaling, it was found that for
 typical data adjusting the rotation range for the scale and
@@ -616,7 +643,8 @@ list of reflections which do not appear to belong to the data set as a
 whole - ``aliens'' - these are subsequently excluded in an iterative manner.
 
 After scaling the unmerged data are reformatted into their original
-sweep structure and merged with Scala or Aimless, as this gives an
+sweep structure using tools from CCP4
+and merged with Scala or Aimless, as this gives an
 easily interpreted report on data quality and also a route into
 producing MTZ files for the subsequent post processing, discussed below.
 
@@ -632,8 +660,9 @@ and XSCALE, giving more consistent results.
 The resolution limit calculations themselves use the merged and
 unmerged $\frac{I}{\sigma_I}$ values, the completeness and the
 $R_{\rm{merge}}$ as possible criteria for determining a cutoff, with
-the first two considered by default with values of 2 and 1
-respectively. The cutoff applied to the unmerged data was found to be
+the merged $\frac{I}{\sigma_I} > 2$ and unmerged 
+$\frac{I}{\sigma_I}> 1$ by default. The cutoff applied to the unmerged
+data was found to be 
 helpful when considering data with very high multiplicity - though the
 multiplicity provides a boost to the apparent $\frac{I}{\sigma_I}$,
 the resulting measurements were found in some cases
@@ -644,7 +673,7 @@ expected, as judged by the $E^4$ plot from Truncate (not shown.)
 This is assumed
 to be a result of a poor estimation of the errors for weak
 reflections, giving rise to systematic effects in
-merging. $CC\frac{1}{2}$ and $CC^*$
+merging. The internal correlation coefficients $CC\frac{1}{2}$ and $CC^*$
 have since been proposed as a more robust
 choice for resolution limit calculation (Evans \& Murshudov, this
 volume and \cite{Karplus25052012})
@@ -695,7 +724,7 @@ interaction between the analysis and the data.
 
 As an expert system can only make decisions based on the information
 available, careful management of data is critical. Most data familiar
-to macromolecular crystallographers deal with static
+to macromolecular crystallographers define static
 information, for example coordinate files and reflection data. 
 Within \emph{xia2} however
 the knowledge at any stage is a \emph{hypothesis} and hence
@@ -714,7 +743,7 @@ a useful model of the experiment. Within \emph{xia2} the raw data are
 structured in terms of sweeps of diffraction data, which belong to
 wavelengths (which are merged to a single MTZ data set in the output)
 which in turn belong to crystals. The crystals are contained within
-projects, but this does not currently take part in the analysis. Crystals
+projects, but this is not currently considered in the analysis. Crystals
 are also the fundamental unit of data for scaling. All of these
 data structures (project, crystal, wavelength, sweep) map directly onto
 objects within \emph{xia2} and initially contain only static data -
@@ -782,7 +811,7 @@ real benefit is felt through the the data management hierarchy.
 
 \subsection{Linking Data Structures and Interfaces}
 
-The benefit to having standard interfaces to all of the analysis
+The benefit of having standard interfaces to all of the analysis
 steps, and linking those analysis steps to the data hierarchy, is that
 the source of a particular piece of information
 is clear. For example, if a sweep is asked for the unit cell and Bravais
@@ -826,7 +855,7 @@ ubiquitous enzyme responsible for the transfer of a dihydroxyethyl
 moiety from a ketose sugar to an aldose sugar in the pentose phosphate
 pathway of metabolism. Crystals were grown from protein in complex
 with the cofactor, thiamine pyrophosphate (TPP) and a divalent $\rm{Mg}^{2+}$
-ion taken from magnesium chloride. This data was collected as part of
+ion from magnesium chloride. These data were collected as part of
 a high throughput structure determination project being carried out as
 a collaboration between Diamond Light Source and the Oxford Protein
 Production Facility (paper in preparation.) As such it provides an
@@ -836,15 +865,19 @@ structure determination pipeline.
 
 The analysis of this data proceeded in a straightforward fashion from
 the command-line 
-\verb|xia2 -3di -project P100TRANSK -crystal OPPF4501 /path/to/data|.
+\verb|xia2 -3d -project P100TRANSK -crystal OPPF4501 /path/to/data|.
+That is, to search in the directory \verb|/path/to/data| for
+diffraction images, assign the project and crystal names and to use
+XDS for integration. 
 The data were first indexed with a hexagonal primitive lattice, and
 integrated with this basis. In postrefinement, the R.M.S. deviation
 ratios for this lattice when compared with the triclinic were 1.02 and
 1.07 for the positional and angular deviations respectively, showing
 that the Bravais lattice choice was consistent with the data, however
 the integration was repeated with an updated model for the reflection
-extent and refined orientation. In the second pass of integration the
-measurements were reported to be noticably stronger. Pointgroup
+profile parameters
+and refined orientation. In the second pass of integration the
+measurements were reported to have a higher signal to noise. Pointgroup
 analysis with Pointless indicated $P321$ consistent with the lattice
 choice, and the spacegroup was assigned as one of $P3_121$ or $P3_221$
 based on the systematic absence analysis. After the first round of
@@ -877,7 +910,9 @@ $R_{\rm{work}}$ and $R_{\rm{free}}$ ($\sim 0.16$ and $\sim 0.24$
 respectively) in refinement. Investigation of this gap included a full repeat
 of the structure solution and refinement in $P1$, with the data
 reprocessed by simply adding \verb|-spacegroup P1| to the command-line
-above. Analysis of this structure showed that the conclusions reached
+above. Analysis of this structure with the Zanuda server
+(http://www.ysbl.york.ac.uk/YSBLPrograms/index.jsp)
+showed that the conclusions reached
 by \emph{xia2} were appropriate and the assigned symmetry and
 statistics valid.
 
@@ -907,21 +942,21 @@ diffraction data.
 
 \section{Acknowledgements}
 
-FIXME REWRITE THIS...
-
-The authors would like to thank the JCSG, Division of Structural Biology at
+The authors would like to thank Martin Walsh, the I04-1 team at
+Diamond  and the OPPF for the
+example included in the manuscript, as well as
+the JCSG, the Division of Structural Biology at
 the Wellcome Trust Centre for Human Genetics,
-SPINE and numerous users for providing the test data which was used in 
-developing this software, as well as staff at Diamond Light Source for 
-their input and feedback.
-The author would also like to thank Harry Powell
+and numerous users for providing the test data which was used in 
+developing this software. We would also like to acknowledge staff and users 
+at Diamond Light Source for their input and feedback.
+The authors would like to thank Harry Powell
 and Andrew Leslie for help with making the best use of \textsc{Mosflm},
-Phil Evans for help with \textsc{Scala} and \textsc{Pointless} including 
+Phil Evans for help with \textsc{Scala}, \textsc{Aimless} and
+\textsc{Pointless} including  
 specific changes to those programs, Wolfgang Kabsch and Kay Diederichs
-for help with XDS/XSCALE and Stephen Prince and Miroslav Papiz
-for help in preparing this manuscript and getting the author started in the
-field of X-ray crystallography. 
-Development work for \textsc{xia2} is currently supported by the Diamond
+for help with XDS/XSCALE. 
+Development work for \textsc{xia2} is currently supported by Diamond
 Light Source Ltd., and was initially supported by the BBSRC
 through the e-Science pilot project e-HTPX, the EU Framework 6 through 
 BioXHit and CCP4.
