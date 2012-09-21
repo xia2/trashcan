@@ -29,27 +29,43 @@ also giving guidelines which can be applied in interactive data processing.
 
 \begin{abstract}
 
-The usage of the data reduction expert system \emph{xia2} was
-presented in an earlier article \cite{Winter:ea5113}. Here the decision making
-protocols employed in the system are presented, with a discussion
-of how these were determined, and how they may be applied in interactive
-processing. 
+\emph{xia2} is an expert system for the automated reduction of
+macromolecular crystallography (MX) data, employing well trusted
+existing software. The system can process a full MX data set from
+images to intensities and structure factor amplitudes with no user
+input. To achieve this many decisions are made, the details of which
+are described in this manuscript. In addition it is critical to have a
+flexible framework which can support the testing of hypotheses and
+allow feedback from later stages in the analysis to the points where
+earlier decisions were made. The essence of this framework is also
+presented here. While the decision making protocols described were
+developed for \emph{xia2}, the are equally applicable to interactive
+data reduction.
 
 \end{abstract}
 
 \section{Introduction}
 
-Decisions made during interactive data reduction are typically based
-on experience, advice from program authors and other users. In many
-cases this will work, reinforcing the strategy, and it is typically
-only when these fail that more detail about those choices is
-sought. Equally, suggestions from the program authors rarely include a
-systematic appraisal of the possibilities and explanations as to
-which options will work best and why. 
-In the development of \emph{xia2} this absence was found
-to be a limitation giving rise to a systematic investigation of the best
-options for a number of programs, 
-based on an analysis of data from the Joint Centre
+Careful reduction of data is key to the success of the diffraction
+experiment \cite{Dauter:ba0020}. This is typically an interactive
+process, with the crystallographer making use of prior knowledge about
+the project and data reduction tools with which they are
+familiar. Over recent years, however, the increase in throughput of
+macromolecular crystallography (MX) beamlines has made it difficult to
+interactively process all data while close to the experiment, giving
+rise to a need for automated data analysis software. This need
+inspired the development of \emph{xia2} \cite{Winter:ea5113}. 
+
+A key part of any automated analysis must be the implementation of the
+decision making process. In interactive processing the decisions are
+based on the user's experience and advice from progrm authors. These
+decisions include selection of images for the initial characterisation
+of the sample; testing indexing solutions; selection of processing
+parameters; handling of resolution limits; selection of pointgroup and
+selection of a suitable model for scaling. In the development of
+\emph{xia2} it was necessary to take a systematic approach to building
+up this expertise, and a study was undertaken using data from the
+Joint Centre
 for Structural Genomics\footnote{http://www.jcsg.org} (JCSG.) The
 outcomes of this investigation will be described here, along with the
 expert system \emph{framework} in which the decision making was
@@ -181,10 +197,12 @@ normalized metric penalty\footnote{All of the metric penalties for a
   value averaged across all sweeps for a given number of images.} for
 one to 15 images spread across the range $0 - 90^{\circ}$, where
 smaller values indicate a more accurate solution. Clearly the use of
-two images gives a substantially more accurate result than the use of
-a single frame, confirming the advice from the Mosflm and
+two images ($\sim 0.24$) gives a substantially more accurate result
+than the use of a single frame ($\sim 0.92$), 
+confirming the advice from the Mosflm and
 Labelit authors. However a further improvement may be observed from
-using three images, after which no further improvement is clear. 
+using three images (to $\sim 0.14$), after which no further
+improvement is clear.  
 
 \begin{figure}
 \caption{Normalised metric penalty for indexing from three images, up
