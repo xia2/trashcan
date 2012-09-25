@@ -34,10 +34,10 @@ macromolecular crystallography (MX) data, employing well trusted
 existing software. The system can process a full MX data set from
 images to intensities and structure factor amplitudes with no user
 input. To achieve this many decisions are made, the details of which
-are described in this manuscript. In addition it is critical to have a
+are described here. In addition, it is critical to have a
 flexible framework which can support the testing of hypotheses and
 allow feedback from later stages in the analysis to the points where
-earlier decisions were made. The essence of this framework is also
+earlier decisions were made, the essence of which is also
 presented here. While the decision making protocols described were
 developed for \emph{xia2}, the are equally applicable to interactive
 data reduction.
@@ -61,20 +61,20 @@ decision making process. In interactive processing the decisions are
 based on the user's experience and advice from progrm authors. These
 decisions include selection of images for the initial characterisation
 of the sample; testing indexing solutions; selection of processing
-parameters; handling of resolution limits; selection of pointgroup and
+parameters; handling of resolution limits; identification of pointgroup and
 selection of a suitable model for scaling. In the development of
 \emph{xia2} it was necessary to take a systematic approach to building
 up this expertise, and a study was undertaken using data from the
 Joint Centre
-for Structural Genomics\footnote{http://www.jcsg.org} (JCSG.) The
+for Structural Genomics (JCSG; http://www.jcsg.org.) The
 outcomes of this investigation will be described here, along with the
 expert system \emph{framework} in which the decision making was
 embedded to develop the final data reduction tool, \emph{xia2}.
 
 \subsection{Workflow}
 
-Taken from the top level, the workflow of data reduction for
-macromolecular crystallography (MX) can be considered as three phases:
+Taken from the top level, the workflow of data reduction for MX
+can be considered as three phases:
 (i) characterisation and (ii) integration of data from individual sweeps,
 followed by (iii) scaling and merging of all sweeps taken from a given
 crystal. Decisions made at earlier stages have implications for
@@ -90,7 +90,7 @@ making expertise.
 
 For any given choice there may be a set of optimum parameters for a
 specific example data set. There may however also be a set of
-default parameters which can be 
+parameters which can be 
 shown to generally work well with limited knowledge of the problem in
 hand, for example a general ``class'' of data sets.
 These \emph{guidelines} may be determined from a systematic
@@ -109,15 +109,15 @@ constantly evolving, and that new packages will become available which
 ideally should be incorporated into the system. As such, some emphasis
 on abstraction of steps in the workflow is also helpful, to allow
 existing components within the system to be replaced. Currently \emph{xia2} 
-includes support for two main integration packages, Mosflm
+includes support for two main integration packages, \textsc{Mosflm}
 \cite{leslie1992rcm} and XDS \cite{Kabsch:dz5179}
 which are accessed as the 2D and 3D
 pipelines respectively, reflecting the approach taken to profile
-fitting. These are used in combination with Scala \cite{Evans:ba5084}, XSCALE
-and more recently Aimless (Evans and Murshudov, this volume) as well
+fitting. These are used in combination with \textsc{Scala} \cite{Evans:ba5084}, XSCALE
+and more recently \textsc{Aimless} (Evans and Murshudov, this volume) as well
 as other
 tools from the CCP4 suite to deliver the final result. In
-addition, Labelit \cite{Sauter:dd5008} and CCTBX
+addition, \textsc{Labelit} \cite{Sauter:dd5008} and CCTBX
 \cite{Grosse-Kunstleve:ks0118} are also 
 extensively used in the analysis.
 
@@ -126,7 +126,7 @@ extensively used in the analysis.
 As discussed above, the crystallographic workflow is considered within
 \emph{xia2} in three phases - characterisation, integration and
 scaling. Within each of these there will be decisions which need to be
-made as well as decisions as to how to handle passing information
+made as well as choices as to how to handle passing information
 around the system, in particular from later stages to earlier. 
 
 Here, the decisions \emph{within} each phase will be considered for
@@ -140,7 +140,7 @@ determine for a given sweep of images:
 \item{A list of possible Bravais lattice options and appropriate cell
     constants for each.}
 \item{Refined / updated values for the beam centre and distance.}
-\item{A lattice / cell proposal, based on an analysis of all of the possible
+\item{A lattice / cell proposal, based on an analysis of the possible
     options.}
 \end{itemize}
 
@@ -154,16 +154,16 @@ ensure that the selected solution meets the acceptance criteria.
 
 \subsection{Labelit and Mosflm}
 
-Labelit and Mosflm share the same underlying one-dimensional FFT
+\textsc{Labelit} and \textsc{Mosflm} share the same underlying one-dimensional FFT
 indexing algorithm \cite{Steller:mf0013} though the
-implementation in Labelit allows for an additional search to refine
+implementation in \textsc{Labelit} allows for an additional search to refine
 the direct beam centre over a wider range. As such, the behaviour of
 the programs in indexing is similar, requiring only one analysis for
 the selection of images - though the analysis of solutions will depend
-on the program being used as they are scored differently.
-The authors of both Labelit and Mosflm recommend the use of two images
+on the program being used as they have differing penalty schemes.
+The authors of both \textsc{Labelit} and \textsc{Mosflm} recommend the use of two images
 for indexing, spaced by $\sim 90^{\circ}$ in rotation (subsequently $\phi$ for
-brevity) giving a wide coverage of 
+brevity) giving an orthogonal coverage of 
 reciprocal space over which to determine the basis vectors. 
 
 To optimise any process a scoring scheme is needed. Here the objective
@@ -172,19 +172,19 @@ accurate indexing solution. As the minimum root mean square
 (R.M.S.) deviation between observed
 and predicted spot centres is a target of refinement and the ideal absolute
 values of the unit cell constants are poorly defined (at least at this
-stage) these represent poor metrics. The metric penalty however,
+stage) these both represent poor metrics. The metric penalty however,
 defined as the deviation from the constraints for each Bravais lattice
 \cite{Grosse-Kunstleve:sh5006} is appropriate as this is a test for
 internal consistency 
 and is also relevent for automatic strategy systems such as EDNA
-\cite{Incardona:wa5014}. With this in mind, the use of few images may
-be desirable.
+\cite{Incardona:wa5014}. With the possibility of characterisation
+prior to data collection in mind, the use of few images may be desirable.
 
 \begin{figure}
 \caption{Mean normalised metric penalty as a function of number of
-  images used for characterisation with Labelit, where smaller values
-  indicate more accurate solutions. The step from two images to three,
-  a factor of around 1.7, is much larger than any subsequent change.
+  images used for characterisation with \textsc{Labelit}, where smaller values
+  indicate more accurate solutions. The step from two images to three
+  is much larger than any subsequent change.
 \label{figure:no_images}}
 \centering
 \includegraphics[scale=0.5]{figures/no_images.pdf}
@@ -193,28 +193,27 @@ be desirable.
 Data were taken from 86 sweeps from the JCSG archive, where  the
 following four
 criteria were met: the lattice was not pseudosymmetric, nor triclinic,
-autoindexing with a single image gave the ``correct'' result and
+autoindexing with a single image gave a reasonable result and
 at least $90^{\circ}$ of data were available. The resulting sweeps had 
-resolution limits in the range 3.5\AA\ to 1.2\AA\.
-First, the number of images
-to use for indexing was considered. Figure~\ref{figure:no_images}
+resolution limits in the range 3.5\AA\ to 1.2\AA. The number of images
+to use for indexing was considered first, and Figure~1
 shows the mean normalized metric penalty, calculated as follows:
 
 \begin{itemize}
 \item{all of the metric penalties for a
-  given sweep were scaled over the range $0 - 1$}
+  given sweep (i.e. for $1 - 15$ frames) were scaled over the range $0 - 1$}
 \item{then this normalized
-  value averaged across all sweeps for a given number of images.}
+  value averaged across all sweeps for each number of images.}
 \end{itemize}
 
 \noindent
-for
-one to 15 images spread across the range $0 - 90^{\circ}$, where
+The calculations were performed for
+images spread across the range $0 - 90^{\circ}$, and
 smaller values indicate a more accurate solution. Clearly the use of
 two images ($\sim 0.24$) gives a substantially more accurate result
 than the use of a single frame ($\sim 0.92$), 
-confirming the advice from the Mosflm and
-Labelit authors. However a further improvement may be observed from
+confirming the advice from the \textsc{Mosflm} and
+\textsc{Labelit} authors. However a further improvement may be observed from
 using three images (to $\sim 0.14$), after which no further
 improvement is clear.  
 
@@ -227,15 +226,17 @@ improvement is clear.
 \end{figure}
 
 Following a similar procedure it was found
-(Figure~\ref{figure:phi_spacing_45a}) that a 
+(Figure~2) that a 
 spacing of more than $\sim 20 - 30^{\circ}$ generally gave the most accurate
-solution. Extending this analysis to sweeps of up to $180^{\circ}$
+solution with a minimum $\sim 45^{\circ}$. 
+Extending this analysis to sweeps of up to $180^{\circ}$, allowing
+spacings to $90^{\circ}$,
 confirmed this result (not shown.) 
 
-This result may be considered as follows: the one-dimensional FFT
-indexing procedure employed in Mosflm and Labelit computes the
+This result may be considered as follows. The one-dimensional FFT
+indexing procedure employed in \textsc{Mosflm} and \textsc{Labelit} computes the
 Fourier transform of the projection of the observed peaks gathered
-from all images in $\sim
+from the selected images in $\sim
 7000$ reciprocal space directions. Those directions which show the
 strongest signal are then considered as possible basis vectors. Using
 three images spaced by $\sim 45^{\circ}$ ensures that every reciprocal
@@ -243,20 +244,20 @@ space direction is likely to be well sampled. This will make it more likely
 that a fundamental basis vector, rather than some linear combination
 of basis vectors, will be found giving a more accurate result.
 
-When using Labelit, the proposed solution is chosen to be the highest symmetry
+When using \textsc{Labelit}, the proposed solution is chosen to be the highest symmetry
 Bravais lattice / cell combination highlighted in the output. The
 Bravais lattice / cell combinations for all other lattices are also
 recorded, where the cell is chosen to be the one with the lowest
-metric penalty where multiple options exist. In usual operation Mosflm
+metric penalty where multiple options exist. In usual operation \textsc{Mosflm}
 makes a selection from the possible solutions which satisfies similar
-constraints, which is taken by \emph{xia2}. Once again, all possible
+constraints, which is accepted by \emph{xia2}. Once again, all possible
 options are saved. It is important to note that this selection of the
 highest symmetry plausible solution is a reasonable approach as it will be
-challenged in subsequent analysis steps.
+challenged, and may be rejected, in subsequent analysis steps.
 
 \subsection{XDS}
 
-Unlike Mosflm and Labelit which assume the $\phi$ centroid is the
+Unlike \textsc{Mosflm} and \textsc{Labelit} which assume the $\phi$ centroid is the
 centre of the image, 
 the indexing in XDS uses calculated $\phi$
 centroids as well as positions on the image of reflections, and
@@ -265,18 +266,11 @@ images. Indeed, it is perfectly possible to index with peaks taken
 from every image in the sweep, a process which may be desirable in some
 circumstances. The indexing algorithm is however less robust to
 errors in the direct beam position than the procedure in
-Labelit. The usual procedure in \emph{xia2} is therefore to first
-index with Labelit and repeat this indexing with XDS
-using the refined beam centre and selected cell and symmetry. However
-this behaviour is under the user's control \emph{via} command-line
-options which are listed in the \emph{xia2} manual.
-
-Where Mosflm and Labelit make explicit assumptions about the experimental
-geometry, XDS allows a general rotation axis and beam vector and will
-typically refine these during the indexing step. Therefore, if the
-intention is to use XDS for integration it is necessary to
-repeat the indexing of the data if Labelit or Mosflm were used for the
-initial characterisation. Determination of the optimum
+\textsc{Labelit}. The usual procedure in \emph{xia2} is therefore to first
+index with \textsc{Labelit} and repeat this indexing with XDS
+ - necessary to refine the beam and rotation axis directions - 
+using the refined beam centre and selected cell and symmetry. 
+Determination of the optimum
 selection of images for indexing with XDS is therefore necessary.
 
 \begin{figure}
@@ -290,29 +284,30 @@ well.
 \includegraphics[scale=0.5]{figures/xds_n_wedges.pdf}
 \end{figure}
 
-By anology with Labelit, data were indexed with a triclinic basis
+By anology with \textsc{Labelit}, data were indexed with a triclinic basis
 from all images and from one to ten $5^{\circ}$ wedges, with the
 resulting triclinic cell used to
 compute the metric penalty for the correct lattice
 using tools from CCTBX. As may be seen
-from Figure~\ref{figure:xds_n_images},
-use of a single $5^{\circ}$ wedge gave the poorest
+from Figure~3,
+use of a single $5^{\circ}$ wedge gave the least accurate
 results followed by the use of all images. The use of two and three
-wedges gave further improvement, with no improvement observed
+wedges showed improved accuracy, with no improvement observed
 subsequently. Following from this, various wedge sizes were tested and
 no substantial trends, beyond using at least two frames, were found
 though a slight benefit was observed for using $\sim 5^{\circ}$ wedges
-(not shown.) Finally the ideal spacing was found to be $\sim
-20 - 30^{\circ}$ (also not shown.)  
+(not shown.) Finally the ideal spacing was found to be 
+in excess of $\sim 20 - 30^{\circ}$ (also not shown) with a
+$45^{\circ}$ spacing used if possible.  
 
 In the case that XDS is used for the initial indexing, it is necessary
 to select a proposed solution from the 44 lattice characters output by
-XDS. In the analysis no solutions with a penalty higher than 40 were
+XDS. In this study no solutions with a penalty higher than 40 were
 found to be correct, so with no guidance \emph{xia2} will select the
 highest symmetry solution with a penalty lower than this threshold. If
 however the symmetry has been given by the user this limit is raised
-to 200. As with Labelit, in cases of multiple cell possibilities for a
-given lattice the one with the lowest penalty is chosen.
+to 200. As with \textsc{Labelit}, in cases of multiple cell possibilities for a
+given Bravais lattice the one with the lowest penalty is chosen.
 
 % got as far as here
 
@@ -342,7 +337,7 @@ discussed shortly.
 
 \subsection{Mosflm}
 
-A typical interactive integration session with Mosflm will start with
+A typical interactive integration session with \textsc{Mosflm} will start with
 indexing followed by the refinement of the cell, once the lattice has
 been chosen. At this stage the integration may be performed either
 through the GUI or from a script. However, by working through this
@@ -404,7 +399,7 @@ choices to be made for the integration proper:
 \begin{itemize}
 \item{Whether to fix the cell constants during integration.}
 \item{Whether to perform the integration with the lattice constraints
-    applied, as recommended by the Mosflm authors, or with a triclinic
+    applied, as recommended by the \textsc{Mosflm} authors, or with a triclinic
     basis.}
 \item{Whether to apply a resolution limit during integration,
     as opposed to integrating across the entire active area.}
@@ -416,7 +411,7 @@ to the accuracy of the observations, best observed by scaling the data
 and considering the merging statistics. Provided that the extent of
 the data are unchanged (i.e. same image range, same resolution limits)
 $R_{\rm{merge}}$ will be a reliable indicator of accuracy. To make
-this assessment, Pointless \cite{Evans:ba5084} and Scala were
+this assessment, \textsc{Pointless} \cite{Evans:ba5084} and \textsc{Scala} were
 used, the latter with a ``standard'' scaling model: smoothed
 scaing on rotation with $5^{\circ}$ intervals, secondary absorption
 correction and smoothed $B$ factor correction with $20^{\circ}$
@@ -436,7 +431,7 @@ processing in with a triclinic basis.
 
 \subsection{XDS}
 
-Where Mosflm is typically run through the graphical user interface
+Where \textsc{Mosflm} is typically run through the graphical user interface
 iMosflm, XDS is run on the command-line with a plain text input file,
 making it ideal for usage 
 within an automated system. The advised use of XDS is to perform all
@@ -446,7 +441,7 @@ is possible, but by no means mandatory, to ``recycle'' parameters from
 the later stages of processing and rerun the integration. The aim here
 is to determine the choices which will generally give rise to the best
 quality results, ideally at minimal computational cost. As with the
-analysis of integration strategies using Mosflm, $R_{\rm{merge}}$ will
+analysis of integration strategies using \textsc{Mosflm}, $R_{\rm{merge}}$ will
 be used as a metric for the quality of the data reduction. The four
 choices are:
 
@@ -462,7 +457,7 @@ choices are:
 \noindent
 These may be compared with the straightforward ``XDS default''
 protocol described above. Using
-the same data as were used for Mosflm, it was
+the same data as were used for \textsc{Mosflm}, it was
 clear that any of these changes to the strategy were ``polishing'' the
 data, with an average change in $R_{\rm{merge}}$ of around 2\% of the
 value. The only marked improvement was found from recycling the
@@ -470,7 +465,7 @@ reflection profile parameters, which define the grid for the
 transformation from the image to the Ewald sphere.
 To recycle these parameters it is necessary to reintegrate the full data set.
 
-In processing the data with Mosflm the selection of Bravais lattice
+In processing the data with \textsc{Mosflm} the selection of Bravais lattice
 was tested \emph{via} postrefinement. In XDS, global refinement is
 performed after integration allowing the lattice to be tested in a
 similar manner, once again with allowing a ratio of no more than 1.5
@@ -494,18 +489,19 @@ earlier processing steps. To assist with this the scaling step is
 split into three phases - the preparation, the scaling itself and then
 post-processing.
 
-Following the use of Mosflm and XDS, Scala (and now Aimless) and
+Following the use of \textsc{Mosflm} and XDS, \textsc{Scala} (and now \textsc{Aimless}) and
 XSCALE, respectively, 
 are natural for the main scaling step. However a number of other
-programs from CCP4 and elsewhere (including Cad, Truncate and
-Pointless) are used to help in this process.
+programs from CCP4 and elsewhere (including \textsc{Cad}, 
+\textsc{Truncate} and
+\textsc{Pointless}) are used to help in this process.
 
 \subsection{Preparation}
 
 \begin{figure}
 \caption{Procedure to determine the crystal point group and Bravais
   lattice consistent with the the diffraction data, taking input from
-  the indexing and analysis with Pointless.
+  the indexing and analysis with \textsc{Pointless}.
 \label{figure:scaling_1}}
 \centering
 \includegraphics[scale=0.5]{figures/scaling-step-1.pdf}
@@ -518,7 +514,7 @@ consistent with the apparent pointgroup of the data
 (Figure~\ref{figure:scaling_1}.)
 This test is performed by comparing the highest allowed Bravais
 lattice from processing with the most likely result from 
-the analysis of intensities with Pointless. If
+the analysis of intensities with \textsc{Pointless}. If
 the two are consistent (for example, pointgroup P422 with lattice tP)
 the test is passed immediately. If the Bravais lattice corresponding
 to the apparent pointgroup has higher
@@ -567,7 +563,7 @@ than the pointgroup symmetry.
 
 Finally, it is necessary to ensure that the data are consistently
 indexed to cope with cases where there may be indexing ambiguity,
-using Pointless (Figure~\ref{figure:scaling_3}.) At this stage the
+using \textsc{Pointless} (Figure~\ref{figure:scaling_3}.) At this stage the
 most likely
 spacegroup is also determined from the systematic absences, primarily
 for the benefit of the downstream sructure factor amplitudes, though
@@ -577,7 +573,7 @@ appropriate renumbering of the batches.
 
 \subsection{Scaling with Scala}
 
-Though the scaling protocol recommended in the Scala documentation
+Though the scaling protocol recommended in the \textsc{Scala} documentation
 (smoothed scales over $5^{\circ}$ spacing in rotation, absorption
 correction with 6 orders of spherical harmonics, $B-$factor correction
 smoothed over $20^{\circ}$ spacing in rotation) works well in many
@@ -585,7 +581,7 @@ cases there are examples when better results may be achieved by,
 for example, including the ``tails'' correction or excluding the
 decay. As such it is worthwhile to perform a search to decide the most
 appropriate model for scaling, which is complicted by the need for a
-protocol for decision making. It was found that using Scala
+protocol for decision making. It was found that using \textsc{Scala}
 with typical data sets there is essentially no risk of over fitting
 the scaling corrections, so the resulting $R_{\rm{merge}}$ was found to
 be a reasonable metric as the resolution limits and range of data
@@ -608,11 +604,11 @@ $B$-factors and the number of spherical harmonics used from the
 defaults as suggested in the documentation was of little benefit.
 Historically, scaling in \emph{xia2} included an iterative process to
 determine appropriate correction factors for the error estimates. This
-procedure is now performed by Scala and Aimless automatically.
+procedure is now performed by \textsc{Scala} and \textsc{Aimless} automatically.
 
 \subsection{Scaling with XSCALE}
 
-Where scaling with Scala applies a parameterised model to the data
+Where scaling with \textsc{Scala} applies a parameterised model to the data
 in order to minimise the differences between symmetry related
 observations, scaling in XSCALE (and the XDS CORRECT step) apply
 corrections in terms of arrays of correction values which are indexed
@@ -644,17 +640,17 @@ whole - ``aliens'' - these are subsequently excluded in an iterative manner.
 
 After scaling the unmerged data are reformatted into their original
 sweep structure using tools from CCP4
-and merged with Scala or Aimless, as this gives an
+and merged with \textsc{Scala} or \textsc{Aimless}, as this gives an
 easily interpreted report on data quality and also a route into
 producing MTZ files for the subsequent post processing, discussed below.
 
 \subsection{Resolution Limit Calculation}
 
 Early in the development of \emph{xia2} the resolution limits were
-determined from an analysis of the output of Scala, which proved to be
+determined from an analysis of the output of \textsc{Scala}, which proved to be
 unreliable. Resolution limits are now calculated directly from the
 scaled intensity data themselves, using routines developed using
-the CCTBX toolbox, allowing the same procedures to be used for data from Scala
+the CCTBX toolbox, allowing the same procedures to be used for data from \textsc{Scala}
 and XSCALE, giving more consistent results.
 
 The resolution limit calculations themselves use the merged and
@@ -769,7 +765,7 @@ can then be implemented using the existing software
 and the decision making protocols described above. The addition of an
 abstract interface also gives the option of centralising standard
 decision making steps, for example the management of solutions from
-indexing. As an example, both Mosflm and Labelit may be used to index
+indexing. As an example, both \textsc{Mosflm} and \textsc{Labelit} may be used to index
 a diffraction pattern based in a small number of images from a sweep,
 so both may present an \emph{Indexer} interface. The detail of how the
 indexing is performed and how the results are interpreted will be
@@ -878,12 +874,12 @@ the integration was repeated with an updated model for the reflection
 profile parameters
 and refined orientation. In the second pass of integration the
 measurements were reported to have a higher signal to noise. Pointgroup
-analysis with Pointless indicated $P321$ consistent with the lattice
+analysis with \textsc{Pointless} indicated $P321$ consistent with the lattice
 choice, and the spacegroup was assigned as one of $P3_121$ or $P3_221$
 based on the systematic absence analysis. After the first round of
 scaling the resolution was estimated to be 2.3\AA, after which
 the scaling was repeated and several rounds of outlier rejection
-performed. Finally the merging was performed with Scala, giving the
+performed. Finally the merging was performed with \textsc{Scala}, giving the
 statistics shown in Table~\ref{table:oppf4501}. 
 
 \begin{table}
