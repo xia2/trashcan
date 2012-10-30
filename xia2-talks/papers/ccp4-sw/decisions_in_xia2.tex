@@ -86,13 +86,29 @@ that are subsequently tested. The system must also express the workflow being
 performed to give the structure into which to embed the decision
 making expertise.
 
+\subsection{Architecture}
+
+As the workflow will be expressed in three phases, each of which may
+be performed with multiple programs, the structure of the code should
+reflect these phases. Within \emph{xia2} this is implemented as
+\emph{Indexer} and \emph{Integrater} classes which act on sweeps of
+images, and \emph{Scaler} classes which act on all of the data from
+one sample. Examples of each of these may be implemented for each
+package used in the analysis, and will include package-specific
+information on how to perform the tasks and analyse the
+results. Provided that these are well designed they may then be used
+interchangably. The details of this architecture and benefits that it
+brings are discussed in Section 5.
+
 \subsection{Blueprint}
 
-For any given choice there may be a set of optimum parameters for a
-specific example data set. There may however also be a set of
-parameters which can be 
-shown to generally work well with limited knowledge of the problem in
-hand, for example a general ``class'' of data sets.
+While there may be a \emph{perfect} set of parameter choices for a
+given data set, for example selecting spots from certain images with
+$\frac{I}{\sigma_I}$ exceeding a certain value for indexing,
+determining these parameters may be expensive and may bring little
+benefit. A more pragmatic approach is to determine those parameters
+which must be adjusted, while determining general rules for others
+which can be shown to work well for certain classes of data.
 These \emph{guidelines} may be determined from a systematic
 analysis of a number of data sets, which should ideally be free of
 artefacts, e.g. split spots, sample misalignment and ice rings. 
