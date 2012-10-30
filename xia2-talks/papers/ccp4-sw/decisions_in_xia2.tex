@@ -236,15 +236,15 @@ The objective of the integration step is to:
 \noindent
 While these objectives have been listed in order of decreasing
 importance to the structure solution process, the second is perhaps
-most significant the development of an expert system. When processing
+most significantto  the development of an expert system. When processing
 interactively for example using iMosflm it is
 straightforward to see if the indexing solution is appropriate from a
 comparison of the observed and predicted reflection positions. When
 the calculations are
 performed with nothing in the way of visual feedback,
 as is the case inside \emph{xia2}, an equivalent assessment is
-needed. This assessment depends on the program used, and will be
-discussed shortly.
+needed. This assessment depends on the program used, and is
+discussed below.
 
 \subsection{Mosflm}
 
@@ -325,7 +325,7 @@ the data are unchanged (i.e. same image range, same resolution limits)
 $R_{\rm{merge}}$ will be a reliable indicator of accuracy. To make
 this assessment, \textsc{Pointless} \cite{Evans:ba5084} and \textsc{Scala} were
 used, the latter with a ``standard'' scaling model: smoothed
-scaing on rotation with $5^{\circ}$ intervals, secondary absorption
+scaling on rotation with $5^{\circ}$ intervals, secondary absorption
 correction and smoothed $B$ factor correction with $20^{\circ}$
 intervals, the default from CCP4i.
 Protocols were determined for integration to assess each
@@ -334,13 +334,12 @@ comparison with the procedures recommended
 by the program authors. In summary, it was found that fixing the cell
 constants during integration was helpful however applying the Bravais
 lattice constraints made little difference, as did integrating across
-the entire fector rather than applying a resolution limit.
+the entire detector face rather than applying a resolution limit.
 The conclusion was therefore to integrate across the
 active area of the detector, fixing the cell constants and applying
 the lattice constraints. In hindsight, however, there are arguments
 against applying the lattice constraints
-and developments are underway to perform all
-processing in with a triclinic basis.
+and developments are underway to perform all processing in P1.
 
 \subsection{XDS}
 
@@ -406,12 +405,13 @@ post-processing.
 Following the use of \textsc{Mosflm} and XDS, \textsc{Scala} 
 (and more recently \textsc{Aimless}) and
 XSCALE, respectively, 
-are natural for the main scaling step. However a number of other
+are used in the main scaling step. However a number of other
 programs from CCP4 and elsewhere (including \textsc{Cad}, 
 \textsc{Truncate} and
-\textsc{Pointless}) are used to help in this process.
+\textsc{Pointless}) are used to help in this process, and
+\textsc{Scala} or \textsc{Aimless} used to \emph{merge} data from XSCALE.
 
-\subsection{Preparation}
+\subsection{Preparation of Data for Scaling}
 
 In the preparation phase the data from integration are tested for
 internal consistency both within and between sweeps. The first test is
@@ -421,7 +421,7 @@ consistent with the apparent pointgroup of the data
 This test is performed by comparing the highest allowed Bravais
 lattice from integration with the most likely result from 
 the analysis of intensities with \textsc{Pointless}. If
-the two are consistent (for example, pointgroup P4/mmm with lattice tP)
+the two are consistent (for example, pointgroup 4mm with lattice tP)
 the test is passed immediately. If the Bravais lattice corresponding
 to the apparent pointgroup has higher
 symmetry than the allowed lattice, as may occur when a
@@ -442,9 +442,9 @@ resolution pass) that the conclusions for one sweep differ from those
 from another. In that case (Figure~5) the lowest
 symmetry Bravais lattice
 is assumed for all sweeps. If at this stage the pointgroup
-conclusions remain inconsistent - perhaps P4/m for one sweep and 
-P4/mmm for another - an error is raised as it is likely
-that something has gone wrong. An example of this may be an
+conclusions remain inconsistent - perhaps 4 for one sweep and 
+4mm for another - an error is raised as it is likely
+that something has gone wrong. An example of this may be tht an
 inconsistent data set has been included in the processing. 
 
 Finally, it is necessary to ensure that the data are consistently
@@ -493,7 +493,7 @@ defaults as suggested in the documentation was of little benefit.
 Historically, scaling in \emph{xia2} included an iterative process to
 determine appropriate correction factors for the error estimates. This
 procedure is now performed by \textsc{Scala} and \textsc{Aimless} automatically.
-Finally, the question of resolution limits is considered below.
+The question of resolution limits is considered in Section 4.4.
 
 \subsection{Scaling with XSCALE}
 
@@ -519,7 +519,8 @@ CORRECT step. It was found that the application of all scaling factors
 (i.e. correcting for decay, detector modulation and absorption)
 systematically gave the lowest merging residual so this is the
 default choice in \emph{xia2}, though a user option is available to
-control this choice. In scaling, all of the sweeps corresponding to
+control this choice as no strong argument is presented not to apply
+these corections. In scaling, all of the sweeps corresponding to
 each wavelenth are scaled together but not merged, and
 data from all wavelengths are scaled simultaneously. 
 
@@ -533,7 +534,10 @@ After scaling the unmerged data are reformatted into their original
 sweep structure using tools from CCP4
 and merged with \textsc{Scala} or \textsc{Aimless}, as this gives an
 easily interpreted report on data quality and also a route into
-producing MTZ files for the subsequent post processing, discussed below.
+producing MTZ files for the subsequent post processing, discussed
+below. While it is possible, and indeed straightforward, to scale data
+integrated with XDS with \textsc{Scala} or \textsc{Aimless} this is
+not currently performed.
 
 \subsection{Resolution Limit Calculation}
 
@@ -565,7 +569,7 @@ merging. The internal correlation coefficients $CC\frac{1}{2}$ and $CC^*$
 have since been proposed as a more robust
 choice for resolution limit calculation (Evans \& Murshudov, this
 volume and \cite{Karplus25052012})
-which will be investigated shortly.
+which will be investigated in the near future.
 
 \subsection{Post Processing}
 
@@ -614,7 +618,7 @@ interaction between the analysis steps and the data.
 \subsection{Data Management}
 
 As an expert system can only make decisions based on the information
-available, careful management of data is critical. Most data familiar
+available, careful management of derived data is critical. Most data familiar
 to macromolecular crystallographers define static
 information, for example coordinate files and reflection data. 
 Within \emph{xia2} however
@@ -662,7 +666,7 @@ and the decision making protocols described above. The addition of an
 abstract interface also gives the option of centralising standard
 decision making steps, such as the management of solutions from
 indexing. As an example, both \textsc{Mosflm} and \textsc{Labelit} may be used to index
-a diffraction pattern based in a small number of images from a sweep,
+a diffraction pattern based on a small number of images from a sweep,
 so both may present an \emph{Indexer} interface. The detail of how the
 indexing is performed and how the results are interpreted will be
 program specific and implemented in \emph{MosflmIndexer} and
@@ -726,7 +730,7 @@ the ``main program'' inside \emph{xia2} is in effect a print statement,
 with all of the processing performed as a side-effect of providing the
 information to show in the output.
 
-\section{Example: Transketolase}
+\section{Example: Transketolase FIXME REPLACE WITH ...}
 
 With real data it becomes possible to illustrate the process of data
 analysis using \emph{xia2} and to clearly identify the information
@@ -1007,6 +1011,5 @@ though a slight benefit was observed for using $\sim 5^{\circ}$ wedges
 (not shown.) Finally the ideal spacing was found to be 
 in excess of $\sim 20 - 30^{\circ}$ (also not shown) with a
 $45^{\circ}$ spacing used if possible.  
-
 
 \end{document}
