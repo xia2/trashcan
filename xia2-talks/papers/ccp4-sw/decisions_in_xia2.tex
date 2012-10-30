@@ -39,7 +39,7 @@ flexible framework which can support the testing of hypotheses and
 allow feedback from later stages in the analysis to the points where
 earlier decisions were made, the essence of which is also
 presented here. While the decision making protocols described were
-developed for \emph{xia2}, the are equally applicable to interactive
+developed for \emph{xia2}, they are equally applicable to interactive
 data reduction.
 
 \end{abstract}
@@ -58,7 +58,7 @@ inspired the development of \emph{xia2} \cite{Winter:ea5113}.
 
 A key part of any automated analysis must be the implementation of the
 decision making process. In interactive processing the decisions are
-based on the user's experience and advice from progrm authors. These
+based on the user's experience and advice from program authors. These
 decisions include selection of images for the initial characterisation
 of the sample; testing indexing solutions; selection of processing
 parameters; handling of resolution limits; identification of pointgroup and
@@ -75,15 +75,15 @@ embedded to develop the final data reduction tool, \emph{xia2}.
 
 Taken from the top level, the workflow of data reduction for MX
 can be considered as three phases:
-(i) characterisation and (ii) integration of data from individual sweeps,
-followed by (iii) scaling and merging of all sweeps taken from a given
+(i) characterisation, (ii) integration of data from individual sweeps,
+and (iii) scaling and merging of all sweeps taken from a given
 crystal. Decisions made at earlier stages have implications for
-subsequent stages, and information from the later stages may
+subsequent stages, and information from these later stages may
 contradict those earlier decisions. Any system to automate data
 reduction must therefore be sufficiently flexible to manage this
-situation gracefully, considering all decisions made as hypotheses
-that are subsequently tested. The system must also express the workflow being
-performed to give the structure into which to embed the decision
+situation effectively, considering all decisions made as hypotheses
+to be subsequently tested. The system must also mirror the workflow being
+performed to provide the structure into which to embed the decision
 making expertise.
 
 \subsection{Architecture}
@@ -137,20 +137,14 @@ addition, \textsc{Labelit} \cite{Sauter:dd5008} and CCTBX
 \cite{Grosse-Kunstleve:ks0118} are also 
 extensively used in the analysis.
 
+As the crystallographic data analysis workflow is considered in three
+phases within \emph{xia2}, the decision making processes for each will
+be detailed in the next three sections.
+
 \section{Decision Making for Data Reduction: Characterisation}
 
-As discussed above, the crystallographic workflow is considered within
-\emph{xia2} in three phases - characterisation, integration and
-scaling. Within each of these there will be decisions which need to be
-made as well as choices as to how to handle passing information
-around the system, in particular from later stages to earlier. 
-
-Here, the decisions \emph{within} each phase will be considered for
-each of the software packages used by \emph{xia2},
-including special cases and
-advice to the user about \emph{xia2} options to use where
-appropriate. The objective of the characterisation stage is to
-determine for a given sweep of images:
+The objective of the characterisation stage is to determine for a
+given sweep of images: 
 
 \begin{itemize}
 \item{A list of possible Bravais lattice options and appropriate cell
@@ -170,79 +164,24 @@ ensure that the selected solution meets the acceptance criteria.
 
 \subsection{Labelit and Mosflm}
 
-\textsc{Labelit} and \textsc{Mosflm} share the same underlying one-dimensional FFT
-indexing algorithm \cite{Steller:mf0013} though the
+\textsc{Labelit} and \textsc{Mosflm} share the same underlying
+one-dimensional FFT indexing algorithm \cite{Steller:mf0013} though the
 implementation in \textsc{Labelit} allows for an additional search to refine
 the direct beam centre over a wider range. As such, the behaviour of
 the programs in indexing is similar, requiring only one analysis for
 the selection of images - though the analysis of solutions will depend
 on the program being used as they have differing penalty schemes.
-The authors of both \textsc{Labelit} and \textsc{Mosflm} recommend the use of two images
-for indexing, spaced by $\sim 90^{\circ}$ in rotation (subsequently $\phi$ for
+The authors of both \textsc{Labelit} and \textsc{Mosflm} recommend the
+use of two images for indexing, spaced by $\sim 90^{\circ}$ in
+rotation (subsequently $\phi$ for 
 brevity) giving an orthogonal coverage of 
-reciprocal space over which to determine the basis vectors. 
+reciprocal space over which to determine the basis vectors. A detailed
+investigation of this is included in Appendix A, with the conclusion
+that the use of three images, spaced by $45^{\circ}$ in rotation
+typically gives the most accurate unit cell constants.
 
-To optimise any process a scoring scheme is needed. Here the objective
-is to determine the selection of images which generally give the most
-accurate indexing solution. As the minimum root mean square
-(R.M.S.) deviation between observed
-and predicted spot centres is a target of refinement and the ideal absolute
-values of the unit cell constants are poorly defined (at least at this
-stage) these both represent poor metrics. The metric penalty however,
-defined as the deviation from the constraints for each Bravais lattice
-\cite{Grosse-Kunstleve:sh5006} is appropriate as this is a test for
-internal consistency 
-and is also relevent for automatic strategy systems such as EDNA
-\cite{Incardona:wa5014}. With the possibility of characterisation
-prior to data collection in mind, the use of few images may be desirable.
-
-Data were taken from 86 sweeps from the JCSG archive, where  the
-following four
-criteria were met: the lattice was not pseudosymmetric, nor triclinic,
-autoindexing with a single image gave a reasonable result and
-at least $90^{\circ}$ of data were available. The resulting sweeps had 
-resolution limits in the range 3.5\AA\ to 1.2\AA. The number of images
-to use for indexing was considered first, and Figure~1
-shows the mean normalized metric penalty, calculated as follows:
-
-\begin{itemize}
-\item{all of the metric penalties for a
-  given sweep (i.e. for $1 - 15$ frames) were scaled over the range $0 - 1$}
-\item{then this normalized
-  value averaged across all sweeps for each number of images.}
-\end{itemize}
-
-\noindent
-The calculations were performed for
-images spread across the range $0 - 90^{\circ}$, and
-smaller values indicate a more accurate solution. Clearly the use of
-two images ($\sim 0.24$) gives a substantially more accurate result
-than the use of a single frame ($\sim 0.92$), 
-confirming the advice from the \textsc{Mosflm} and
-\textsc{Labelit} authors. However a further improvement may be observed from
-using three images (to $\sim 0.14$), after which no further
-improvement is clear.  
-
-Following a similar procedure it was found
-(Figure~2) that a 
-spacing of more than $\sim 20 - 30^{\circ}$ generally gave the most accurate
-solution with a minimum $\sim 45^{\circ}$. 
-Extending this analysis to sweeps of up to $180^{\circ}$, allowing
-spacings to $90^{\circ}$,
-confirmed this result (not shown.) 
-
-This result may be considered as follows. The one-dimensional FFT
-indexing procedure employed in \textsc{Mosflm} and \textsc{Labelit} computes the
-Fourier transform of the projection of the observed peaks gathered
-from the selected images in $\sim
-7000$ reciprocal space directions. Those directions which show the
-strongest signal are then considered as possible basis vectors. Using
-three images spaced by $\sim 45^{\circ}$ ensures that every reciprocal
-space direction is likely to be well sampled. This will make it more likely
-that a fundamental basis vector, rather than some linear combination
-of basis vectors, will be found giving a more accurate result.
-
-When using \textsc{Labelit}, the proposed solution is chosen to be the highest symmetry
+When using \textsc{Labelit}, the proposed solution is chosen to be the
+highest symmetry 
 Bravais lattice / cell combination highlighted in the output. The
 Bravais lattice / cell combinations for all other lattices are also
 recorded, where the cell is chosen to be the one with the lowest
@@ -255,8 +194,8 @@ challenged, and may be rejected, in subsequent analysis steps.
 
 \subsection{XDS}
 
-Unlike \textsc{Mosflm} and \textsc{Labelit} which assume the $\phi$ centroid is the
-centre of the image, 
+Unlike \textsc{Mosflm} and \textsc{Labelit} which assume the $\phi$
+centroid is the centre of rotation of the image, 
 the indexing in XDS uses calculated $\phi$
 centroids as well as positions on the image of reflections, and
 therefore operates most reliably when given one or more \emph{wedges} of
@@ -268,24 +207,10 @@ errors in the direct beam position than the procedure in
 index with \textsc{Labelit} and repeat this indexing with XDS
  - necessary to refine the beam and rotation axis directions - 
 using the refined beam centre and selected cell and symmetry. 
-Determination of the optimum
-selection of images for indexing with XDS is therefore necessary.
-
-By anology with \textsc{Labelit}, data were indexed with a triclinic basis
-from all images and from one to ten $5^{\circ}$ wedges, with the
-resulting triclinic cell used to
-compute the metric penalty for the correct lattice
-using tools from CCTBX. As may be seen
-from Figure~3,
-use of a single $5^{\circ}$ wedge gave the least accurate
-results followed by the use of all images. The use of two and three
-wedges showed improved accuracy, with no improvement observed
-subsequently. Following from this, various wedge sizes were tested and
-no substantial trends, beyond using at least two frames, were found
-though a slight benefit was observed for using $\sim 5^{\circ}$ wedges
-(not shown.) Finally the ideal spacing was found to be 
-in excess of $\sim 20 - 30^{\circ}$ (also not shown) with a
-$45^{\circ}$ spacing used if possible.  
+Determination of the optimum selection of images for indexing with XDS
+is therefore necessary. In conclusion, the use of three wedges of
+data, each of $\sim 5^{\circ}$, spaced in excess of $\sim 20 -
+30^{\circ}$ was found to be effective.
 
 In the case that XDS is used for the initial indexing, it is necessary
 to select a proposed solution from the 44 lattice characters output by
@@ -295,8 +220,6 @@ highest symmetry solution with a penalty lower than this threshold. If
 however the symmetry has been given by the user this limit is raised
 to 200. As with \textsc{Labelit}, in cases of multiple cell possibilities for a
 given Bravais lattice the one with the lowest penalty is chosen.
-
-% got as far as here
 
 \section{Decision Making for Data Reduction: Integration}
 
@@ -1000,7 +923,90 @@ than the pointgroup symmetry.
 \bibliographystyle{iucr}
 %\bibliographystyle{plain}
 
+\appendix
 
+\section{Selection of Images for Autoindexing with Mosflm, Labelit and
+XDS}
+
+\subsection{Mosflm and Labelit}
+
+To optimise any process a scoring scheme is needed. Here the objective
+is to determine the selection of images which generally give the most
+accurate indexing solution. As the minimum root mean square
+(R.M.S.) deviation between observed
+and predicted spot centres is a target of refinement and the ideal absolute
+values of the unit cell constants are poorly defined (at least at this
+stage) these both represent poor metrics. The metric penalty however,
+defined as the deviation from the constraints for each Bravais lattice
+\cite{Grosse-Kunstleve:sh5006} is appropriate as this is a test for
+internal consistency 
+and is also relevent for automatic strategy systems such as EDNA
+\cite{Incardona:wa5014}. With the possibility of characterisation
+prior to data collection in mind, the use of few images may be desirable.
+
+Data were taken from 86 sweeps from the JCSG archive, where  the
+following four
+criteria were met: the lattice was not pseudosymmetric, nor triclinic,
+autoindexing with a single image gave a reasonable result and
+at least $90^{\circ}$ of data were available. The resulting sweeps had 
+resolution limits in the range 3.5\AA\ to 1.2\AA. The number of images
+to use for indexing was considered first, and Figure~1
+shows the mean normalized metric penalty, calculated as follows:
+
+\begin{itemize}
+\item{all of the metric penalties for a
+  given sweep (i.e. for $1 - 15$ frames) were scaled over the range $0 - 1$}
+\item{then this normalized
+  value averaged across all sweeps for each number of images.}
+\end{itemize}
+
+\noindent
+The calculations were performed for
+images spread across the range $0 - 90^{\circ}$, and
+smaller values indicate a more accurate solution. Clearly the use of
+two images ($\sim 0.24$) gives a substantially more accurate result
+than the use of a single frame ($\sim 0.92$), 
+confirming the advice from the \textsc{Mosflm} and
+\textsc{Labelit} authors. However a further improvement may be observed from
+using three images (to $\sim 0.14$), after which no further
+improvement is clear.  
+
+Following a similar procedure it was found
+(Figure~2) that a 
+spacing of more than $\sim 20 - 30^{\circ}$ generally gave the most accurate
+solution with a minimum $\sim 45^{\circ}$. 
+Extending this analysis to sweeps of up to $180^{\circ}$, allowing
+spacings to $90^{\circ}$,
+confirmed this result (not shown.) 
+
+This result may be considered as follows. The one-dimensional FFT
+indexing procedure employed in \textsc{Mosflm} and \textsc{Labelit} computes the
+Fourier transform of the projection of the observed peaks gathered
+from the selected images in $\sim
+7000$ reciprocal space directions. Those directions which show the
+strongest signal are then considered as possible basis vectors. Using
+three images spaced by $\sim 45^{\circ}$ ensures that every reciprocal
+space direction is likely to be well sampled. This will make it more likely
+that a fundamental basis vector, rather than some linear combination
+of basis vectors, will be found giving a more accurate result.
+
+\subsection{XDS}
+
+By anology with \textsc{Labelit}, data were indexed with a triclinic basis
+from all images and from one to ten $5^{\circ}$ wedges, with the
+resulting triclinic cell used to
+compute the metric penalty for the correct lattice
+using tools from CCTBX. As may be seen
+from Figure~3,
+use of a single $5^{\circ}$ wedge gave the least accurate
+results followed by the use of all images. The use of two and three
+wedges showed improved accuracy, with no improvement observed
+subsequently. Following from this, various wedge sizes were tested and
+no substantial trends, beyond using at least two frames, were found
+though a slight benefit was observed for using $\sim 5^{\circ}$ wedges
+(not shown.) Finally the ideal spacing was found to be 
+in excess of $\sim 20 - 30^{\circ}$ (also not shown) with a
+$45^{\circ}$ spacing used if possible.  
 
 
 \end{document}
