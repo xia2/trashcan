@@ -1,5 +1,6 @@
-\documentclass[preprint,pdf]{iucr}
-\journalcode{D}
+%\documentclass[preprint,pdf]{iucr}
+\documentclass[a4paper, 11pt]{article}
+%\journalcode{D}
 \usepackage{graphicx}
 \usepackage{cite}
 
@@ -7,42 +8,43 @@
 
 \title{Decision Making in xia2}
 
-\author[a]{G.}{Winter}
-\author[a]{C.M.C.}{Lobley}
-\author[b]{S.M.}{Prince}
-\aff[a]{Diamond Light Source, Harwell Science and Innovation Campus,
-Oxfordshire, \country{UK}}
-\aff[b]{Faculty of Life Sciences, Manchester Interdisciplinary  Biocentre, 
-Manchester, \country{UK}}
+%\author[a]{G.}{Winter}
+%\author[a]{C.M.C.}{Lobley}
+%\author[b]{S.M.}{Prince}
+%\aff[a]{Diamond Light Source, Harwell Science and Innovation Campus,
+%Oxfordshire, \country{UK}}
+%\aff[b]{Faculty of Life Sciences, Manchester Interdisciplinary  Biocentre, 
+%Manchester, \country{UK}}
 
-\keyword{automation}
-\keyword{data reduction}
-\keyword{expert system}
+%\keyword{automation}
+%\keyword{data reduction}
+%\keyword{expert system}
 
 \maketitle
 \clearpage
 
-\begin{synopsis}
-The basis for decision making in the program \emph{xia2} is described,
-also giving guidelines which can be applied in interactive data processing.
-\end{synopsis}
+% \begin{synopsis}
+% The basis for decision making in the program \emph{xia2} is described,
+% also giving guidelines which can be applied in interactive data processing.
+% \end{synopsis}
 
-\begin{abstract}
 
-\emph{xia2} is an expert system for the automated reduction of
-macromolecular crystallography (MX) data, employing well trusted
-existing software. The system can process a full MX data set from
-images to intensities and structure factor amplitudes with no user
-input. To achieve this many decisions are made, the details of which
-are described here. In addition, it is critical to have a
-flexible framework which can support the testing of hypotheses and
-allow feedback from later stages in the analysis to the points where
-earlier decisions were made, the essence of which is also
-presented here. While the decision making protocols described were
-developed for \emph{xia2}, they are equally applicable to interactive
-data reduction.
+% \begin{abstract}
 
-\end{abstract}
+% \emph{xia2} is an expert system for the automated reduction of
+% macromolecular crystallography (MX) data, employing well trusted
+% existing software. The system can process a full MX data set from
+% images to intensities and structure factor amplitudes with no user
+% input. To achieve this many decisions are made, the details of which
+% are described here. In addition, it is critical to have a
+% flexible framework which can support the testing of hypotheses and
+% allow feedback from later stages in the analysis to the points where
+% earlier decisions were made, the essence of which is also
+% presented here. While the decision making protocols described were
+% developed for \emph{xia2}, they are equally applicable to interactive
+% data reduction.
+
+% \end{abstract}
 
 \section{Introduction}
 
@@ -829,104 +831,6 @@ processing. As such these may be useful to a new student of
 crystallography wishing to learn more about the analysis of
 diffraction data.
 
-\section{Acknowledgements}
-
-The authors would like to thank Martin Walsh, the I04-1 team at
-Diamond  and the OPPF for the
-example included in the manuscript, as well as
-the JCSG, the Division of Structural Biology at
-the Wellcome Trust Centre for Human Genetics,
-and numerous users for providing the test data which was used in 
-developing this software. We would also like to acknowledge staff and users 
-at Diamond Light Source for their input and feedback.
-The authors would like to thank Harry Powell
-and Andrew Leslie for help with making the best use of \textsc{Mosflm},
-Phil Evans for help with \textsc{Scala}, \textsc{Aimless} and
-\textsc{Pointless} including  
-specific changes to those programs, Wolfgang Kabsch and Kay Diederichs
-for help with XDS/XSCALE. 
-Development work for \textsc{xia2} is currently supported by Diamond
-Light Source Ltd., and has also been supported by the BBSRC
-through the e-Science pilot project e-HTPX, the EU Framework 6 through 
-BioXHit and CCP4.
-
-\begin{figure}
-\caption{Mean normalised metric penalty as a function of number of
-  images used for characterisation with \textsc{Labelit}, where smaller values
-  indicate more accurate solutions. The step from two images to three
-  is much larger than any subsequent change.
-\label{figure:no_images}}
-\centering
-\includegraphics[scale=0.5]{figures/no_images.pdf}
-\end{figure}
-
-\begin{figure}
-\caption{Normalised metric penalty for indexing from three images, up
-  to a maximum spacing of $45^{\circ}$.
-\label{figure:phi_spacing_45a}}
-\centering
-\includegraphics[scale=0.5]{figures/phi_spacing_45a.pdf}
-\end{figure}
-
-\begin{figure}
-\caption{Mean normalised metric penalty for the correct autoindexing 
-solution from XDS, as a function of the number of $5^{\circ}$ wedges used.
-The 0 point corresponds to the use of all images. From these results it is
-clear that the use of three wedges, rather than the full data set, works
-well.
-\label{figure:xds_n_images}}
-\centering
-\includegraphics[scale=0.5]{figures/xds_n_wedges.pdf}
-\end{figure}
-
-\begin{figure}
-\caption{Procedure to determine the crystal point group and Bravais
-  lattice consistent with the the diffraction data, taking input from
-  the indexing and analysis with \textsc{Pointless}.
-\label{figure:scaling_1}}
-\centering
-\includegraphics[scale=0.5]{figures/scaling-step-1.pdf}
-\end{figure}
-
-\begin{figure}
-\caption{Procedure for combining pointgroup information from all
-  sweeps, following on from \ref{figure:scaling_1}, and assuming that
-  the lowest symmetry lattice is correct.
-\label{figure:scaling_2}}
-\centering
-\includegraphics[scale=0.5]{figures/scaling-step-2.pdf}
-\end{figure}
-
-\begin{figure}
-\caption{Procedure to establish uniform indexing of all sweeps,
-following on from \ref{figure:scaling_2}, which allows for intrinsic
-ambiguity in the origin choice where the lattice symmetry is higher
-than the pointgroup symmetry.
-\label{figure:scaling_3}}
-\centering
-\includegraphics[scale=0.5]{figures/scaling-step-3.pdf}
-\end{figure}
-
-\begin{figure}
-\caption{General flow of expert system interfaces, showing how the
-  prepare, do and finish functions are used. Decisions are diamonds,
-  processing tasks as rectangles.
-\label{figure:fig6}}
-\centering
-\includegraphics[scale=0.5]{figures/Fig6.pdf}
-\end{figure}
-
-
-
-
-
-
-
-\bibliography{xia2references}{}
-%\referencelist[xia2references]
-\bibliographystyle{iucr}
-%\bibliographystyle{plain}
-
 \appendix
 
 \section{Selection of Images for Autoindexing with Mosflm, Labelit and
@@ -1011,5 +915,106 @@ though a slight benefit was observed for using $\sim 5^{\circ}$ wedges
 (not shown.) Finally the ideal spacing was found to be 
 in excess of $\sim 20 - 30^{\circ}$ (also not shown) with a
 $45^{\circ}$ spacing used if possible.  
+
+
+
+
+\section{Acknowledgements}
+ 
+The authors would like to thank Martin Walsh, the I04-1 team at
+Diamond  and the OPPF for the
+example included in the manuscript, as well as
+the JCSG, the Division of Structural Biology at
+the Wellcome Trust Centre for Human Genetics,
+and numerous users for providing the test data which was used in 
+developing this software. We would also like to acknowledge staff and users 
+at Diamond Light Source for their input and feedback.
+The authors would like to thank Harry Powell
+and Andrew Leslie for help with making the best use of \textsc{Mosflm},
+Phil Evans for help with \textsc{Scala}, \textsc{Aimless} and
+\textsc{Pointless} including  
+specific changes to those programs, Wolfgang Kabsch and Kay Diederichs
+for help with XDS/XSCALE. 
+Development work for \textsc{xia2} is currently supported by Diamond
+Light Source Ltd., and has also been supported by the BBSRC
+through the e-Science pilot project e-HTPX, the EU Framework 6 through 
+BioXHit and CCP4.
+
+
+
+\begin{figure}
+\caption{Mean normalised metric penalty as a function of number of
+  images used for characterisation with \textsc{Labelit}, where smaller values
+  indicate more accurate solutions. The step from two images to three
+  is much larger than any subsequent change.
+\label{figure:no_images}}
+\centering
+\includegraphics[scale=0.5]{figures/no_images.pdf}
+\end{figure}
+
+\begin{figure}
+\caption{Normalised metric penalty for indexing from three images, up
+  to a maximum spacing of $45^{\circ}$.
+\label{figure:phi_spacing_45a}}
+\centering
+\includegraphics[scale=0.5]{figures/phi_spacing_45a.pdf}
+\end{figure}
+
+\begin{figure}
+\caption{Mean normalised metric penalty for the correct autoindexing 
+solution from XDS, as a function of the number of $5^{\circ}$ wedges used.
+The 0 point corresponds to the use of all images. From these results it is
+clear that the use of three wedges, rather than the full data set, works
+well.
+\label{figure:xds_n_images}}
+\centering
+\includegraphics[scale=0.5]{figures/xds_n_wedges.pdf}
+\end{figure}
+
+\begin{figure}
+\caption{Procedure to determine the crystal point group and Bravais
+  lattice consistent with the the diffraction data, taking input from
+  the indexing and analysis with \textsc{Pointless}.
+\label{figure:scaling_1}}
+\centering
+\includegraphics[scale=0.5]{figures/scaling-step-1.pdf}
+\end{figure}
+
+\begin{figure}
+\caption{Procedure for combining pointgroup information from all
+  sweeps, following on from \ref{figure:scaling_1}, and assuming that
+  the lowest symmetry lattice is correct.
+\label{figure:scaling_2}}
+\centering
+\includegraphics[scale=0.5]{figures/scaling-step-2.pdf}
+\end{figure}
+
+\begin{figure}
+\caption{Procedure to establish uniform indexing of all sweeps,
+following on from \ref{figure:scaling_2}, which allows for intrinsic
+ambiguity in the origin choice where the lattice symmetry is higher
+than the pointgroup symmetry.
+\label{figure:scaling_3}}
+\centering
+\includegraphics[scale=0.5]{figures/scaling-step-3.pdf}
+\end{figure}
+
+\begin{figure}
+\caption{General flow of expert system interfaces, showing how the
+  prepare, do and finish functions are used. Decisions are diamonds,
+  processing tasks as rectangles.
+\label{figure:fig6}}
+\centering
+\includegraphics[scale=0.5]{figures/Fig6.pdf}
+\end{figure}
+
+
+%\referencelist[xia2references]
+
+
+\bibliography{xia2references}{}
+%\bibliographystyle{iucr}
+\bibliographystyle{plain}
+
 
 \end{document}
