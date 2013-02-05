@@ -566,4 +566,78 @@ programs that \emph{xia2} has used must be correctly cited.
 \item{List: xia2-list@lists.sourceforge.net}
 \end{itemize}
 
+\section{Full List of Command-Line Options}
+
+\begin{tabular}{ll}
+Option & Usage \\
+-2d  &	Use Mosflm and Scala				\\
+-2da  &	Use Mosflm and Aimless				\\
+-2dai  & Use Mosflm (inc. for indexing) and Aimless	\\
+-2di  &	Use Mosflm (inc. for indexing) and Scala	\\
+-2dia  & Pun of -2dai					\\
+-3d  & Use XDS and XSCALE, Scala to merge		\\
+-3da  &	Use XDS and XSCALE, Aimless to merge		\\
+-3dai  & Use XDS and XSCALE, Aimless to merge, XDS to index	\\
+-3daii  & Use XDS and XSCALE, Aimless to merge, XDS to index (all
+frames) \\
+-3di  &	Use XDS and XSCALE, Scala to merge, XDS to index	\\
+-3dii  & Use XDS and XSCALE, Scala to merge, XDS to index (all
+frames) \\
+-3diia  & Pun for -3daii					\\
+\end{tabular}
+\begin{tabular}{ll}
+Option & Usage \\
+-atom X & Switch on separating anomalous pairs   	\\
+-batch\_scale  & Use batch rather than smooth scaling	\\
+-beam  & Beam coordinates, in Mosflm convention	\\
+-blend  & Save files for BLEND					\\
+-cell  & Set the input cell constants (needs symmetry)	\\
+-spacegroup  &	Set the spacegroup \\
+-crystal  & Assign the crystal ID	\\
+-project  & Assign the project ID \\
+-debug  & Switch on debugging output (a bad idea - this goes to
+xia2-debug.txt anyway) \\
+-executable  &	Override location of executable (deprecated)	\\
+-failover  & Continue to process if one sweep fails	\\
+-image image & Process only sweep containing image \\
+-start\_end  &	Assign start and end of sweep, needs -image \\
+-free\_fraction  & Fraction of reflections to use in free set	\\
+-free\_total  & Total number of reflections in free set	\\
+-freer\_file  &	Copy FreeR\_flags from this file \\
+-hdr\_in  & Input header information (developer tool) \\
+-hdr\_out  & Output header information (developer tool)	\\
+-ice  &	Exclude ice ring regions	\\
+\end{tabular}
+\begin{tabular}{ll}
+Option & Usage \\
+-indexer  & Assign indexer to use (developer tool) \\
+-integrater  &	Assign integrater to use (developer tool) \\
+-scaler  & Assign scaler to use (development tool) \\
+-interactive  &	Manual selection of images for indexing (developer
+tool) \\
+-isigma  &  Unmerged limit for resolution limit calculations \\
+-misigma  & Merged limit for resolution limit calculations \\
+-mask  & Additional mask for detector e.g. for backstop. \\
+-microcrystal  & Options for microcrystal processing	\\
+-min\_images  & Min no. of images to make a sweep \\
+-no\_lattice\_test  & Switch off Bravais lattice tests	\\
+-parallel N  & Number of cores to use \\
+-phil  & Pass in Phil override file (developer tool) \\
+-quick  & Cut corners to go quicker \\
+-reference\_reflection\_file ref.mtz &	Assign reference reflection file \\
+-resolution  &	Set the resolution limit \\
+-reversephi  &	Warn of backwards phi axis \\
+-scale\_model decay,absorption,... & Manually set the scale model \\
+-serial  & Non-parallel (-parallel 1)	\\
+-small\_molecule  & Settings for processing small molecule data \\
+-trust\_timestamps  & If no timestamp in header, trust file timestamps
+\\
+-xinfo  & Pass xinfo file in \\
+-xparallel N & (XDS) use forkintegrate with N machines \\
+-xparm GXPARM.XDS  & Pass in refined coordinate description from calibration set	\\
+-xparm\_ub GXPARM.XDS   &	Also use UB matrix from ... (developer tool) \\
+-zero\_dose  &	Switch on zero-dose extrapolation \\
+\end{tabular}
+
+
 \end{document}
