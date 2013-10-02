@@ -8,6 +8,7 @@ def read_reference(mtz_file):
         if label.find('imean') >= 0:
             reference = miller_array
             break
+        
     assert reference is not None
     return reference.map_to_asu()
 
@@ -44,26 +45,66 @@ if __name__ == '__main__':
     import sys
 
     if len(sys.argv) == 1:
-        raise RuntimeError, '%s reference [spacegroup]' % sys.argv[0]
+        raise RuntimeError, '%s reference [spacegroup] [reindex]' % \
+              sys.argv[0]
 
     reference1 = read_reference(sys.argv[1])
 
-    if len(sys.argv) == 3:
-        from cctbx.sgtbx import space_group, space_group_symbols
-        sgtype = space_group(space_group_symbols(sys.argv[2])).type()
-    else:
+    sgtype = None
+    cb_ops = []
+
+    for arg in sys.argv[2:]:
+        if not sgtype:
+            try:
+                from cctbx.sgtbx import space_group, space_group_symbols
+                sgtype = space_group(space_group_symbols(arg)).type()
+                continue
+            except RuntimeError, e:
+                pass
+            
+        try:
+            from cctbx import sgtbx
+            cb_op = sgtbx.change_of_basis_op(arg)
+            cb_ops.append(cb_op)
+            continue
+        except ValueError, e:
+            pass
+
+        raise RuntimeError, '%s not understood' % arg
+            
+    if not sgtype:
         sgtype = reference1.space_group().type()
 
-    from cctbx import sgtbx
-    cb_op = sgtbx.change_of_basis_op('k,h,-l')
-    reference2 = reference1.change_basis(cb_op).map_to_asu()
+    references = [reference1.change_basis(cb_op).map_to_asu() \
+                  for cb_op in cb_ops]
+
+    from collections import defaultdict
+    ccs = defaultdict(list)
     
-    ccs = []
     for i, pkl_file in enumerate(sys.stdin):
         pkl = read_pkl(pkl_file.strip())
         pkl = pkl.average_bijvoet_mates()
-        c1, n1 = compare(reference1, pkl, sgtype)
-        c2, n2 = compare(reference2, pkl, sgtype)
-        print '%5d %s %6.3f %5d %6.3f %5d' % (i, pkl_file.strip(),
-                                              c1, n1, c2, n2)
+        c, n = compare(reference1, pkl, sgtype)
+        print '%5d %s %6.3f %5d' % (i, pkl_file.strip(), c, n),
+        ccs[0].append(c)
+        for j, reference in enumerate(references):
+            c, n = compare(reference, pkl, sgtype)
+            print '%6.3f %5d' % (c, n),
+            ccs[j + 1].append(c)
+        print ''
+
+    from matplotlib import pyplot
+    
+    for j in sorted(ccs):
+        pyplot.scatter(range(len(ccs[j])), ccs[j])
+    pyplot.savefig('ccs.png')
+    pyplot.close()
+
+    from scitbx.array_family import flex
+    
+    for j in sorted(ccs):
+        hist = flex.histogram(flex.double(ccs[j]), n_slots=50)
+        pyplot.plot(hist.slot_centers(), hist.slots())
+        pyplot.savefig('cc_hist_%d.png' % j)
+        pyplot.close()
 
