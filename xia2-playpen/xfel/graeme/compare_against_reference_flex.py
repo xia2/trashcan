@@ -42,9 +42,17 @@ def compare(a, b, sgtype):
 
 if __name__ == '__main__':
     import sys
+
+    if len(sys.argv) == 1:
+        raise RuntimeError, '%s reference [spacegroup]' % sys.argv[0]
+
     reference1 = read_reference(sys.argv[1])
-    from cctbx.sgtbx import space_group, space_group_symbols
-    sgtype = space_group(space_group_symbols(sys.argv[2])).type()
+
+    if len(sys.argv) == 3:
+        from cctbx.sgtbx import space_group, space_group_symbols
+        sgtype = space_group(space_group_symbols(sys.argv[2])).type()
+    else:
+        sgtype = reference1.space_group().type()
 
     from cctbx import sgtbx
     cb_op = sgtbx.change_of_basis_op('k,h,-l')
