@@ -84,6 +84,19 @@ if __name__ == '__main__':
     for i, pkl_file in enumerate(sys.stdin):
         pkl = read_pkl(pkl_file.strip())
         pkl = pkl.average_bijvoet_mates()
+
+        if False:
+            # have an I/sigma selection of > 3
+
+            i_over_sigi = pkl.data() / pkl.sigmas()
+            pkl = pkl.select(i_over_sigi > 3)
+
+        if False:
+            # have an I/sigma selection of > 1
+
+            i_over_sigi = pkl.data() / pkl.sigmas()
+            pkl = pkl.select(i_over_sigi > 1)
+        
         c, n = compare(reference1, pkl, sgtype)
         print '%5d %s %6.3f %5d' % (i, pkl_file.strip(), c, n),
         ccs[0].append(c)
