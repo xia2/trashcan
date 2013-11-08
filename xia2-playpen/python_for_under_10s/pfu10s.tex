@@ -76,31 +76,31 @@ The Python turtle module (a module is a ``lump'' of computer program) is a littl
 This is where you need to start thinking about \emph{exactly} what you want the computer (or turtle) to do. Let's start by drawing a square. Easy right? But you need to imagine that you are walking around and holding a giant pen and blindfolded - how would you draw a square then? This is the kind of instructions you need to give the computer:
 
 \begin{enumerate}
-\item{Step forwards 10 paces}
+\item{Step forwards 100 paces}
 \item{Turn left}
-\item{Step forwards 10 paces}
+\item{Step forwards 100 paces}
 \item{Turn left}
-\item{Step forwards 10 paces}
+\item{Step forwards 100 paces}
 \item{Turn left}
-\item{Step forwards 10 paces}
+\item{Step forwards 100 paces}
 \item{Turn left}
 \end{enumerate}
 
 \noindent
-if you do this you should find you have drawn a square about 10 paces to a side. We really need to be more specific though - how far left to turn? Also it's boring to repeat yourself like this, but we will come back to that later with something called \emph{loops}. 
+if you do this you should find you have drawn a square about 100 paces to a side. We really need to be more specific though - how far left to turn? Also it's boring to repeat yourself like this, but we will come back to that later with something called \emph{loops}. 
 
 Here's some Python code to do exactly this:
 
 {\small
 \begin{verbatim}
 import turtle
-turtle.forward(10)
+turtle.forward(100)
 turtle.left(90)
-turtle.forward(10)
+turtle.forward(100)
 turtle.left(90)
-turtle.forward(10)
+turtle.forward(100)
 turtle.left(90)
-turtle.forward(10)
+turtle.forward(100)
 turtle.left(90)
 \end{verbatim}
 }
@@ -117,13 +117,13 @@ Python 2.7.1 (r271:86832, Jul 31 2011, 19:30:53)
 [GCC 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2335.15.00)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import turtle
->>> turtle.forward(10)
+>>> turtle.forward(100)
 >>> turtle.left(90)
->>> turtle.forward(10)
+>>> turtle.forward(100)
 >>> turtle.left(90)
->>> turtle.forward(10)
+>>> turtle.forward(100)
 >>> turtle.left(90)
->>> turtle.forward(10)
+>>> turtle.forward(100)
 >>> turtle.left(90)
 >>> 
 \end{verbatim}
@@ -133,11 +133,11 @@ Type "help", "copyright", "credits" or "license" for more information.
 \label{figure-turtle-001-square}
 \centering
 \fbox{\includegraphics[scale=0.4]{turtle-001-square.png}}
-\caption{The square drawn by the turtle after stepping forward 10 and
+\caption{The square drawn by the turtle after stepping forward 100 and
   turning left 90 four times.}
 \end{figure}
 
-What we have done here is to say first "I would like to use the turtle" then we have said four times to move forward 10 steps and to turn left by 90 degrees (which is a corner on a square.) You may find after you have typed all of this that you did not need to type it all, as Python remembers what you have done and so you can sometimes just press the "up" arrow on the keyboard and re-run some of the things you have typed already.
+What we have done here is to say first "I would like to use the turtle" then we have said four times to move forward 100 steps and to turn left by 90 degrees (which is a corner on a square.) You may find after you have typed all of this that you did not need to type it all, as Python remembers what you have done and so you can sometimes just press the "up" arrow on the keyboard and re-run some of the things you have typed already.
 
 You can also lift the pen up with \verb|turtle.penup()| and put it down again with \verb|turtle.pendown()| - with these it is possible to draw some very fancy pictures limited only by your imagination and patience! Why not go and play some. When you've drawn some pictures ``by hand'' like this let's find out about loops.
 
@@ -149,13 +149,13 @@ Just to draw a square earlier took a lot of typing - when you are a computer it 
 \begin{verbatim}
 import turtle
 for j in range(4):
-  turtle.forward(10)
+  turtle.forward(100)
   turtle.left(90)
 \end{verbatim}
 }
 
 \noindent 
-which tells the computer to do the same thing four times. It is useful to look at these lines one at a time. If you type \verb|range(4)| you will see \verb|[0, 1, 2, 3]| - this is what Python calls a list, and it is a list of numbers which go from 0 to 3. This is Python's way of counting which is a bit odd but you will get used to it. Then we have the \verb|turtle.forward(10)| command and the \verb|turtle.left(90)| command a little way in - there are two spaces in front. This says that these instructions are \emph{inside} the loop. If you do this you will find it draws exactly the same square as earlier. You can also have something like:
+which tells the computer to do the same thing four times. It is useful to look at these lines one at a time. If you type \verb|range(4)| you will see \verb|[0, 1, 2, 3]| - this is what Python calls a list, and it is a list of numbers which go from 0 to 3. This is Python's way of counting which is a bit odd but you will get used to it. Then we have the \verb|turtle.forward(100)| command and the \verb|turtle.left(90)| command a little way in - there are two spaces in front. This says that these instructions are \emph{inside} the loop. If you do this you will find it draws exactly the same square as earlier. You can also have something like:
 
 {\small
 \begin{verbatim}
@@ -235,6 +235,8 @@ AttributeError: 'module' object has no attribute 'forwards'
 }
 
 \chapter{Programming Python}
+
+\section{Variables}
 
 
 
