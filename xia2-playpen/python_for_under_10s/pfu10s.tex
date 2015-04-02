@@ -499,4 +499,161 @@ for j in range(5):
 \end{verbatim}
 }
 
+This combines loops, variables, functions and comparisons to draw a
+very complicated shape with only a handful of instructions. It's a
+very complicated place to start though so let's start somewhere
+simpler:
+
+{\small
+\begin{verbatim}
+def offend(who):
+  print who, 'smells!'
+
+name = raw_input()
+offend(name)
+\end{verbatim}
+}
+
+This will read a name typed in, then \emph{call} \verb|offend| with
+that name to show something like \verb|graeme smells!|.  The value of
+name gets passed to \verb|offend| as \verb|who| which wil be equal to
+the same thing - this means that the name inside does not need to be
+known from outside, only that the name passed in should be used. We
+could also have something like:
+
+{\small
+\begin{verbatim}
+def count(to):
+  for j in range(to):
+    print j
+
+count(5)
+\end{verbatim}
+}
+
+\noindent
+will give the values 0, 1, 2, 3, 4. if you call count(500) it will
+print a lot more numbers out. To understand the fancy drawing code
+above will require more Python things though... like types.
+
+\section{Types}
+
+Python has quite a few \emph{types} which are the different kinds of
+values variables can have. We've used numbers already, and strings
+(which are words). In any programming language the types of variables
+are important, but In Python you can mostly ignore them - they mostly
+show themselves when things go wrong.
+
+Strings or names, if used in a program, need to be put in
+\verb|'quotes'| like \verb|'smells'| earlier. If you want to set
+someone's name in a program you need to have
+
+{\small
+\begin{verbatim}
+name = 'graeme'
+\end{verbatim}
+}
+
+\noindent
+This will set name to \verb|graeme| without needing to ask you to type
+anything in. Once you have a name (or otherwise) in a string you can
+start to do some more fun things, beyond just offending people. One
+fun thing you can do is to make strings change themselves:
+
+{\small
+\begin{verbatim}
+s = 'argh'
+for j in range(5):
+  s = s.replace('a', 'aa')
+print s
+\end{verbatim}
+}
+
+\noindent
+this wil show you:
+
+{\small
+\begin{verbatim}
+>>> print s
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaargh
+\end{verbatim}
+}
+
+\noindent
+we can use this to make some very interesting pictures called
+fractals, or the fancy picture above, starting from things like this:
+
+{\small
+\begin{verbatim}
+def long(itrn):
+  word = 'A'
+  for j in range(itrn):
+    word = word.replace('A', 'ABA')
+  print word
+
+long(1)
+long(2)
+long(3)
+long(4)
+\end{verbatim}
+}
+
+\noindent
+which will give
+
+{\small
+\begin{verbatim}
+ABA
+ABABABA
+ABABABABABABABA
+ABABABABABABABABABABABABABABABA
+\end{verbatim}
+}
+
+\noindent
+Now looking at the program earlier we do some of this magic and
+combine it with comparisons to write a program \emph{within} a program
+- \verb|F| is \emph{forward}, \verb|R| is \emph{right} and \verb|L| is
+\emph{left}.
+
+{\small
+\begin{verbatim}
+import turtle
+
+def draw(itrn):
+  sqr = 'FRFRFRFR'
+  for j in range(itrn):
+    sqr = sqr.replace('F', 'FLFRFRFLF')
+    
+  for s in sqr:
+    if s == 'F':
+      turtle.forward(3 ** (4 - itrn))
+    elif s == 'L':
+      turtle.left(90)
+    elif s == 'R':
+      turtle.right(90)
+
+for j in range(5):
+  draw(j)
+\end{verbatim}
+}
+
+\noindent
+Each \emph{iteration} of this will draw a more complicated pattern
+than the previous one. Tricks like this can allow you to generate
+pictures like this - the ``Dragon curve'' - with very little
+code. These were used in the original Jurassic Park book!
+
+\begin{figure}
+\label{figure-dragon}
+\centering
+\begin{tabular}{cc}
+\includegraphics[scale=0.4]{dragon-4.png} & 
+\includegraphics[scale=0.4]{dragon-6.png} \\
+\includegraphics[scale=0.4]{dragon-8.png} & 
+\includegraphics[scale=0.4]{dragon-10.png} \\
+\end{tabular}
+\caption{Dragon curves 4, 6, 8, 10}
+\end{figure}
+
 \end{document}
