@@ -20,7 +20,9 @@ def draw(itrn):
 for j in range(5):
   draw(j)
       
-open('sqr.ps', 'w').write(turtle.getscreen().getcanvas().postscript())
+#open('sqr.ps', 'w').write(turtle.getscreen().getcanvas().postscript())
 
+import time
+time.sleep(100)
       
   

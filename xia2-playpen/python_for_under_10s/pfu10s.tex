@@ -12,9 +12,29 @@
 
 \section{Preface for Grown Ups}
 
-When the author was a child computers were smaller, simpler and harder to break\footnote{Machines like the BBC Model B, ZX81 and Spectrum 48k spring to mind}, and so much more suitable for leaning how they work. Today computers are bigger, more complex, easier to break and much less straightforward to understand. At the same time they are used for everything: from catching up on TV to reading the news, communicating with people and gaming. This has meant that the creative process of writing simple computer programs (typically games) has been lost in favour of easily accessed entertainment. While none of this is a bad thing, it has removed the opportunity to learn \emph{how they work}. The idea of this book is to provide this opportunity, using free tools and real programming languages. 
+When the author was a child computers were smaller, simpler and harder
+to break\footnote{Machines like the BBC Model B, ZX81 and Spectrum 48k
+  spring to mind}, and so much more suitable for leaning how they
+work. Today computers are bigger, more complex, easier to break and
+much less straightforward to understand. At the same time they are
+used for everything: from catching up on TV to reading the news,
+communicating with people and games. This has meant that the creative
+process of writing simple computer programs (typically games) has been
+lost in favour of easily accessed entertainment. While none of this is
+a bad thing, it has removed the opportunity to learn \emph{how they
+  work}. The idea of this book is to provide this opportunity, using
+free tools and real programming languages. 
 
-The pre-requisite for this is a relatively recent computer - anything bought since about 2005 or so, running Windows, Linux or Mac OS X should be fine. The only dependency is the installation of Python 2.7.3 or later from http://www.python.org. If you have an old laptop lying around which used to be useful and is no longer, this will probably be fine. If you're feeling really keen the Raspberry Pi may be for you (http://wwww.raspberrypi.org) as this is a little computer aimed at children learning about computers, which will plug into the TV in the same way as computers from the mid 1980's did, only much more powerful...
+The pre-requisite for this is a relatively recent computer - anything
+bought since about 2005 or so, running Windows, Linux or Mac OS X
+should be fine. The only dependency is the installation of Python
+2.7.3 or later from http://www.python.org. If you have an old laptop
+lying around which used to be useful and is no longer, this will
+probably be fine. If you're feeling really keen the Raspberry Pi may
+be for you (http://wwww.raspberrypi.org) as this is a little computer
+aimed at children learning about computers, which will plug into the
+TV in the same way as computers from the mid 1980's did, only much
+more powerful... 
 
 \section{Preface for Children}
 
@@ -34,11 +54,18 @@ explain the picture. Also, the way that the computer instructions are
 written will look a bit different - they will be written \verb|like this| which means ``this is something to type in'' or ``what the Python
 window'' should look like.
 
-Some people say programming is hard, and sometimes it is, but the hardest bit is thinking about what you want the computer to do in little pieces - once you have done this getting the computer to do the work is easy. That's enough - let's get started!
+Some people say programming is hard, and sometimes it is, but the
+hardest bit is thinking about what you want the computer to do in
+little pieces - once you have done this getting the computer to do the
+work is easy. That's enough - let's get started!
 
 \section{Getting Started}
 
-The only thing that is needed is to install Python - which you can download from http://www.python.org. This is free but it is probably better if a grown up installs it. To use it you will need to do some typing in something called a terminal - on an Apple computer they look like Figure~\ref{figure-terminal}.
+The only thing that is needed is to install Python - which you can
+download from http://www.python.org. This is free but it is probably
+better if a grown up installs it. To use it you will need to do some
+typing in something called a terminal - on an Apple computer they look
+like Figure~\ref{figure-terminal}.
 
 \begin{figure}
 \label{figure-terminal}
@@ -61,19 +88,38 @@ Type "help", "copyright", "credits" or "license" for more information.
 }
 
 \noindent 
-or something similar which says that the computer is ready to start talking to you in Python. If you see this then everything is set up just fine.
+or something similar which says that the computer is ready to start
+talking to you in Python. If you see this then everything is set up
+just fine. 
 
 \chapter{Pythons and Turtles}
 
 \section{Introduction}
 
-Most programming books begin with showing how to print something (which means show it on the screen) usually ``Hello, World!'', and then move on to how to print your name, numbers and so on. This is not very interesting so this book will start with how to draw some shapes, which is a good way of learning how to tell the computer things, as you need to think hard about what you want first. For this we will use the Python turtle.
+Most programming books begin with showing how to print something
+(which means show it on the screen) usually ``Hello, World!'', and
+then move on to how to print your name, numbers and so on. This is not
+very interesting so this book will start with how to draw some shapes,
+which is a good way of learning how to tell the computer things, as
+you need to think hard about what you want first. For this we will use
+the Python turtle. 
 
 \section{The Python Turtle}
 
-The Python turtle module (a module is a ``lump'' of computer program) is a little arrow which you can use to draw pictures. Unlike most drawing programs where you use a mouse to do drawing for this you need to tell it where to go. The simplest way to use it is to tell it to go forwards, backwards, left and right by certain amounts, and to lift the pen up and to put it down again. When you start it is pointing sideways.
+The Python turtle module (a module is a ``lump'' of computer program)
+is a little arrow which you can use to draw pictures. Unlike most
+drawing programs where you use a mouse to do drawing for this you need
+to tell it where to go. The simplest way to use it is to tell it to go
+forwards, backwards, left and right by certain amounts, and to lift
+the pen up and to put it down again. When you start it is pointing
+sideways. 
 
-This is where you need to start thinking about \emph{exactly} what you want the computer (or turtle) to do. Let's start by drawing a square. Easy right? But you need to imagine that you are walking around and holding a giant pen and blindfolded - how would you draw a square then? This is the kind of instructions you need to give the computer:
+This is where you need to start thinking about \emph{exactly} what you
+want the computer (or turtle) to do. Let's start by drawing a
+square. Easy right? But you need to imagine that you are walking
+around and holding a giant pen and blindfolded - how would you draw a
+square then? This is the kind of instructions you need to give the
+computer: 
 
 \begin{enumerate}
 \item{Step forwards 100 paces}
@@ -143,7 +189,12 @@ You can also lift the pen up with \verb|turtle.penup()| and put it down again wi
 
 \section{Loops}
 
-Just to draw a square earlier took a lot of typing - when you are a computer it can take a lot of instructions to do something simple. There are easier ways to do this though, and one of them is to have something called a loop. Loops are easy - they just say to do the same thing over and over again. We could draw the square with a loop like this:
+Just to draw a square earlier took a lot of typing - when you are a
+computer it can take a lot of instructions to do something
+simple. There are easier ways to do this though, and one of them is to
+have something called a loop. Loops are easy - they just say to do the
+same thing over and over again. We could draw the square with a loop
+like this (watching very carefully where the spaces go!)
 
 {\small
 \begin{verbatim}
@@ -217,6 +268,51 @@ turtle.reset()
 which clears the screen - you also don't need to keep typing import
 turtle as after the first time you already have it.
 
+\subsection{Loops Inside Loops}
+
+Sometimes there are things you want to do over and over (like drawing
+a square earlier) which themselves require doing something over and
+over (like drawing the sides of that square). Python allows you to do
+all of this by having one loop (draw the sides of the square) inside
+the other loop, for example:
+
+{\small
+\begin{verbatim}
+import turtle
+
+for i in range(10):
+  for j in range(4):
+    turtle.forward(10 * (i + 1))
+    turtle.left(90)
+\end{verbatim}
+}
+
+\noindent
+This will give you something like
+Figure~\ref{figure-loop-within-loop}, a series of squares each getting
+larger than the last. This little program shows you two things - the
+letters \verb|i| and \verb|j| here have to be different letters do the
+program knows which one you mean, and you have to be very careful with
+spaces (two, then four) as these tell the program which instructions
+need to be performed within which loop.
+
+\begin{figure}
+\label{figure-loop-within-loop}
+\centering
+\fbox{\includegraphics[scale=0.4]{turtle-001-loop-loop.png}}
+\caption{A series of squares drawn by a loop within a loop.}
+\end{figure}
+
+This does however mean you can make some really fancy shapes like
+Figure~\ref{figure-fancy}. The code for which will follow later...
+
+\begin{figure}
+\label{figure-fancy}
+\centering
+\fbox{\includegraphics[scale=0.4]{turtle-fancy.png}}
+\caption{What you can do with lots of loops!}
+\end{figure}
+
 \section{Mistakes}
 
 Sometimes you will type things in wrong - this is fine and everyone does this - when you do make a mistake Python will complain that it does not understand, and usually this will have the word ``Error:'' in the message and it will try to explain what was wrong. When you have done this a lot you will find that these messages make sense but right now don't worry.
@@ -227,8 +323,7 @@ Sometimes you will type things in wrong - this is fine and everyone does this - 
 >>> for j in range(360):
 ...   turtle.forwards(1)
 ...   turtle.left(1)
-... 
-Traceback (most recent call last):
+... Traceback (most recent call last):
   File "<stdin>", line 2, in <module>
 AttributeError: 'module' object has no attribute 'forwards'
 \end{verbatim}
@@ -236,8 +331,172 @@ AttributeError: 'module' object has no attribute 'forwards'
 
 \chapter{Programming Python}
 
+In this chapter we will start to look at some of the elements which go
+into writing a computer program, in particular variables, comparisons
+and functions.
+
 \section{Variables}
 
+We have already been using a lot of variables but have not considered
+what they actually are. In this code:
 
+{\small
+\begin{verbatim}
+>>> for j in range(4):
+...   print j
+... 
+0
+1
+2
+3
+\end{verbatim}
+}
+
+\noindent
+\verb|j| is a variable. A variable is something which can be set to
+some value, but we don't know what that value is. For example, 2 is
+always equal to 2 - it's never 1, 3.5 or 17. This means it's
+constant. If I have something like \verb|a = 2| however it means
+\emph{right now} \verb|a| is equal to 2 but later we could set it to
+something else. This is very useful for writing computer programs as
+we know what we want to do, but sometimes we don't know what we want
+to do it to, for example priting your name:
+
+{\small
+\begin{verbatim}
+Graemes-MacBook-Pro-2:python_for_under_10s graeme$ python
+Python 2.7.8 (default_cci, Mar 19 2015, 08:06:01) 
+[GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.57)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> name = raw_input('--> ')
+--> Graeme
+>>> print name
+Graeme
+\end{verbatim}
+}
+
+Here we know \verb|raw_input| will get your name (or whatever else you
+typed in) but we don't know what that is. It doesn't matter though, we
+can still print it. We can also get Python to \emph{guess} your name
+with this:
+
+{\small
+\begin{verbatim}
+import getpass
+print getpass.getuser()
+\end{verbatim}
+}
+
+This will print the name of the person who is logged in, who could be
+you, or your mum or dad, or some other name completely! We can use
+this name like this:
+
+{\small
+\begin{verbatim}
+import getpass
+name = getpass.getuser()
+print name
+\end{verbatim}
+}
+
+\noindent
+which says to get the user name then save it for later use in the
+\emph{variable} \verb|name|.
+
+\section{Comparisons}
+
+Sometimes we may want do to something special if the value of some
+variable is equal to something, or bigger than it or less than
+it. Making a decision about this is called a \emph{comparison} as we
+are comparing a variable with something. In Python this works like
+this:
+
+{\small
+\begin{verbatim}
+a = 1
+if a == 2:
+  print 'Something strange as happened!'
+\end{verbatim}
+}
+
+\noindent
+where we set \verb|a = 1| then act surprised (we should be really
+surprised) if in the next line it is suddenly 2! Something could
+happen to a in the meantime though like this:
+
+{\small
+\begin{verbatim}
+a = 1
+a = 2 * a
+if a == 2:
+  print 'Something strange as happened!'
+\end{verbatim}
+}
+
+\noindent
+so now we would expect it to print something - the strange thing is a
+was multiplied by 2. This can be more fun if we change the behaviour of
+the program depending on the value of a variable:
+
+{\small
+\begin{verbatim}
+import getpass
+name = getpass.getuser()
+if name == 'graeme':
+  print name, 'smells!'
+else:
+  print name, 'is nice'
+\end{verbatim}
+}
+
+Here if the name logged into the computer is \verb|graeme| one thing
+will happen, otherwise something else will happen. Combining this kind
+of thing with loops can start to make some much more interesting
+things happen.
+
+\section{Functions}
+
+In this example code
+
+{\small
+\begin{verbatim}
+import getpass
+name = getpass.getuser()
+print name
+\end{verbatim}
+}
+
+\noindent
+and in lots of other places you have seen brackets \verb|()| at the
+ends of words. These sometimes have things \verb|(in, them)| and we
+used them a lot for the turtle like \verb|turtle.forward(100)|. These
+brackets mean that we have called a \emph{function} which means in
+computer speak ``go and find this code and do what it says.'' This is
+how most programming works including the turtle - people write code
+which other people can then use to make programs. The fancy picture in
+the previous chapter was made using functions, and variables, and
+looks like this:
+
+{\small
+\begin{verbatim}
+import turtle
+
+def draw(itrn):
+  sqr = 'FRFRFRFR'
+  for j in range(itrn):
+    sqr = sqr.replace('F', 'FLFRFRFLF')
+    
+  for s in sqr:
+    if s == 'F':
+      turtle.forward(3 ** (4 - itrn))
+    elif s == 'L':
+      turtle.left(90)
+    elif s == 'R':
+      turtle.right(90)
+
+for j in range(5):
+  draw(j)
+\end{verbatim}
+}
 
 \end{document}

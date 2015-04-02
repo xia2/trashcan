@@ -16,6 +16,8 @@ def draw(itrn):
 for j in range(5):
   draw(j)
       
+import time
+time.sleep(60)
 
       
   
